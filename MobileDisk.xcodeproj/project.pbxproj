@@ -1,0 +1,282 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		4494309C158EB4C000ADAE89 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4494309B158EB4C000ADAE89 /* UIKit.framework */; };
+		4494309E158EB4C000ADAE89 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4494309D158EB4C000ADAE89 /* Foundation.framework */; };
+		449430A0158EB4C000ADAE89 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4494309F158EB4C000ADAE89 /* CoreGraphics.framework */; };
+		449430A6158EB4C000ADAE89 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 449430A4158EB4C000ADAE89 /* InfoPlist.strings */; };
+		449430A8158EB4C000ADAE89 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 449430A7158EB4C000ADAE89 /* main.m */; };
+		449430AC158EB4C100ADAE89 /* MobileDiskAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 449430AB158EB4C100ADAE89 /* MobileDiskAppDelegate.m */; };
+		449430AF158EB4C100ADAE89 /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 449430AD158EB4C100ADAE89 /* MainStoryboard.storyboard */; };
+		449430B2158EB4C100ADAE89 /* MobileDiskViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 449430B1158EB4C100ADAE89 /* MobileDiskViewController.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		44943097158EB4C000ADAE89 /* MobileDisk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MobileDisk.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4494309B158EB4C000ADAE89 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		4494309D158EB4C000ADAE89 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		4494309F158EB4C000ADAE89 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		449430A3158EB4C000ADAE89 /* MobileDisk-Info.plist */ = {isa = PBXFileReference; path = "MobileDisk-Info.plist"; sourceTree = "<group>"; };
+		449430A5158EB4C000ADAE89 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		449430A7158EB4C000ADAE89 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		449430A9158EB4C000ADAE89 /* MobileDisk-Prefix.pch */ = {isa = PBXFileReference; path = "MobileDisk-Prefix.pch"; sourceTree = "<group>"; };
+		449430AA158EB4C000ADAE89 /* MobileDiskAppDelegate.h */ = {isa = PBXFileReference; path = MobileDiskAppDelegate.h; sourceTree = "<group>"; };
+		449430AB158EB4C100ADAE89 /* MobileDiskAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MobileDiskAppDelegate.m; sourceTree = "<group>"; };
+		449430AE158EB4C100ADAE89 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard.storyboard; sourceTree = "<group>"; };
+		449430B0158EB4C100ADAE89 /* MobileDiskViewController.h */ = {isa = PBXFileReference; path = MobileDiskViewController.h; sourceTree = "<group>"; };
+		449430B1158EB4C100ADAE89 /* MobileDiskViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MobileDiskViewController.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		44943094158EB4C000ADAE89 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4494309C158EB4C000ADAE89 /* UIKit.framework in Frameworks */,
+				4494309E158EB4C000ADAE89 /* Foundation.framework in Frameworks */,
+				449430A0158EB4C000ADAE89 /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		4494308C158EB4C000ADAE89 = {
+			isa = PBXGroup;
+			children = (
+				449430A1158EB4C000ADAE89 /* MobileDisk */,
+				4494309A158EB4C000ADAE89 /* Frameworks */,
+				44943098158EB4C000ADAE89 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		44943098158EB4C000ADAE89 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				44943097158EB4C000ADAE89 /* MobileDisk.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		4494309A158EB4C000ADAE89 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				4494309B158EB4C000ADAE89 /* UIKit.framework */,
+				4494309D158EB4C000ADAE89 /* Foundation.framework */,
+				4494309F158EB4C000ADAE89 /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		449430A1158EB4C000ADAE89 /* MobileDisk */ = {
+			isa = PBXGroup;
+			children = (
+				449430AA158EB4C000ADAE89 /* MobileDiskAppDelegate.h */,
+				449430AB158EB4C100ADAE89 /* MobileDiskAppDelegate.m */,
+				449430AD158EB4C100ADAE89 /* MainStoryboard.storyboard */,
+				449430B0158EB4C100ADAE89 /* MobileDiskViewController.h */,
+				449430B1158EB4C100ADAE89 /* MobileDiskViewController.m */,
+				449430A2158EB4C000ADAE89 /* Supporting Files */,
+			);
+			path = MobileDisk;
+			sourceTree = "<group>";
+		};
+		449430A2158EB4C000ADAE89 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				449430A3158EB4C000ADAE89 /* MobileDisk-Info.plist */,
+				449430A4158EB4C000ADAE89 /* InfoPlist.strings */,
+				449430A7158EB4C000ADAE89 /* main.m */,
+				449430A9158EB4C000ADAE89 /* MobileDisk-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		44943096158EB4C000ADAE89 /* MobileDisk */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 449430B5158EB4C100ADAE89 /* Build configuration list for PBXNativeTarget "MobileDisk" */;
+			buildPhases = (
+				44943093158EB4C000ADAE89 /* Sources */,
+				44943094158EB4C000ADAE89 /* Frameworks */,
+				44943095158EB4C000ADAE89 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MobileDisk;
+			productName = MobileDisk;
+			productReference = 44943097158EB4C000ADAE89 /* MobileDisk.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		4494308E158EB4C000ADAE89 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = MobileDisk;
+				LastUpgradeCheck = 0430;
+			};
+			buildConfigurationList = 44943091158EB4C000ADAE89 /* Build configuration list for PBXProject "MobileDisk" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 4494308C158EB4C000ADAE89;
+			productRefGroup = 44943098158EB4C000ADAE89 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				44943096158EB4C000ADAE89 /* MobileDisk */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		44943095158EB4C000ADAE89 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				449430A6158EB4C000ADAE89 /* InfoPlist.strings in Resources */,
+				449430AF158EB4C100ADAE89 /* MainStoryboard.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		44943093158EB4C000ADAE89 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				449430A8158EB4C000ADAE89 /* main.m in Sources */,
+				449430AC158EB4C100ADAE89 /* MobileDiskAppDelegate.m in Sources */,
+				449430B2158EB4C100ADAE89 /* MobileDiskViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		449430A4158EB4C000ADAE89 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				449430A5158EB4C000ADAE89 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		449430AD158EB4C100ADAE89 /* MainStoryboard.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				449430AE158EB4C100ADAE89 /* en */,
+			);
+			name = MainStoryboard.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		449430B3158EB4C100ADAE89 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		449430B4158EB4C100ADAE89 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		449430B6158EB4C100ADAE89 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "MobileDisk/MobileDisk-Prefix.pch";
+				INFOPLIST_FILE = "MobileDisk/MobileDisk-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		449430B7158EB4C100ADAE89 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "MobileDisk/MobileDisk-Prefix.pch";
+				INFOPLIST_FILE = "MobileDisk/MobileDisk-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		44943091158EB4C000ADAE89 /* Build configuration list for PBXProject "MobileDisk" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				449430B3158EB4C100ADAE89 /* Debug */,
+				449430B4158EB4C100ADAE89 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		449430B5158EB4C100ADAE89 /* Build configuration list for PBXNativeTarget "MobileDisk" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				449430B6158EB4C100ADAE89 /* Debug */,
+				449430B7158EB4C100ADAE89 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 4494308E158EB4C000ADAE89 /* Project object */;
+}
