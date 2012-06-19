@@ -20,7 +20,10 @@
 
 @implementation MDHTTPConnection{
     
-    NSMutableString *relativePath;
+    NSMutableArray *multipartData;
+    //This flag tell that if we need to keep reading header from post
+    BOOL postHaderFinished;
+    int bytePointer;
 }
 
 
@@ -36,7 +39,9 @@
     //We support method POST 
     if([method isEqualToString:@"POST"])
     {
-        return YES;
+        //Only root path can support POST
+        if([path isEqualToString:@"/"])
+            return YES;
     }
     
     return [super supportsMethod:method atPath:path];
@@ -49,7 +54,136 @@
 - (void)prepareForBodyWithSize:(UInt64)contentLength
 {
 	// Override me to allocate buffers, file handles, etc.
-    NSLog(@"%llu", contentLength);
+    NSLog(@"body size:%llu", contentLength);
+    
+    multipartData = [[NSMutableArray alloc] init];
+    
+    postHaderFinished = NO;
+    bytePointer = 0;
+}
+
+/**
+ * This method is called to handle data read from a POST / PUT.
+ * The given data is part of the request body.
+ **/
+- (void)processBodyData:(NSData *)postDataChunk
+{
+    NSLog(@"PostDataChunk:%@", [[NSString alloc] initWithData:postDataChunk encoding:NSUTF8StringEncoding]);
+    
+    /**Check if we need to keep reading header of not**/
+    if(!postHaderFinished)
+    {
+        //0x0A0D indicate end of a line in bytes data
+        UInt16 separatorBytes = 0x0A0D;
+        /**Give 2 because 0x0A0D is 16 bits(UInt16) that equal to 2 bytes and length is byte unit
+         0A 1byte 0D 1byte**/
+        NSData *separatorData = [NSData dataWithBytes:&separatorBytes length:2];
+        
+        //Result is 2 since length is byte unit 
+        int l = [separatorData length];
+        
+        for(int i=0; i<[postDataChunk length]-l; i++)
+        {
+            //We search 2 bytes at a time, first param is location to search
+            //second param is numbers of bytes to search
+            NSRange searchRange = {i, l};
+            
+            /**
+             E.g
+        
+                byte data: 2d2d1b4a a76c8fa1 
+                range:{0,2}
+                result:2d2d
+                elements:2d 2d 1b 4a a7 6c 8f a1
+             
+             **/
+            //Get subdata from postDataChunk by range
+            NSData *subData = [postDataChunk subdataWithRange:searchRange];
+            
+            //Compare with 0x0A0D to see if it is end of line, otherwise keep searching
+            if([subData isEqualToData:separatorData])
+            {
+                //End of line and get byte data
+                NSRange newRange = {bytePointer, i-bytePointer};
+                
+                /**
+                 i=0, 0A0D=2bytes,
+                 i+2= ignore 0A0D
+                 **/
+                //we set next start byte pointer
+                bytePointer = i+l;
+                i+=l-1;
+                
+                NSData *newData = [postDataChunk subdataWithRange:newRange];
+                
+                //Check if data has any bytes
+                if([newData length])
+                {
+                    //add data to array
+                    [multipartData addObject:newData];
+                }
+                else
+                {
+                    //header is finish
+                    postHaderFinished = YES;
+                    
+                    //We get back the byte data post header info at second line
+                    const void *byteData = [[multipartData objectAtIndex:1] bytes];
+                    int byteLength = [[multipartData objectAtIndex:1] length];
+                    
+                    //Convert to string
+                    NSString *postHeaderInfo = [[NSString alloc] initWithBytes:byteData length:byteLength encoding:NSUTF8StringEncoding];
+                    
+                    //We need to find filename
+                    NSArray *componentsInfo = [postHeaderInfo componentsSeparatedByString:@"filename="];
+                    
+                    componentsInfo = [[componentsInfo lastObject] componentsSeparatedByString:@"\""];
+					componentsInfo = [[componentsInfo objectAtIndex:1] componentsSeparatedByString:@"\\"];
+                    
+                    //actually a path append with file name
+                    NSString *fileName = [[config documentRoot] stringByAppendingPathComponent:[componentsInfo lastObject]];
+                    
+                    NSRange fileDataRange = {bytePointer, [postDataChunk length] - bytePointer};
+
+                    //create a file
+                    BOOL saveFileSuccess = [[NSFileManager defaultManager] createFileAtPath:fileName contents:[postDataChunk subdataWithRange:fileDataRange] attributes:nil];
+                    
+                    if(saveFileSuccess)
+                        NSLog(@"file saved");
+                    else 
+                        NSLog(@"file did not saved");
+                    
+                    
+                    //we will use this file to write data
+                    NSFileHandle *file = [NSFileHandle fileHandleForUpdatingAtPath:fileName];
+                    
+                    if(file)
+                    {
+                        //put file pointer at the end of file
+                        [file seekToEndOfFile];
+                        //we add handler to array and use it later
+                        [multipartData addObject:file];
+                    }
+                    
+                    break;
+                }
+            }
+        }
+    }
+    else
+    {
+        //header is finished, we  can write data
+        [(NSFileHandle*)[multipartData lastObject] writeData:postDataChunk];
+        NSLog(@"%@", [[NSString alloc] initWithData:postDataChunk encoding:NSUTF8StringEncoding]);
+    }
+}
+
+/**
+ * This method is called after the request body has been fully read but before the HTTP request is processed.
+ **/
+- (void)finishBody
+{
+    NSLog(@"finish body");
 }
 
 
@@ -68,43 +202,83 @@
     //NSLog(@"Method: %@", method);
     //NSLog(@"Relatvie path: %@", path);
     
-    //Check method action
-    if([method isEqualToString:@"GET"])
+    //If there is a post with uploading file, requestContentLength will be greater thatn 0
+    if(requestContentLength > 0)
     {
-        /**In GET method it might be requested a path of directory or a single file**/
         
-        //We get back full path
-        NSString *fullPath = [[config documentRoot] stringByAppendingPathComponent:path];
+        if ([multipartData count] < 2) return nil;
         
-        /**Since the full path might be a directory or file, therefore, we need to retrieve
-         attributes for this full path and we will check if it is a directory or file later**/
-        //Get attributes by full path 
-        NSDictionary *fileAtt = [[NSFileManager defaultManager] attributesOfItemAtPath:fullPath error:nil];
+        NSString* postInfo = [[NSString alloc] initWithBytes:[[multipartData objectAtIndex:1] bytes]
+                                                      length:[[multipartData objectAtIndex:1] length]
+                                                    encoding:NSUTF8StringEncoding];
         
-        /**Because attributes is stored in dictionary so we obtain the value by key to 
-         check what kind of path is this file?, directory? etc**/
-        if([[fileAtt objectForKey:NSFileType] isEqualToString:NSFileTypeRegular])
+        NSArray* postInfoComponents = [postInfo componentsSeparatedByString:@"filename="];
+        postInfoComponents = [[postInfoComponents lastObject] componentsSeparatedByString:@"\""];
+        postInfoComponents = [[postInfoComponents objectAtIndex:1] componentsSeparatedByString:@"\\"];
+        NSString* fileName = [postInfoComponents lastObject];
+        
+        if (![fileName isEqualToString:@""])
         {
-            //This is a regular file, transfer file
-            return [[HTTPFileResponse alloc] initWithFilePath:fullPath forConnection:self];
-        }
-        else if([[fileAtt objectForKey:NSFileType] isEqualToString:NSFileTypeDirectory])
-        {
-            //This is a directory, create web data
-            NSData *webData = [self createWebDataWithRelativePath:path];
+            /**We need to trim the file at end**/
+            UInt16 separatorBytes = 0x0A0D;
+            NSMutableData* separatorData = [NSMutableData dataWithBytes:&separatorBytes length:2];
+            [separatorData appendData:[multipartData objectAtIndex:0]];
+            int l = [separatorData length];
+            int count = 2;	//number of times the separator shows up at the end of file data
             
-            //respond
-            if(webData != nil)
-                return [[HTTPDataResponse alloc] initWithData:webData];
+            NSFileHandle* dataToTrim = [multipartData lastObject];
+            //NSLog(@"data: %@", dataToTrim);
+            
+            for (unsigned long long i = [dataToTrim offsetInFile] - l; i > 0; i--)
+            {
+                [dataToTrim seekToFileOffset:i];
+                if ([[dataToTrim readDataOfLength:l] isEqualToData:separatorData])
+                {
+                    [dataToTrim truncateFileAtOffset:i];
+                    i -= l;
+                    if (--count == 0) break;
+                }
+            }
         }
-        else
-        {
-            //other unknow
-            return nil;
-        }
+        
+        //clear buffer
+        multipartData = nil;
+        requestContentLength = 0; 
     }
     
-
+    /**We need to determind what kind of relative path is to do a proper respond**/
+    //We get back full path
+    NSString *str =[path stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSString *fullPath = [[config documentRoot] stringByAppendingPathComponent:str];
+    
+    
+    /**Since the full path might be a directory or file, therefore, we need to retrieve
+     attributes for this full path and we will check if it is a directory or file later**/
+    //Get attributes by full path 
+    NSError *fileAttError;
+    NSDictionary *fileAtt = [[NSFileManager defaultManager] attributesOfItemAtPath:fullPath error:&fileAttError];
+    
+    /**Because attributes is stored in dictionary so we obtain the value by key to 
+     check what kind of path is this file?, directory? etc**/
+    if([[fileAtt objectForKey:NSFileType] isEqualToString:NSFileTypeRegular])
+    {
+        //This is a regular file, the request is try to download file. Transfer file
+        return [[HTTPFileResponse alloc] initWithFilePath:fullPath forConnection:self];
+    }
+    else if([[fileAtt objectForKey:NSFileType] isEqualToString:NSFileTypeDirectory])
+    {
+        //This is a directory, create web data, the request is try to access a directory
+        NSData *webData = [self createWebDataWithRelativePath:path];
+        
+        //respond
+        if(webData != nil)
+            return [[HTTPDataResponse alloc] initWithData:webData];
+    }
+    else
+    {
+        //other unknow
+        return nil;
+    }
     
     return nil;
 }
@@ -132,6 +306,7 @@
     
     //Start to construct html code
     [htmlStrCode appendString:@"<html><head>"];
+    [htmlStrCode appendString:@"<META http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">"];
     [htmlStrCode appendFormat:@"<title>File from %@</title>", [config server].name];
     [htmlStrCode appendString:@"<style>html {background-color:#eeeeee} body { background-color:#FFFFFF; font-family:Tahoma,Arial,Helvetica,sans-serif; font-size:18x; margin-left:15%; margin-right:15%; border:3px groove #006600; padding:15px; } </style>"];
     [htmlStrCode appendString:@"</head><body>"];
@@ -143,7 +318,7 @@
     if(![relPath isEqualToString:@"/"])
     {
         //Root hyper link
-        [htmlStrCode appendFormat:@"<a href=\"/\">root</a><br />\n"];
+        [htmlStrCode appendFormat:@"<a href=\"/\">Root</a><br />\n"];
         
         //Back a level
         [htmlStrCode appendFormat:@"<a href=\"%@\">Back</a><br />\n", [relPath stringByDeletingLastPathComponent]];
@@ -154,7 +329,7 @@
     NSError *attError;
     for(NSString *aContent in contents)
     {
-        
+        /**contents contain the name of directory or file not path we need to append them**/
         NSString *newContentPath = [fullPath stringByAppendingPathComponent:aContent];
         
         //Get attributes for a single content at path such as file type, file size.... 
@@ -168,6 +343,7 @@
             fileModifiDate = [[NSDate date] description];
         }
         
+        /**We can reuse newContentPath**/
         //If content is a directory
         if([[fileAttributes objectForKey:NSFileType] isEqualToString:@"NSFileTypeDirectory"])
         {
@@ -190,7 +366,18 @@
     
     [htmlStrCode appendString:@"</p>"];
     
-    //later we will support post
+    //A form for upload file 
+    if ([self supportsMethod:@"POST" atPath:relPath])
+	{
+		[htmlStrCode appendString:@"<form action=\"\" method=\"post\" enctype=\"multipart/form-data\" name=\"form1\" id=\"form1\">"];
+		[htmlStrCode appendString:@"<label>upload file"];
+		[htmlStrCode appendString:@"<input type=\"file\" name=\"file\" id=\"file\" />"];
+		[htmlStrCode appendString:@"</label>"];
+		[htmlStrCode appendString:@"<label>"];
+		[htmlStrCode appendString:@"<input type=\"submit\" name=\"button\" id=\"button\" value=\"Submit\" />"];
+		[htmlStrCode appendString:@"</label>"];
+		[htmlStrCode appendString:@"</form>"];
+	}
     
     [htmlStrCode appendString:@"</body></html>"];
     
