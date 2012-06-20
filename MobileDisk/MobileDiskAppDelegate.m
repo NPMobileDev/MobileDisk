@@ -7,14 +7,68 @@
 //
 
 #import "MobileDiskAppDelegate.h"
+#import "HTTPServer.h"
+#import "MDHTTPConnection.h"
+#import "MDSettingsViewController.h"
 
-@implementation MobileDiskAppDelegate
+
+
+@implementation MobileDiskAppDelegate{
+    
+    HTTPServer *httpServer;
+}
+
 
 @synthesize window = _window;
+
+#pragma mark - Configure http server
+-(void)configureHttpServer
+{
+    if(httpServer == nil)
+    {
+        //Create server
+        httpServer = [[HTTPServer alloc] init];
+    }
+    
+    // Tell the server to broadcast its presence via Bonjour.
+	// This allows browsers such as Safari to automatically discover our service.
+    [httpServer setType:@"_http._tcp."];
+    
+    //Tell the server to use our own custom HTTP connection class which is MDHTTPConnection
+    //by default it is HTTPConnection
+    [httpServer setConnectionClass:[MDHTTPConnection class]];
+    
+    // Normally there's no need to run our server on any specific port.
+	// Technologies like Bonjour allow clients to dynamically discover the server's port at runtime.
+	// However, for easy testing you may want force a certain port so you can just hit the refresh button.
+    [httpServer setPort:kHttpServerPort];
+    
+    //Get document path
+    NSArray *directories = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    
+    NSString *docPath = [directories objectAtIndex:0];
+    
+    //Set document root
+    [httpServer setDocumentRoot:docPath];
+    NSLog(@"Setting document root:%@", docPath);
+    
+    NSLog(@"Http server configuration complete");
+}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
+    
+    //configure and create http server
+    [self configureHttpServer];
+    
+    //get settings controller and set http server
+    UITabBarController *tabbarController = (UITabBarController*)self.window.rootViewController;
+    UINavigationController *navController = [tabbarController.viewControllers objectAtIndex:1];
+    MDSettingsViewController *settingsController = [navController.viewControllers objectAtIndex:0];
+    
+    settingsController.httpServer = httpServer;
+    
     return YES;
 }
 							

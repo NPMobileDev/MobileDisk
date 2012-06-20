@@ -12,3 +12,11 @@
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
 #endif
+
+#ifndef MD_Custom_Notification
+    #define kResolveIPNotification @"ResolveIPNotification"
+#endif
+
+#ifndef MD_HttpServer
+    #define kHttpServerPort 8080
+#endif

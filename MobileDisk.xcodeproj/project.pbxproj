@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4440BB621591A9740073BBAA /* MDSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4440BB611591A9740073BBAA /* MDSettingsViewController.m */; };
+		4440BB721591B8360073BBAA /* IPResolver.m in Sources */ = {isa = PBXBuildFile; fileRef = 4440BB711591B8360073BBAA /* IPResolver.m */; };
 		4494309C158EB4C000ADAE89 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4494309B158EB4C000ADAE89 /* UIKit.framework */; };
 		4494309E158EB4C000ADAE89 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4494309D158EB4C000ADAE89 /* Foundation.framework */; };
 		449430A0158EB4C000ADAE89 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4494309F158EB4C000ADAE89 /* CoreGraphics.framework */; };
@@ -44,6 +46,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4440BB601591A9740073BBAA /* MDSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDSettingsViewController.h; sourceTree = "<group>"; };
+		4440BB611591A9740073BBAA /* MDSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDSettingsViewController.m; sourceTree = "<group>"; };
+		4440BB701591B8360073BBAA /* IPResolver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IPResolver.h; sourceTree = "<group>"; };
+		4440BB711591B8360073BBAA /* IPResolver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IPResolver.m; sourceTree = "<group>"; };
 		44943097158EB4C000ADAE89 /* MobileDisk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MobileDisk.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4494309B158EB4C000ADAE89 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		4494309D158EB4C000ADAE89 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -126,6 +132,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4440BB5E1591A9190073BBAA /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				4440BB601591A9740073BBAA /* MDSettingsViewController.h */,
+				4440BB611591A9740073BBAA /* MDSettingsViewController.m */,
+			);
+			name = Settings;
+			sourceTree = "<group>";
+		};
+		4440BB6F1591B8010073BBAA /* IP-Resolver */ = {
+			isa = PBXGroup;
+			children = (
+				4440BB701591B8360073BBAA /* IPResolver.h */,
+				4440BB711591B8360073BBAA /* IPResolver.m */,
+			);
+			name = "IP-Resolver";
+			sourceTree = "<group>";
+		};
 		4494308C158EB4C000ADAE89 = {
 			isa = PBXGroup;
 			children = (
@@ -158,6 +182,7 @@
 		449430A1158EB4C000ADAE89 /* MobileDisk */ = {
 			isa = PBXGroup;
 			children = (
+				4440BB5E1591A9190073BBAA /* Settings */,
 				449430AA158EB4C000ADAE89 /* MobileDiskAppDelegate.h */,
 				449430AB158EB4C100ADAE89 /* MobileDiskAppDelegate.m */,
 				449430AD158EB4C100ADAE89 /* MainStoryboard.storyboard */,
@@ -184,6 +209,7 @@
 		449430B8158EB4E500ADAE89 /* HttpServer */ = {
 			isa = PBXGroup;
 			children = (
+				4440BB6F1591B8010073BBAA /* IP-Resolver */,
 				44943138158F296900ADAE89 /* CustomHTTPConnection */,
 				44943115158EBB6700ADAE89 /* Logging */,
 				449430D1158EB8AD00ADAE89 /* Categories */,
@@ -374,6 +400,8 @@
 				44943113158EBB3A00ADAE89 /* DDLog.m in Sources */,
 				44943114158EBB3A00ADAE89 /* DDTTYLogger.m in Sources */,
 				4494313B158F29B900ADAE89 /* MDHTTPConnection.m in Sources */,
+				4440BB621591A9740073BBAA /* MDSettingsViewController.m in Sources */,
+				4440BB721591B8360073BBAA /* IPResolver.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

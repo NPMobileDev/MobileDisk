@@ -14,6 +14,8 @@
 
 @interface MobileDiskViewController ()
 
+@property (nonatomic, weak) IBOutlet UILabel *ipLabel;
+
 -(IBAction)httpServerSwitch:(id)sender;
 -(void)configureHttpServer;
 -(NSString *)documentPath;
@@ -29,6 +31,8 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     //Http server 
     HTTPServer *httpServer;
 }
+
+@synthesize ipLabel = _ipLabel;
 
 - (void)viewDidLoad
 {
@@ -120,6 +124,10 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
         if([httpServer start:&error])
         {
             DDLogInfo(@"Started HTTP Server on port %hu", [httpServer listeningPort]);
+            
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showIP:) name:kResolveIPNotification object:nil];
+            
+            [MDHTTPConnection performSelectorInBackground:@selector(resolveIP) withObject:nil];
         }
         else
         {
@@ -134,6 +142,17 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
         //Stop server
         [httpServer stop];
     }
+}
+
+-(void)showIP:(NSNotification *) notification
+{
+    //NSLog(@"noti:%@", notification);
+    
+    NSDictionary *dic = [notification object];
+    
+    self.ipLabel.text = [[dic objectForKey:@"en1"] stringByAppendingFormat:@":%i", httpServer.port];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kResolveIPNotification object:nil];
 }
 
 @end

@@ -26,6 +26,11 @@
     int bytePointer;
 }
 
+-(void)dealloc
+{
+    multipartData = nil;
+}
+
 
 #pragma mark - Support method
 /**
@@ -306,6 +311,7 @@
     
     //Start to construct html code
     [htmlStrCode appendString:@"<html><head>"];
+    //charset must use UTF-8 to support other language
     [htmlStrCode appendString:@"<META http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">"];
     [htmlStrCode appendFormat:@"<title>File from %@</title>", [config server].name];
     [htmlStrCode appendString:@"<style>html {background-color:#eeeeee} body { background-color:#FFFFFF; font-family:Tahoma,Arial,Helvetica,sans-serif; font-size:18x; margin-left:15%; margin-right:15%; border:3px groove #006600; padding:15px; } </style>"];
