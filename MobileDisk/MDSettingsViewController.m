@@ -17,10 +17,11 @@
 @property (nonatomic, weak) IBOutlet UITableView *tableView;
 
 -(void)resolveIPAddress;
--(void)UpdateLabels;
 -(void)createTableViewData;
 -(void)configureCell:(UITableViewCell *)cell WithIndexPath:(NSIndexPath *)indexPath;
 - (void)WifiSwitch:(id)sender;
+-(void)reloadTableViewSection:(NSUInteger)section WithAnimation:(BOOL)yesOrNO;
+-(void)calculateDiskSpace;
 
 @end
 
@@ -38,6 +39,14 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     NSMutableArray *cellModels;
     //hold section header
     NSMutableArray *sectionHeaders;
+    
+    //disk space string
+    NSString *diskSpaceString;
+    //free space string
+    NSString *freeSpaceString;
+    
+    //used to prevent ddlog add many times
+    BOOL DDLogIsSet;
 }
 
 @synthesize httpServer = _httpServer;
@@ -61,7 +70,9 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 {
     if((self=[super initWithCoder:aDecoder]))
     {
+        //we create tabel data
         [self createTableViewData];
+        
     }
     
     return self;
@@ -79,10 +90,14 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     
     // Configure our logging framework.
 	// To keep things simple and fast, we're just going to log to the Xcode console.
-	[DDLog addLogger:[DDTTYLogger sharedInstance]];
+    if(!DDLogIsSet)
+    {
+        [DDLog addLogger:[DDTTYLogger sharedInstance]];
+        DDLogIsSet = YES;
+    }
     
-    //update labels
-    [self UpdateLabels];
+    //we calculate disk space
+    [self calculateDiskSpace];
 }
 
 - (void)viewDidUnload
@@ -112,16 +127,27 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 //#warning Incomplete method implementation.
     // Return the number of rows in the section.
     
+    //get back row
     NSArray *rows = [cellModels objectAtIndex:section];
     
+    /**
+        check if section 0, the reason to check section is equal to 0 is because at section 0
+        we have a row that act like drop down list, which mean it will be hidden from time to
+        time
+     
+        setion 0 has two rows, take look settings view in storyboard
+     **/
     if(section == 0)
     {
+        //only to show the second row when http server is activate 
         if(httpServerON)
         {
+            //http server is activate we show both rows at section 0
             return [rows count];
         }
         else
         {
+            //http server is no activate, we hidden last row, there for total row is 1
             return [rows count] - 1;
         }
     }
@@ -134,10 +160,15 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 {
     //static NSString *CellIdentifier = @"Cell";
     
-    //get cell identifier
+    /**get cell identifier depend on which section and row**/
+    
+    //find the rows in which section
     NSArray *rows = [cellModels objectAtIndex:indexPath.section];
+    
+    //find the identifier in which row
     NSString *cellIdentifier = [rows objectAtIndex:indexPath.row];
     
+    //get back reusable prototype cell by identifier
     UITableViewCell *cell = (UITableViewCell*)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     
     // Configure the cell...
@@ -207,8 +238,10 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
 - (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if(indexPath.section == 0)
+    //section > 0 we don't want any rows to be selected
+    if(indexPath.section > 1)
     {
+        [tableView deselectRowAtIndexPath:indexPath animated:NO];
         return nil;
     }
     
@@ -217,6 +250,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    //second cell's height at section 0 is 99 value is from design tool
     if(indexPath.section == 0)
     {
         if(indexPath.row == 1)
@@ -229,9 +263,18 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 }
 
 #pragma mark - Update labels
--(void)UpdateLabels
+-(void)reloadTableViewSection:(NSUInteger)section WithAnimation:(BOOL)yesOrNO
 {
-    [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
+    if(yesOrNO)
+    {
+        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:section] withRowAnimation:UITableViewRowAnimationAutomatic];
+    }
+    else
+    {
+        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:section] withRowAnimation:UITableViewRowAnimationNone];
+    }
+
+    
 }
 
 #pragma mark - Resolve IP address
@@ -260,55 +303,186 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     //store string 
     serverAddress = httpAddress;
     
-    //update labels
-    [self UpdateLabels];
+    //reload table section
+    [self reloadTableViewSection:0 WithAnimation:YES];
 }
 
 #pragma mark - Create tableview data
 -(void)createTableViewData
 {
+
+    /**
+        Here we construct data for tableview, there are multiples prototype cells
+        in in table view in settings view. Each Cells has it's own identifier, therefore,
+        we need to construct a data that hold these identifiers so when tabel view is asking
+        for a specific cell we can give coorespond indentifier. Table view use identifer to
+        retrieve a proper reuseable prototype cell  by indentifier.
+     
+        To check identifier take look each prototype cell's indentifier field in settings view
+        in storyboard.
+        
+        To expand more section headers and cells, you should design prototype cell in storyboard and then add indentifier and header in here
+     **/
+    
+    /**
+        cellModels contain many array which hold identifiers for prototype cells, those
+        array are represent sections in table view and the elements in array represent the
+        prototype cell
+        
+        Important: the order of array and array's emelents is equal to table view's order 
+     **/
     cellModels = nil;
     cellModels = [[NSMutableArray alloc] init];
-    sectionHeaders = nil;
+    
+    /**
+        sectionHeaders hold the headers for each sections in table view
+        
+        Important: the order is equal to table view's section order
+     **/
+    sectionHeaders = nil; 
     sectionHeaders = [[NSMutableArray alloc] init];
 
     
-    //add prototype cell identifier for section 0
+    //add prototype cell identifier for section 0, two row
     [cellModels addObject:[NSArray arrayWithObjects:@"S0-R0-WifiStatus", @"S0-R1-Address", nil]];
+    
+    //add prototype cell identifier for section 1, two row
+    [cellModels addObject:[NSArray arrayWithObjects:@"S1-R0-DiskSpace", @"S1-R1-FreeSpace", nil]];
+    
     //add header for section 0
-    [sectionHeaders addObject:@"Wi-Fi Transfer"];
+    [sectionHeaders addObject:NSLocalizedString(@"Wi-Fi Transfer", @"WiFi Transfer")];
+    
+    //add header for section 1
+    [sectionHeaders addObject:NSLocalizedString(@"Usage", @"Usage")];
     
 }
 
 #pragma mark - Configure cell
 -(void)configureCell:(UITableViewCell *)cell WithIndexPath:(NSIndexPath *)indexPath
 {
-    if(indexPath.section == 0)
-    {
-        if(indexPath.row == 0)
-        {
-            UISwitch *wifiSwitch = (UISwitch*)[cell viewWithTag:1000];
-            [wifiSwitch setOn:httpServerON];
-            
-            [wifiSwitch addTarget:self action:@selector(WifiSwitch:) forControlEvents:UIControlEventValueChanged];
-        }
-        else if(indexPath.row == 1)
-        {
-            UILabel *addressLabel = (UILabel*)[cell viewWithTag:1001];
-            
-            if(httpServerON && serverAddress != nil)
+    /**
+        all the tags are setted in UI design tool. Use tags to easy get any of UI elements
+        in each cell.
+        
+        take look elements tag in cell in table view in settings view
+     **/
+    
+    switch (indexPath.section) {
+        
+            /**
+             configure cells at section 0
+             **/
+        case 0:
+            if(indexPath.row == 0)
             {
-                addressLabel.text = serverAddress;
+                //get back switch by tag
+                UISwitch *wifiSwitch = (UISwitch*)[cell viewWithTag:1000];
+                
+                //set switch's status by http server status
+                [wifiSwitch setOn:httpServerON];
+                
+                //we add a action to switch which can turn on/off http server
+                [wifiSwitch addTarget:self action:@selector(WifiSwitch:) forControlEvents:UIControlEventValueChanged];
             }
-            else
+            else if(indexPath.row == 1)
             {
-                addressLabel.text = @"";
+                //get back label by tag
+                UILabel *addressLabel = (UILabel*)[cell viewWithTag:1001];
+                
+                
+                //set label's text 
+                if(httpServerON && serverAddress != nil)
+                {
+                    addressLabel.text = serverAddress;
+                }
+                else
+                {
+                    addressLabel.text = @"";
+                }
             }
-        }
+            
+            break;
+            
+            /**
+             configure cells at section 1
+             **/
+        case 1:
+            if(indexPath.row == 0)
+            {
+                UILabel *diskSpaceLabel = (UILabel*)[cell viewWithTag:1002];
+                
+                diskSpaceLabel.text = diskSpaceString;
+            }
+            else if(indexPath.row == 1)
+            {
+                UILabel *freeSpaceLabel = (UILabel*)[cell viewWithTag:1003];
+                
+                freeSpaceLabel.text = freeSpaceString;
+            }
+            
+            break;
+            
+        default:
+            break;
     }
     
 }
 
+#pragma mark - Usage calculation
+-(void)calculateDiskSpace
+{
+    NSError *error;
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    
+    NSDictionary *dic = [[NSFileManager defaultManager] attributesOfFileSystemForPath:[paths lastObject] error:&error];
+    
+    if(error == nil)
+    {
+        NSNumber *totalSpaceInByte = [dic objectForKey:@"NSFileSystemSize"];
+        NSNumber *availableSpaceInByte = [dic objectForKey:@"NSFileSystemFreeSize"];
+        
+        diskSpaceString = [self sizeToStringWithByte:[totalSpaceInByte floatValue]];
+        freeSpaceString = [self sizeToStringWithByte:[availableSpaceInByte floatValue]];
+    }
+    else
+    {
+        NSLog(@"Calculate disk space error:%@", error);
+    }
+    
+   
+}
+
+//convert given size in byte to string e.g 1024bytes -> 1KB
+-(NSString *)sizeToStringWithByte:(float)size
+{
+    float convertSize = size;
+    NSString *unitStr = @"Bytes";
+    
+    if(convertSize >= 1024)
+    {
+        //kb
+        convertSize = convertSize / 1024;
+        unitStr = @"KB";
+    }
+    
+    if(convertSize >= 1024)
+    {
+        //mb
+        convertSize = convertSize / 1024;
+        unitStr = @"MB";
+    }
+    
+    if(convertSize >= 1024)
+    {
+        //gb
+        convertSize = convertSize / 1024;
+        unitStr = @"GB";
+    }
+    
+    return [NSString stringWithFormat:@"%.2f%@", convertSize, unitStr];
+}
+
+#pragma mark - WiFi switcher
 - (void)WifiSwitch:(id)sender {
 
     UISwitch *wifiSwitcher = sender;
@@ -336,7 +510,9 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
         else
         {
             httpServerON = NO;
+            
             DDLogError(@"Error starting HTTP Server: %@", serverError);
+            
         }
     }
     else
@@ -346,8 +522,8 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
         
         httpServerON = NO;
         
-        //update labels
-        [self UpdateLabels];
+        //reload table section
+        [self reloadTableViewSection:0 WithAnimation:YES];
     }
 }
 @end
