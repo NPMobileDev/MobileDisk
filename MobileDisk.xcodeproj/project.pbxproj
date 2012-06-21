@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		443ACE081592F395008B4DF2 /* MDFilesNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 443ACE071592F395008B4DF2 /* MDFilesNavigationController.m */; };
+		443ACE0B1592F52E008B4DF2 /* MDFilesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 443ACE0A1592F52E008B4DF2 /* MDFilesViewController.m */; };
+		443ACE0E1593018D008B4DF2 /* MDFiles.m in Sources */ = {isa = PBXBuildFile; fileRef = 443ACE0D1593018D008B4DF2 /* MDFiles.m */; };
 		4440BB621591A9740073BBAA /* MDSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4440BB611591A9740073BBAA /* MDSettingsViewController.m */; };
 		4440BB721591B8360073BBAA /* IPResolver.m in Sources */ = {isa = PBXBuildFile; fileRef = 4440BB711591B8360073BBAA /* IPResolver.m */; };
 		4494309C158EB4C000ADAE89 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4494309B158EB4C000ADAE89 /* UIKit.framework */; };
@@ -46,6 +49,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		443ACE061592F395008B4DF2 /* MDFilesNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDFilesNavigationController.h; sourceTree = "<group>"; };
+		443ACE071592F395008B4DF2 /* MDFilesNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDFilesNavigationController.m; sourceTree = "<group>"; };
+		443ACE091592F52E008B4DF2 /* MDFilesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDFilesViewController.h; sourceTree = "<group>"; };
+		443ACE0A1592F52E008B4DF2 /* MDFilesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDFilesViewController.m; sourceTree = "<group>"; };
+		443ACE0C1593018D008B4DF2 /* MDFiles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDFiles.h; sourceTree = "<group>"; };
+		443ACE0D1593018D008B4DF2 /* MDFiles.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDFiles.m; sourceTree = "<group>"; };
 		4440BB601591A9740073BBAA /* MDSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDSettingsViewController.h; sourceTree = "<group>"; };
 		4440BB611591A9740073BBAA /* MDSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDSettingsViewController.m; sourceTree = "<group>"; };
 		4440BB701591B8360073BBAA /* IPResolver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IPResolver.h; sourceTree = "<group>"; };
@@ -132,6 +141,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		443ACDFE1592EF76008B4DF2 /* Files */ = {
+			isa = PBXGroup;
+			children = (
+				443ACE061592F395008B4DF2 /* MDFilesNavigationController.h */,
+				443ACE071592F395008B4DF2 /* MDFilesNavigationController.m */,
+				443ACE091592F52E008B4DF2 /* MDFilesViewController.h */,
+				443ACE0A1592F52E008B4DF2 /* MDFilesViewController.m */,
+				443ACE0C1593018D008B4DF2 /* MDFiles.h */,
+				443ACE0D1593018D008B4DF2 /* MDFiles.m */,
+			);
+			name = Files;
+			sourceTree = "<group>";
+		};
 		4440BB5E1591A9190073BBAA /* Settings */ = {
 			isa = PBXGroup;
 			children = (
@@ -182,6 +204,7 @@
 		449430A1158EB4C000ADAE89 /* MobileDisk */ = {
 			isa = PBXGroup;
 			children = (
+				443ACDFE1592EF76008B4DF2 /* Files */,
 				4440BB5E1591A9190073BBAA /* Settings */,
 				449430AA158EB4C000ADAE89 /* MobileDiskAppDelegate.h */,
 				449430AB158EB4C100ADAE89 /* MobileDiskAppDelegate.m */,
@@ -402,6 +425,9 @@
 				4494313B158F29B900ADAE89 /* MDHTTPConnection.m in Sources */,
 				4440BB621591A9740073BBAA /* MDSettingsViewController.m in Sources */,
 				4440BB721591B8360073BBAA /* IPResolver.m in Sources */,
+				443ACE081592F395008B4DF2 /* MDFilesNavigationController.m in Sources */,
+				443ACE0B1592F52E008B4DF2 /* MDFilesViewController.m in Sources */,
+				443ACE0E1593018D008B4DF2 /* MDFiles.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

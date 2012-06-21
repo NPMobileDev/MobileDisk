@@ -55,6 +55,16 @@
     NSLog(@"Http server configuration complete");
 }
 
++(NSString *)documentDirectory
+{
+    //Get document path
+    NSArray *directories = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    
+    NSString *docPath = [directories objectAtIndex:0];
+    
+    return docPath;
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
@@ -65,8 +75,7 @@
     //get settings controller and set http server
     UITabBarController *tabbarController = (UITabBarController*)self.window.rootViewController;
     UINavigationController *navController = [tabbarController.viewControllers objectAtIndex:1];
-    MDSettingsViewController *settingsController = [navController.viewControllers objectAtIndex:0];
-    
+    MDSettingsViewController *settingsController = [navController.viewControllers objectAtIndex:0];    
     settingsController.httpServer = httpServer;
     
     return YES;
