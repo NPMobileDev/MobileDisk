@@ -129,9 +129,6 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Settings" id="ym4-dW-z0x"/>
-                    <connections>
-                        <outlet property="tableView" destination="Uhk-jR-IAd" id="dAR-I3-oWk"/>
-                    </connections>
                 </tableViewController>
             </objects>
             <point key="canvasLocation" x="788" y="-532"/>
@@ -208,6 +205,17 @@
             <point key="canvasLocation" x="280" y="-532"/>
         </scene>
     </scenes>
+    <classes>
+        <class className="MDFilesNavigationController" superclassName="UINavigationController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/MDFilesNavigationController.h"/>
+        </class>
+        <class className="MDFilesViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/MDFilesViewController.h"/>
+        </class>
+        <class className="MDSettingsViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/MDSettingsViewController.h"/>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

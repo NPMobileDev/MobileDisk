@@ -22,6 +22,7 @@
 @synthesize filePath = _filePath;
 @synthesize fileSizeString = _fileSizeString;
 @synthesize fileSize = _fileSize;
+@synthesize isSelected =_isSelected;
 
 -(void)dealloc
 {
@@ -35,6 +36,7 @@
     if((self = [super init]))
     {
         self.fileName = filename;
+        self.isSelected = NO;
         [self configureFileByPath:path];
     }
     

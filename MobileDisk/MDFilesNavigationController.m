@@ -37,10 +37,11 @@
     
     //set it's working path
     rootController.workingPath = [MobileDiskAppDelegate documentDirectory];
-    rootController.title = NSLocalizedString(@"Files", @"Files");
+    rootController.controllerTitle = NSLocalizedString(@"Files", @"Files");
     
     //set view controllers for navigation controller, here it's only root controller
     [self setViewControllers:[NSArray arrayWithObject:rootController]];
+    
 }
 
 - (void)viewDidUnload

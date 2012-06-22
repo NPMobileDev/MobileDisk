@@ -14,7 +14,6 @@
 
 @interface MDSettingsViewController ()
 
-@property (nonatomic, weak) IBOutlet UITableView *tableView;
 
 -(void)resolveIPAddress;
 -(void)createTableViewData;
@@ -50,7 +49,6 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 }
 
 @synthesize httpServer = _httpServer;
-@synthesize tableView = _tableView;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {

@@ -30,6 +30,9 @@
 //the file size in byte
 @property (nonatomic, assign) unsigned long long fileSize;
 
+//determind if file was selected only used for tableView's edit mode
+@property (nonatomic, assign) BOOL isSelected;
+
 -(id)initWithFilePath:(NSString *)path FileName:(NSString *)filename;
 
 @end

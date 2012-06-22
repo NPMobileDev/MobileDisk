@@ -8,21 +8,29 @@
 
 #import "MDFilesViewController.h"
 #import "MDFiles.h"
+#import "MDFilesTableViewCell.h"
 
 @interface MDFilesViewController ()
 
 -(void)findContentInWorkingPath:(NSString *)path;
--(void)configureCell:(UITableViewCell *)cell WithIndexPath:(NSIndexPath *)indexPath;
+-(void)configureCell:(MDFilesTableViewCell *)cell WithIndexPath:(NSIndexPath *)indexPath;
+-(void)addSelectEditableCellAtIndexPath:(NSIndexPath *)indexPath;
+-(void)deleteSelectEditableCellAtIndexPath:(NSIndexPath *)indexPath;
 
 @end
 
 @implementation MDFilesViewController{
     
+    
     //the content in current directory
     NSMutableArray *directoryContents;
+    
+    //store selected indexpath
+    NSMutableArray *selectedIndexPaths;
 }
 
 @synthesize workingPath = _workingPath;
+@synthesize controllerTitle = _controllerTitle;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -36,6 +44,25 @@
 -(void)dealloc
 {
     self.workingPath = nil;
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    self.title = self.controllerTitle;
+    
+    [self findContentInWorkingPath:self.workingPath];
+    
+    [self.tableView reloadData];
+    
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    self.title = NSLocalizedString(@"Back", @"Back");
 }
 
 - (void)viewDidLoad
@@ -52,6 +79,12 @@
     {
         [self findContentInWorkingPath:self.workingPath];
     }
+    
+    //add edit right button
+    UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(editTableView)];
+    
+    self.navigationItem.rightBarButtonItem = rightButton;
+
 }
 
 - (void)viewDidUnload
@@ -87,12 +120,12 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Cell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    MDFilesTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
     if(cell == nil)
     {
         //create cell
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
+        cell = [[MDFilesTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier withTableView:tableView];     
     }
     
     // Configure the cell...
@@ -142,6 +175,13 @@
 */
 
 #pragma mark - Table view delegate
+/*
+- (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+    return indexPath;
+}
+ */
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -152,22 +192,58 @@
      // Pass the selected object to the new view controller.
      [self.navigationController pushViewController:detailViewController animated:YES];
      */
-    
     MDFiles *file = [directoryContents objectAtIndex:indexPath.row];
     
-    if(!file.isFile)
+    //check table is in editing mode
+    if(!tableView.isEditing)
     {
-        //is a directory
-        //instantiate a MDFilesViewController
-        MDFilesViewController *fileController = [self.storyboard instantiateViewControllerWithIdentifier:@"MDFilesViewController"];
         
-        //set property
-        fileController.workingPath = [self.workingPath stringByAppendingPathComponent:file.fileName];
-        fileController.title = file.fileName;
-        
-        //push view controller
-        [self.navigationController pushViewController:fileController animated:YES];
+        if(!file.isFile)
+        {
+            //is a directory
+            //instantiate a MDFilesViewController
+            MDFilesViewController *fileController = [self.storyboard instantiateViewControllerWithIdentifier:@"MDFilesViewController"];
+            
+            //set property
+            fileController.workingPath = [self.workingPath stringByAppendingPathComponent:file.fileName];
+            fileController.controllerTitle = file.fileName;
+            
+            //push view controller
+            [self.navigationController pushViewController:fileController animated:YES];
+        }
     }
+    else
+    {
+        //is in editing mode
+        
+        //get cell
+        MDFilesTableViewCell *cell = (MDFilesTableViewCell*)[tableView cellForRowAtIndexPath:indexPath];
+        
+        UIImageView *selectedIndicator = cell.selectionIndicator;
+        
+        if(file.isSelected) 
+        {
+           //file was selected make it deselected
+            selectedIndicator.image = [UIImage imageNamed:cell.notSelectedIndicatorName];
+            
+           //make file deselected
+            file.isSelected = NO;
+            
+            [self deleteSelectEditableCellAtIndexPath:indexPath];
+        }
+        else
+        {
+            //file was not selected make it selected
+            selectedIndicator.image = [UIImage imageNamed:cell.selectedIndicatorName];
+            
+            //make file selected
+            file.isSelected = YES;
+            
+            [self addSelectEditableCellAtIndexPath:indexPath];
+        }
+        
+    }
+
 }
 
 #pragma mark - Find content in working path
@@ -201,9 +277,10 @@
 }
 
 #pragma mark - Configure cell
--(void)configureCell:(UITableViewCell *)cell WithIndexPath:(NSIndexPath *)indexPath
+-(void)configureCell:(MDFilesTableViewCell *)cell WithIndexPath:(NSIndexPath *)indexPath
 {
     MDFiles *file = [directoryContents objectAtIndex:indexPath.row];
+
     
     if(file.isFile)
     {
@@ -226,8 +303,95 @@
         //is directory
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
+    
+    //set image for selected and not selected for edit mode
+    UIImageView *selectIndicator = cell.selectionIndicator;
+    if(file.isSelected)
+    {
+
+        selectIndicator.image = [UIImage imageNamed:cell.selectedIndicatorName];
+    }
+    else
+    {
+        selectIndicator.image = [UIImage imageNamed:cell.notSelectedIndicatorName];
+    }
+    
 }
 
+#pragma mark - Edit table view
+-(void)editTableView
+{
+    NSLog(@"Editing table");
+    [self.tableView setEditing:YES animated:YES];
+    
+    //add cancel right button
+    UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneEditTabelView)];
+    
+    self.navigationItem.rightBarButtonItem = rightButton;
+    
+    //allow table selection while editing
+    self.tableView.allowsSelectionDuringEditing = YES;
+}
 
+-(void)doneEditTabelView
+{
+    NSLog(@"Done editing table");
+    
+    [self.tableView setEditing:NO animated:YES];
+    
+    //add edit right button
+    UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(editTableView)];
+    
+    self.navigationItem.rightBarButtonItem = rightButton;
+    
+    self.tableView.allowsSelectionDuringEditing = NO;
+    
+    
+    //clear all selected cell index path from array
+    if(selectedIndexPaths != nil)
+    {
+        for(NSIndexPath *indexPath in selectedIndexPaths)
+        {
+            //set file isSelected to NO
+            MDFiles *file = [directoryContents objectAtIndex:indexPath.row];
+            
+            file.isSelected = NO;
+            
+            //reset cell selected indicator image as well
+            MDFilesTableViewCell *cell = (MDFilesTableViewCell*)[self.tableView cellForRowAtIndexPath:indexPath];
+            UIImageView *selectedIndicator = cell.selectionIndicator;
+            
+            selectedIndicator.image = [UIImage imageNamed:cell.notSelectedIndicatorName];
+        }
+        
+        selectedIndexPaths = nil;
+    }
+}
+
+//take care add  cell selection in table view edit mode
+-(void)addSelectEditableCellAtIndexPath:(NSIndexPath *)indexPath
+{
+    //store selected index path in array
+    if(selectedIndexPaths ==nil)
+    {
+        selectedIndexPaths = [[NSMutableArray alloc] init];
+    }
+    
+    /**
+        here logical is to remove object first to make sure there is no duplicated object
+        then we add object into array
+     **/
+    [selectedIndexPaths removeObject:indexPath];
+    [selectedIndexPaths addObject:indexPath];
+    
+}
+//take care delete cell selection in table view edit mode
+-(void)deleteSelectEditableCellAtIndexPath:(NSIndexPath *)indexPath
+{
+    if(selectedIndexPaths != nil)
+    {
+        [selectedIndexPaths removeObject:indexPath];
+    }
+}
 
 @end

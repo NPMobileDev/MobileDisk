@@ -19,5 +19,6 @@
 
 //current path
 @property (nonatomic, copy) NSString *workingPath;
+@property (nonatomic, copy) NSString *controllerTitle;
 
 @end

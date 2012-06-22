@@ -10,6 +10,9 @@
 		443ACE081592F395008B4DF2 /* MDFilesNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 443ACE071592F395008B4DF2 /* MDFilesNavigationController.m */; };
 		443ACE0B1592F52E008B4DF2 /* MDFilesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 443ACE0A1592F52E008B4DF2 /* MDFilesViewController.m */; };
 		443ACE0E1593018D008B4DF2 /* MDFiles.m in Sources */ = {isa = PBXBuildFile; fileRef = 443ACE0D1593018D008B4DF2 /* MDFiles.m */; };
+		443D004C159410CD008CCCBE /* MDFilesTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 443D004B159410CD008CCCBE /* MDFilesTableViewCell.m */; };
+		443D00501594219C008CCCBE /* IsSelected.png in Resources */ = {isa = PBXBuildFile; fileRef = 443D004E1594219C008CCCBE /* IsSelected.png */; };
+		443D00511594219C008CCCBE /* NotSelected.png in Resources */ = {isa = PBXBuildFile; fileRef = 443D004F1594219C008CCCBE /* NotSelected.png */; };
 		4440BB621591A9740073BBAA /* MDSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4440BB611591A9740073BBAA /* MDSettingsViewController.m */; };
 		4440BB721591B8360073BBAA /* IPResolver.m in Sources */ = {isa = PBXBuildFile; fileRef = 4440BB711591B8360073BBAA /* IPResolver.m */; };
 		4494309C158EB4C000ADAE89 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4494309B158EB4C000ADAE89 /* UIKit.framework */; };
@@ -55,6 +58,10 @@
 		443ACE0A1592F52E008B4DF2 /* MDFilesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDFilesViewController.m; sourceTree = "<group>"; };
 		443ACE0C1593018D008B4DF2 /* MDFiles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDFiles.h; sourceTree = "<group>"; };
 		443ACE0D1593018D008B4DF2 /* MDFiles.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDFiles.m; sourceTree = "<group>"; };
+		443D004A159410CD008CCCBE /* MDFilesTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDFilesTableViewCell.h; sourceTree = "<group>"; };
+		443D004B159410CD008CCCBE /* MDFilesTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDFilesTableViewCell.m; sourceTree = "<group>"; };
+		443D004E1594219C008CCCBE /* IsSelected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = IsSelected.png; sourceTree = "<group>"; };
+		443D004F1594219C008CCCBE /* NotSelected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = NotSelected.png; sourceTree = "<group>"; };
 		4440BB601591A9740073BBAA /* MDSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDSettingsViewController.h; sourceTree = "<group>"; };
 		4440BB611591A9740073BBAA /* MDSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDSettingsViewController.m; sourceTree = "<group>"; };
 		4440BB701591B8360073BBAA /* IPResolver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IPResolver.h; sourceTree = "<group>"; };
@@ -150,6 +157,8 @@
 				443ACE0A1592F52E008B4DF2 /* MDFilesViewController.m */,
 				443ACE0C1593018D008B4DF2 /* MDFiles.h */,
 				443ACE0D1593018D008B4DF2 /* MDFiles.m */,
+				443D004A159410CD008CCCBE /* MDFilesTableViewCell.h */,
+				443D004B159410CD008CCCBE /* MDFilesTableViewCell.m */,
 			);
 			name = Files;
 			sourceTree = "<group>";
@@ -220,6 +229,8 @@
 		449430A2158EB4C000ADAE89 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				443D004E1594219C008CCCBE /* IsSelected.png */,
+				443D004F1594219C008CCCBE /* NotSelected.png */,
 				44943132158F245A00ADAE89 /* index.html */,
 				449430A3158EB4C000ADAE89 /* MobileDisk-Info.plist */,
 				449430A4158EB4C000ADAE89 /* InfoPlist.strings */,
@@ -387,6 +398,8 @@
 				449430A6158EB4C000ADAE89 /* InfoPlist.strings in Resources */,
 				449430AF158EB4C100ADAE89 /* MainStoryboard.storyboard in Resources */,
 				44943133158F245A00ADAE89 /* index.html in Resources */,
+				443D00501594219C008CCCBE /* IsSelected.png in Resources */,
+				443D00511594219C008CCCBE /* NotSelected.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -428,6 +441,7 @@
 				443ACE081592F395008B4DF2 /* MDFilesNavigationController.m in Sources */,
 				443ACE0B1592F52E008B4DF2 /* MDFilesViewController.m in Sources */,
 				443ACE0E1593018D008B4DF2 /* MDFiles.m in Sources */,
+				443D004C159410CD008CCCBE /* MDFilesTableViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
