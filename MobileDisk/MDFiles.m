@@ -31,13 +31,13 @@
     self.fileSizeString = nil;
 }
 
--(id)initWithFilePath:(NSString *)path FileName:(NSString *)filename
+-(id)initWithFilePath:(NSString *)workingPath FileName:(NSString *)filename
 {
     if((self = [super init]))
     {
         self.fileName = filename;
         self.isSelected = NO;
-        [self configureFileByPath:path];
+        [self configureFileByPath:[workingPath stringByAppendingPathComponent:filename]];
     }
     
     return self;

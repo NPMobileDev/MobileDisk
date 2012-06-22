@@ -33,7 +33,7 @@
 //determind if file was selected only used for tableView's edit mode
 @property (nonatomic, assign) BOOL isSelected;
 
-//the path should included file name 
--(id)initWithFilePath:(NSString *)path FileName:(NSString *)filename;
+
+-(id)initWithFilePath:(NSString *)workingPath FileName:(NSString *)filename;
 
 @end

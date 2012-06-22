@@ -20,7 +20,6 @@
 -(void)showToolBar;
 -(void)hideToolBar;
 -(void)addFolder;
--(BOOL)AddFolderAtPath:(NSString *)path WithFolderName:(NSString *)folderName;
 -(void)reloadTableViewData;
 
 @end
@@ -31,7 +30,7 @@ const float ToolBarAnimationDuration = 0.1f;
     
     
     //the content in current directory
-    NSMutableArray *directoryContents;
+    NSMutableArray *filesArray;
     
     //store selected indexpath
     NSMutableArray *selectedIndexPaths;
@@ -93,6 +92,14 @@ const float ToolBarAnimationDuration = 0.1f;
     
     self.title = NSLocalizedString(@"Back", @"Back");
     
+    [self.tableView setEditing:NO animated:YES];
+    
+}
+
+-(void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    
     //we need to remove tool bar
     [toolbar removeFromSuperview];
 }
@@ -107,7 +114,7 @@ const float ToolBarAnimationDuration = 0.1f;
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
-    if(directoryContents == nil)
+    if(filesArray == nil)
     {
         [self findContentInWorkingPath:self.workingPath];
     }
@@ -170,7 +177,7 @@ const float ToolBarAnimationDuration = 0.1f;
 //#warning Incomplete method implementation.
     // Return the number of rows in the section.
     
-    return [directoryContents count];
+    return [filesArray count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -248,7 +255,7 @@ const float ToolBarAnimationDuration = 0.1f;
      // Pass the selected object to the new view controller.
      [self.navigationController pushViewController:detailViewController animated:YES];
      */
-    MDFiles *file = [directoryContents objectAtIndex:indexPath.row];
+    MDFiles *file = [filesArray objectAtIndex:indexPath.row];
     
     //check table is in editing mode
     if(!tableView.isEditing)
@@ -308,7 +315,7 @@ const float ToolBarAnimationDuration = 0.1f;
 {
     NSError *error;
     
-    directoryContents = [[NSMutableArray alloc] init];
+    filesArray = [[NSMutableArray alloc] init];
     
     //find contents
     NSArray *contents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:&error];
@@ -318,13 +325,11 @@ const float ToolBarAnimationDuration = 0.1f;
         //store content
         for(NSString *theContent in contents)
         {
-            NSString *filePath = [self.workingPath stringByAppendingPathComponent:theContent];
-            
             //init file info object
-            MDFiles *file = [[MDFiles alloc] initWithFilePath:filePath FileName:theContent];
+            MDFiles *file = [[MDFiles alloc] initWithFilePath:self.workingPath FileName:theContent];
             
-            //add file object to array
-            [directoryContents addObject:file];
+            //add to diectoryContents
+            [filesArray addObject:file];
         }
     }
     else
@@ -336,7 +341,7 @@ const float ToolBarAnimationDuration = 0.1f;
 #pragma mark - Configure cell
 -(void)configureCell:(MDFilesTableViewCell *)cell WithIndexPath:(NSIndexPath *)indexPath
 {
-    MDFiles *file = [directoryContents objectAtIndex:indexPath.row];
+    MDFiles *file = [filesArray objectAtIndex:indexPath.row];
 
     
     if(file.isFile)
@@ -373,20 +378,6 @@ const float ToolBarAnimationDuration = 0.1f;
         selectIndicator.image = [UIImage imageNamed:cell.notSelectedIndicatorName];
     }
     
-}
-
--(void)addFileForTableViewWithFilePath:(NSString *)filePath AndFileName:(NSString *)filename
-{
-    //init file info object
-    MDFiles *file = [[MDFiles alloc] initWithFilePath:filePath FileName:filename];
-    
-    //add file object to array
-    [directoryContents addObject:file];
-    
-    //insert cell to table view
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[directoryContents count]-1 inSection:0];
-    
-    [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
 }
 
 #pragma mark Reload table view data
@@ -438,7 +429,7 @@ const float ToolBarAnimationDuration = 0.1f;
         for(NSIndexPath *indexPath in selectedIndexPaths)
         {
             //set file isSelected to NO
-            MDFiles *file = [directoryContents objectAtIndex:indexPath.row];
+            MDFiles *file = [filesArray objectAtIndex:indexPath.row];
             
             file.isSelected = NO;
             
@@ -566,9 +557,15 @@ const float ToolBarAnimationDuration = 0.1f;
             {
                 //reload table view data
                 //[self reloadTableViewData];
-                NSString *filePath = [self.workingPath stringByAppendingPathComponent:newFolderNameTextField.text];
+                //we don't reload whole data instead of adding a new file to data and add a cell to table
+                MDFiles *file = [[MDFiles alloc] initWithFilePath:self.workingPath FileName:newFolderNameTextField.text];
                 
-                [self addFileForTableViewWithFilePath:filePath AndFileName:newFolderNameTextField.text];
+                [filesArray addObject:file];
+                
+                //insert cell to table view
+                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[filesArray count]-1 inSection:0];
+                
+                [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
             }
         }
         
