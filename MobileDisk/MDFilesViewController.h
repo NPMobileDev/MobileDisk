@@ -15,7 +15,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MDFilesViewController : UITableViewController
+@interface MDFilesViewController : UITableViewController <UIAlertViewDelegate>
 
 //current path
 @property (nonatomic, copy) NSString *workingPath;

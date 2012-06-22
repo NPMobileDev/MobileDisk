@@ -111,6 +111,10 @@ const NSString *NotSelectedImageName = @"NotSelected";
 {
     [super prepareForReuse];
     
+    self.textLabel.text = nil;
+    self.detailTextLabel.text = nil;
+    self.imageView.image = nil;
+    
 }
 
 #pragma mark - getter

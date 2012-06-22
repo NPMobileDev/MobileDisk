@@ -56,16 +56,22 @@
     {
         //is a file
         self.isFile = YES;
+        
+        //NSLog(@"file:%@ is a file", self.fileName);
     }
     else if([fileType isEqualToString:NSFileTypeDirectory])
     {
         //is a directory
         self.isFile = NO;
+        
+         //NSLog(@"file:%@ is a directory", self.fileName);
     }
     else
     {
         //other type
         self.isFile = NO;
+        
+       //NSLog(@"file:%@ is a unknow file", self.fileName);
     }
     
     //set file path

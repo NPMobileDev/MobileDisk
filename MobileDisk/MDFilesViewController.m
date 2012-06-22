@@ -16,8 +16,16 @@
 -(void)configureCell:(MDFilesTableViewCell *)cell WithIndexPath:(NSIndexPath *)indexPath;
 -(void)addSelectEditableCellAtIndexPath:(NSIndexPath *)indexPath;
 -(void)deleteSelectEditableCellAtIndexPath:(NSIndexPath *)indexPath;
+-(void)createToolBar;
+-(void)showToolBar;
+-(void)hideToolBar;
+-(void)addFolder;
+-(BOOL)AddFolderAtPath:(NSString *)path WithFolderName:(NSString *)folderName;
+-(void)reloadTableViewData;
 
 @end
+
+const float ToolBarAnimationDuration = 0.1f;
 
 @implementation MDFilesViewController{
     
@@ -27,11 +35,19 @@
     
     //store selected indexpath
     NSMutableArray *selectedIndexPaths;
+    
+    //toolbar
+    UIToolbar *toolbar;
+    
+    //text field to type in name for new folder
+    UITextField *newFolderNameTextField;
 }
 
 @synthesize workingPath = _workingPath;
 @synthesize controllerTitle = _controllerTitle;
 
+#pragma mark - Override methods 
+/*
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
@@ -40,6 +56,7 @@
     }
     return self;
 }
+*/
 
 -(void)dealloc
 {
@@ -58,11 +75,26 @@
     
 }
 
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    /**
+     we add tool bar to view here because we want it to be on this view controller
+     then we add to navigation controller's view
+     **/
+    [self.navigationController.view addSubview:toolbar];
+    
+}
+
 -(void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
     
     self.title = NSLocalizedString(@"Back", @"Back");
+    
+    //we need to remove tool bar
+    [toolbar removeFromSuperview];
 }
 
 - (void)viewDidLoad
@@ -84,7 +116,9 @@
     UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(editTableView)];
     
     self.navigationItem.rightBarButtonItem = rightButton;
-
+    
+    //create tool bar
+    [self createToolBar];
 }
 
 - (void)viewDidUnload
@@ -97,6 +131,28 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
+#pragma mark - Create tool bar
+-(void)createToolBar
+{
+    //create tool bar
+    if(toolbar == nil)
+    {
+        /**
+         use design tool to find out position 431=480(iphone height)-49(tabbar height)
+         tool bar is behide tabbar at beginning
+         **/
+        toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 431, 320, 44)];
+        
+        //add tool bar items
+        //add Add folder items
+        UIBarButtonItem *addFolderButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Add folder", @"Add folder") style:UIBarButtonItemStyleDone target:self action:@selector(addFolder)];
+               
+        
+        NSArray *buttonItems = [NSArray arrayWithObjects:addFolderButton, nil];
+        toolbar.items = buttonItems;
+    }
 }
 
 #pragma mark - Table view data source
@@ -210,6 +266,7 @@
             
             //push view controller
             [self.navigationController pushViewController:fileController animated:YES];
+            
         }
     }
     else
@@ -318,6 +375,28 @@
     
 }
 
+-(void)addFileForTableViewWithFilePath:(NSString *)filePath AndFileName:(NSString *)filename
+{
+    //init file info object
+    MDFiles *file = [[MDFiles alloc] initWithFilePath:filePath FileName:filename];
+    
+    //add file object to array
+    [directoryContents addObject:file];
+    
+    //insert cell to table view
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[directoryContents count]-1 inSection:0];
+    
+    [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+}
+
+#pragma mark Reload table view data
+-(void)reloadTableViewData
+{
+    [self findContentInWorkingPath:self.workingPath];
+    
+    [self.tableView reloadData];
+}
+
 #pragma mark - Edit table view
 -(void)editTableView
 {
@@ -331,6 +410,9 @@
     
     //allow table selection while editing
     self.tableView.allowsSelectionDuringEditing = YES;
+    
+    //show tool bar
+    [self showToolBar];
 }
 
 -(void)doneEditTabelView
@@ -345,6 +427,9 @@
     self.navigationItem.rightBarButtonItem = rightButton;
     
     self.tableView.allowsSelectionDuringEditing = NO;
+    
+    //hide tool bar
+    [self hideToolBar];
     
     
     //clear all selected cell index path from array
@@ -392,6 +477,126 @@
     {
         [selectedIndexPaths removeObject:indexPath];
     }
+}
+
+//show tool bar
+-(void)showToolBar
+{
+    //tool bar frame
+    CGRect toolbarFrame = toolbar.frame;
+    toolbarFrame.origin.y -= toolbar.frame.size.height;
+    
+    //table view frame
+    CGRect tableViewFrame = self.tableView.frame;
+    tableViewFrame.size.height -= toolbar.frame.size.height;
+    
+    //give animation
+    [UIView beginAnimations:nil context:nil];
+    [UIView setAnimationDuration:ToolBarAnimationDuration];
+    
+    toolbar.frame = toolbarFrame;
+    self.tableView.frame = tableViewFrame;
+    
+    [UIView commitAnimations];
+}
+
+//hide tool bar
+-(void)hideToolBar
+{
+    //tool bar frame
+    CGRect toolbarFrame = toolbar.frame;
+    toolbarFrame.origin.y += toolbar.frame.size.height;
+    
+    //table view frame
+    CGRect tableViewFrame = self.tableView.frame;
+    tableViewFrame.size.height += toolbar.frame.size.height;
+
+    //give animation
+    [UIView beginAnimations:nil context:nil];
+    [UIView setAnimationDuration:ToolBarAnimationDuration];
+    
+    toolbar.frame = toolbarFrame;
+    self.tableView.frame = tableViewFrame;
+    
+    [UIView commitAnimations];
+}
+
+#pragma mark - ToolBar items' method
+-(void)addFolder
+{
+    /**
+        create text field if needed
+     **/
+    if(newFolderNameTextField == nil)
+    {
+        newFolderNameTextField = [[UITextField alloc] initWithFrame:CGRectMake(12, 45, 260, 25)];
+        newFolderNameTextField.placeholder = NSLocalizedString(@"Folder name", @"Folder name");
+        newFolderNameTextField.backgroundColor = [UIColor whiteColor];
+        newFolderNameTextField.borderStyle = UITextBorderStyleRoundedRect;
+        newFolderNameTextField.text = nil;
+    }
+    
+    //use alert view to let user to type in folder name
+    UIAlertView *addFolderAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Add folder", @"Add folder") message:@"this gets covered" delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel") otherButtonTitles:NSLocalizedString(@"Add", @"Add"), nil];
+    
+    [addFolderAlert addSubview:newFolderNameTextField];
+    [addFolderAlert show];
+    
+    [newFolderNameTextField becomeFirstResponder];
+}
+
+#pragma mark - Add folder UIAlertView delegate
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+    if(buttonIndex == 1)
+    {
+        //check if text field's text is empty
+        if([newFolderNameTextField.text isEqualToString:@""])
+        {
+            UIAlertView *invaildAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", @"Error") message:NSLocalizedString(@"You have to give a name for a new folder", @"You have to give a name for a new folder") delegate:nil cancelButtonTitle:nil otherButtonTitles:NSLocalizedString(@"OK", @"OK"), nil];
+            
+            [invaildAlert show];
+        }
+        else
+        {
+            //create folder
+            BOOL success =[self AddFolderAtPath:self.workingPath WithFolderName:newFolderNameTextField.text];
+            
+            if(success)
+            {
+                //reload table view data
+                //[self reloadTableViewData];
+                NSString *filePath = [self.workingPath stringByAppendingPathComponent:newFolderNameTextField.text];
+                
+                [self addFileForTableViewWithFilePath:filePath AndFileName:newFolderNameTextField.text];
+            }
+        }
+        
+        //clear text field
+        newFolderNameTextField.text = nil;
+        
+    }
+}
+
+#pragma mark - Add folder method
+//path should not contain folder name
+-(BOOL)AddFolderAtPath:(NSString *)path WithFolderName:(NSString *)folderName
+{
+    NSError *error;
+    
+    NSString *fullPath = [path stringByAppendingPathComponent:folderName];
+    
+    [[NSFileManager defaultManager] createDirectoryAtPath:fullPath withIntermediateDirectories:YES attributes:nil error:&error];
+    
+    if(error != nil)
+    {
+        NSLog(@"There is an error while creating a directory %@, at path %@", folderName, path);
+        
+        return NO;
+    }
+    
+    return YES;
+    
 }
 
 @end
