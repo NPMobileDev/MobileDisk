@@ -136,11 +136,7 @@ const float ToolBarAnimationDuration = 0.1f;
     }
     
     
-    if(filesArray == nil)
-    {
-        //create one if needed
-        filesArray = [[NSMutableArray alloc] init];
-    }
+    //find content in working path
     [self findContentInWorkingPath:self.workingPath];
     
     //creat navigation right button
@@ -394,6 +390,7 @@ const float ToolBarAnimationDuration = 0.1f;
         filesArray = [[NSMutableArray alloc] init];
     }
     
+    //we need to clear array each time we start to find content
     if([filesArray count] != 0)
     {
         //clear first
