@@ -17,10 +17,13 @@
 -(void)addSelectEditableCellAtIndexPath:(NSIndexPath *)indexPath;
 -(void)deleteSelectEditableCellAtIndexPath:(NSIndexPath *)indexPath;
 -(void)createToolBar;
+-(void)createNaviRightButton;
 -(void)showToolBar;
 -(void)hideToolBar;
 -(void)addFolder;
 -(void)reloadTableViewData;
+-(void)renameFiles;
+-(void)updateToolBar;
 
 @end
 
@@ -28,6 +31,8 @@ const float ToolBarAnimationDuration = 0.1f;
 
 @implementation MDFilesViewController{
     
+    
+    enum EditingStatus theStatus;
     
     //the content in current directory
     NSMutableArray *filesArray;
@@ -40,6 +45,9 @@ const float ToolBarAnimationDuration = 0.1f;
     
     //text field to type in name for new folder
     UITextField *newFolderNameTextField;
+    
+    //text field to type in name for new folder
+    UITextField *renameFileTextField;
 }
 
 @synthesize workingPath = _workingPath;
@@ -67,10 +75,6 @@ const float ToolBarAnimationDuration = 0.1f;
     [super viewWillAppear:animated];
     
     self.title = self.controllerTitle;
-    
-    [self findContentInWorkingPath:self.workingPath];
-    
-    [self.tableView reloadData];
     
 }
 
@@ -119,13 +123,13 @@ const float ToolBarAnimationDuration = 0.1f;
         [self findContentInWorkingPath:self.workingPath];
     }
     
-    //add edit right button
-    UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(editTableView)];
-    
-    self.navigationItem.rightBarButtonItem = rightButton;
+    //creat navigation right button
+    [self createNaviRightButton];
     
     //create tool bar
     [self createToolBar];
+    
+    theStatus = StatusNone;
 }
 
 - (void)viewDidUnload
@@ -138,6 +142,27 @@ const float ToolBarAnimationDuration = 0.1f;
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
+#pragma mark - Create navigation right button
+-(void)createNaviRightButton
+{
+    /**we want two bar buttons on right side of navigation bar**/
+    
+    //edit button
+    UIBarButtonItem *editButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(editTableView)];
+    
+    //refresh button
+    UIBarButtonItem *refreshButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(reloadTableViewData)];
+    
+    //create a tool bar 
+    UIToolbar *rightToolBar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, 90, 44.01)];
+    rightToolBar.items = [NSArray arrayWithObjects:editButton, refreshButton, nil];
+    
+    //create right button with tool bar in it
+    UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithCustomView:rightToolBar];
+    
+    self.navigationItem.rightBarButtonItem = rightButton;
 }
 
 #pragma mark - Create tool bar
@@ -155,10 +180,30 @@ const float ToolBarAnimationDuration = 0.1f;
         //add tool bar items
         //add Add folder items
         UIBarButtonItem *addFolderButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Add folder", @"Add folder") style:UIBarButtonItemStyleDone target:self action:@selector(addFolder)];
+        
+        //add Rename items
+        UIBarButtonItem *renameButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Rename", @"Rename") style:UIBarButtonSystemItemAction target:self action:@selector(renameFiles)];
                
         
-        NSArray *buttonItems = [NSArray arrayWithObjects:addFolderButton, nil];
+        NSArray *buttonItems = [NSArray arrayWithObjects:addFolderButton, renameButton, nil];
         toolbar.items = buttonItems;
+    }
+    
+    [self updateToolBar];
+}
+
+-(void)updateToolBar
+{
+    UIBarButtonItem *renameButton = [toolbar.items objectAtIndex:1];
+    
+    if(selectedIndexPaths == nil || [selectedIndexPaths count] != 1)
+    {
+        
+        renameButton.enabled = NO;
+    }
+    else
+    {
+        renameButton.enabled = YES;
     }
 }
 
@@ -306,6 +351,7 @@ const float ToolBarAnimationDuration = 0.1f;
             [self addSelectEditableCellAtIndexPath:indexPath];
         }
         
+        [self updateToolBar];
     }
 
 }
@@ -394,10 +440,26 @@ const float ToolBarAnimationDuration = 0.1f;
     NSLog(@"Editing table");
     [self.tableView setEditing:YES animated:YES];
     
-    //add cancel right button
-    UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneEditTabelView)];
+    /**Here we cnage edit button to done button**/
+    //get right tool bar on navigation bar
+    UIToolbar *rightToolBar = (UIToolbar*)self.navigationItem.rightBarButtonItem.customView;
     
-    self.navigationItem.rightBarButtonItem = rightButton;
+    //disable refresh button
+    UIBarButtonItem *refreshButton = [rightToolBar.items objectAtIndex:1];
+    refreshButton.enabled = NO;
+    
+    //get back second button(refresh) from tool bar and create a items
+    NSMutableArray *items = [[NSMutableArray alloc] initWithObjects:refreshButton, nil];
+    
+    //create done button
+    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneEditTabelView)];
+    
+    //insert done button to first element in items
+    [items insertObject:doneButton atIndex:0];
+    
+    //reassign button to tool bar
+    [rightToolBar setItems:items animated:YES];
+    
     
     //allow table selection while editing
     self.tableView.allowsSelectionDuringEditing = YES;
@@ -412,10 +474,27 @@ const float ToolBarAnimationDuration = 0.1f;
     
     [self.tableView setEditing:NO animated:YES];
     
-    //add edit right button
+    
+    /**Here we cnage done button to edit button**/
+    //get right tool bar on navigation bar
+    UIToolbar *rightToolBar = (UIToolbar*)self.navigationItem.rightBarButtonItem.customView;
+    
+    //enable refresh button
+    UIBarButtonItem *refreshButton = [rightToolBar.items objectAtIndex:1];
+    refreshButton.enabled = YES;
+    
+    //get back second button(refresh) from tool bar and create a items
+    NSMutableArray *items = [[NSMutableArray alloc] initWithObjects:refreshButton, nil];
+    
+    //create edit button
     UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(editTableView)];
     
-    self.navigationItem.rightBarButtonItem = rightButton;
+    //insert edit button to first element in items
+    [items insertObject:rightButton atIndex:0];
+    
+    //reassign button to tool bar
+    [rightToolBar setItems:items animated:YES];
+    
     
     self.tableView.allowsSelectionDuringEditing = NO;
     
@@ -534,45 +613,181 @@ const float ToolBarAnimationDuration = 0.1f;
     [addFolderAlert show];
     
     [newFolderNameTextField becomeFirstResponder];
+    
+    //change status to add folder
+    theStatus = StatusAddFolder;
+}
+
+-(void)renameFiles
+{
+    if(renameFileTextField == nil)
+    {
+        renameFileTextField = [[UITextField alloc] initWithFrame:CGRectMake(12, 45, 260, 25)];
+        renameFileTextField.placeholder = NSLocalizedString(@"New name", @"New name");
+        renameFileTextField.backgroundColor = [UIColor whiteColor];
+        renameFileTextField.borderStyle = UITextBorderStyleRoundedRect;
+        renameFileTextField.text = nil;
+    }
+    
+    //use alert view to let user to type in new name
+    UIAlertView *renameAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Rename", @"Rename") message:@"this gets covered" delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel") otherButtonTitles:NSLocalizedString(@"Rename", @"Rename"), nil];
+    
+    [renameAlert addSubview:renameFileTextField];
+    [renameAlert show];
+    
+    [renameFileTextField becomeFirstResponder];
+    
+    //change status to rename
+    theStatus = StatusRename;
 }
 
 #pragma mark - Add folder UIAlertView delegate
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
-    if(buttonIndex == 1)
+    if(theStatus == StatusAddFolder)
     {
-        //check if text field's text is empty
-        if([newFolderNameTextField.text isEqualToString:@""])
+        if(buttonIndex == 1)
         {
-            UIAlertView *invaildAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", @"Error") message:NSLocalizedString(@"You have to give a name for a new folder", @"You have to give a name for a new folder") delegate:nil cancelButtonTitle:nil otherButtonTitles:NSLocalizedString(@"OK", @"OK"), nil];
-            
-            [invaildAlert show];
-        }
-        else
-        {
-            //create folder
-            BOOL success =[self AddFolderAtPath:self.workingPath WithFolderName:newFolderNameTextField.text];
-            
-            if(success)
+            //check if text field's text is empty
+            if([newFolderNameTextField.text isEqualToString:@""])
             {
-                //reload table view data
-                //[self reloadTableViewData];
-                //we don't reload whole data instead of adding a new file to data and add a cell to table
-                MDFiles *file = [[MDFiles alloc] initWithFilePath:self.workingPath FileName:newFolderNameTextField.text];
+                UIAlertView *addFolderinvaildAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", @"Error") message:NSLocalizedString(@"You have to give a name for a new folder", @"You have to give a name for a new folder") delegate:nil cancelButtonTitle:nil otherButtonTitles:NSLocalizedString(@"OK", @"OK"), nil];
                 
-                [filesArray addObject:file];
+                [addFolderinvaildAlert show];
+            }
+            else
+            {
+                //create folder
+                BOOL success =[self AddFolderAtPath:self.workingPath WithFolderName:newFolderNameTextField.text];
                 
-                //insert cell to table view
-                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[filesArray count]-1 inSection:0];
+                if(success)
+                {
+                    //reload table view data
+                    //[self reloadTableViewData];
+                    //we don't reload whole data instead of adding a new file to data and add a cell to table
+                    MDFiles *file = [[MDFiles alloc] initWithFilePath:self.workingPath FileName:newFolderNameTextField.text];
+                    
+                    [filesArray addObject:file];
+                    
+                    //insert cell to table view
+                    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[filesArray count]-1 inSection:0];
+                    
+                    [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+                }
+            }
+            
+            //clear text field
+            newFolderNameTextField.text = nil;
+            
+            //change status to none
+            theStatus = StatusNone;
+        }
+    }
+    else if(theStatus == StatusRename)
+    {
+        if(buttonIndex == 1)
+        {
+            //check if text field's text is empty
+            if([renameFileTextField.text isEqualToString:@""])
+            {
+                UIAlertView *renameInvaildAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", @"Error") message:NSLocalizedString(@"Name can not be blank", @"Name can not be blank") delegate:nil cancelButtonTitle:nil otherButtonTitles:NSLocalizedString(@"OK", @"OK"), nil];
                 
-                [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+                [renameInvaildAlert show];
+            }
+            else
+            {
+                //check if name has been used 
+                NSIndexPath *indexPath = [selectedIndexPaths lastObject];
+                MDFiles *file = [filesArray objectAtIndex:indexPath.row];
+                NSString *checkedFilePath = [self.workingPath stringByAppendingPathComponent:renameFileTextField.text];
+                
+                if([[NSFileManager defaultManager] fileExistsAtPath:checkedFilePath])
+                {
+                    NSString *msg = [NSString stringWithFormat:NSLocalizedString(@"The name %@ had been used", @"The name %@ had been used"), renameFileTextField.text];
+                    
+                    UIAlertView *duplicateNameAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", @"Error") message:msg delegate:nil cancelButtonTitle:nil otherButtonTitles:NSLocalizedString(@"OK", @"OK"), nil];
+                    
+                    [duplicateNameAlert show];
+                }
+                else
+                {
+                    /**Rename**/
+                    NSError *error;
+                    NSString *fileExtension = nil;
+                    NSString *newPath;
+                    NSString *newFileName;
+                    
+                    //if it is file get back file extension that mean .xxx
+                    if(file.isFile)
+                    {
+                        NSArray *splitString = [file.filePath componentsSeparatedByString:@"."];
+                        fileExtension = [splitString lastObject];
+                    }
+                    
+                    //find new file path
+                    if(fileExtension != nil)
+                    {
+                        //it is file 
+                        newFileName = [NSString stringWithFormat:@"%@.%@", renameFileTextField.text, fileExtension];
+                        newPath = [self.workingPath stringByAppendingPathComponent:newFileName];
+                    }
+                    else
+                    {
+                        //it is directory
+                        newPath = [self.workingPath stringByAppendingPathComponent:renameFileTextField.text];
+                    }
+                    
+                    //use move item to rename
+                    [[NSFileManager defaultManager] moveItemAtPath:file.filePath toPath:newPath error:&error];
+                    
+                    if(error != nil)
+                    {
+                        NSLog(@"There is an error while rename file error:%@", error);
+                    }
+                    
+                    //since move item will create new file we need to delete old one
+                    [[NSFileManager defaultManager] removeItemAtPath:file.filePath error:&error];
+                    
+                    
+                    MDFiles *newfile;
+                    //create a new file representation
+                    if(fileExtension != nil)
+                    {
+                        newfile = [[MDFiles alloc] initWithFilePath:self.workingPath FileName:newFileName];
+                    }
+                    else
+                    {
+                        newfile = [[MDFiles alloc] initWithFilePath:self.workingPath FileName:renameFileTextField.text];
+                    }
+                    
+                    NSIndexPath *indexPath = [selectedIndexPaths lastObject];
+                    int objectIndex = [filesArray indexOfObject:[filesArray objectAtIndex:indexPath.row]];
+                    
+                    //remove old file representation from files array
+                    [filesArray removeObjectAtIndex:indexPath.row];
+                    
+                    //delete cell
+                    [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
+                    
+                    //insert new file representation
+                    [filesArray insertObject:newfile atIndex:indexPath.row];
+                    
+                    NSArray *insertIndexPaths = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:objectIndex inSection:0]];
+                    
+                    //insert cell
+                    [self.tableView insertRowsAtIndexPaths:insertIndexPaths withRowAnimation:UITableViewRowAnimationNone];
+
+                    
+                    //finally we remove selected IndexPath
+                    [selectedIndexPaths removeAllObjects];
+
+                }
             }
         }
         
-        //clear text field
-        newFolderNameTextField.text = nil;
-        
+        theStatus = StatusNone;
     }
+
 }
 
 #pragma mark - Add folder method
@@ -583,16 +798,30 @@ const float ToolBarAnimationDuration = 0.1f;
     
     NSString *fullPath = [path stringByAppendingPathComponent:folderName];
     
-    [[NSFileManager defaultManager] createDirectoryAtPath:fullPath withIntermediateDirectories:YES attributes:nil error:&error];
-    
-    if(error != nil)
+    //check if folder name exists or not
+    if([[NSFileManager defaultManager] fileExistsAtPath:fullPath])
     {
-        NSLog(@"There is an error while creating a directory %@, at path %@", folderName, path);
+        NSString *msg = [NSString stringWithFormat:NSLocalizedString(@"The folder %@ already exists", @"The folder exists"), folderName];
+        //file exists
+        UIAlertView *existAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", @"Error") message:msg delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles: nil];
+        
+        [existAlert show];
         
         return NO;
     }
-    
-    return YES;
+    else 
+    {
+        [[NSFileManager defaultManager] createDirectoryAtPath:fullPath withIntermediateDirectories:YES attributes:nil error:&error];
+        
+        if(error != nil)
+        {
+            NSLog(@"There is an error while creating a directory %@, at path %@", folderName, path);
+            
+            return NO;
+        }
+        
+        return YES;
+    }
     
 }
 

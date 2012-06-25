@@ -15,6 +15,13 @@
 
 #import <UIKit/UIKit.h>
 
+enum EditingStatus{
+  
+    StatusNone,
+    StatusAddFolder,
+    StatusRename
+};
+
 @interface MDFilesViewController : UITableViewController <UIAlertViewDelegate>
 
 //current path

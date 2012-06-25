@@ -114,6 +114,7 @@ const NSString *NotSelectedImageName = @"NotSelected";
     self.textLabel.text = nil;
     self.detailTextLabel.text = nil;
     self.imageView.image = nil;
+    self.accessoryType = UITableViewCellAccessoryNone;
     
 }
 
