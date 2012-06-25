@@ -107,6 +107,8 @@ const float ToolBarAnimationDuration = 0.1f;
     
     [self.tableView setEditing:NO animated:YES];
     
+    theStatus = StatusNone;
+    
 }
 
 -(void)viewDidDisappear:(BOOL)animated
@@ -133,10 +135,13 @@ const float ToolBarAnimationDuration = 0.1f;
         hiddenFiles = [NSArray arrayWithObjects:@".DS_Store", nil];
     }
     
+    
     if(filesArray == nil)
     {
-        [self findContentInWorkingPath:self.workingPath];
+        //create one if needed
+        filesArray = [[NSMutableArray alloc] init];
     }
+    [self findContentInWorkingPath:self.workingPath];
     
     //creat navigation right button
     [self createNaviRightButton];
@@ -152,6 +157,10 @@ const float ToolBarAnimationDuration = 0.1f;
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
+    
+    hiddenFiles = nil;
+    filesArray = nil;
+    toolbar =nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -379,7 +388,17 @@ const float ToolBarAnimationDuration = 0.1f;
 {
     NSError *error;
     
-    filesArray = [[NSMutableArray alloc] init];
+    if(filesArray == nil)
+    {
+        //create one if needed
+        filesArray = [[NSMutableArray alloc] init];
+    }
+    
+    if([filesArray count] != 0)
+    {
+        //clear first
+        [filesArray removeAllObjects];
+    }
     
     //find contents
     NSArray *contents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:&error];
