@@ -23,7 +23,13 @@
 -(void)addFolder;
 -(void)reloadTableViewData;
 -(void)renameFiles;
+-(void)filesAction;
 -(void)updateToolBar;
+-(BOOL)doAddFolderAtPath:(NSString *)workingPath WithFolderName:(NSString *)folderName;
+-(void)doRenameFile;
+-(void)doDeleteSelect;
+-(void)doDeselectAll;
+-(void)doSelectAll;
 
 @end
 
@@ -33,6 +39,9 @@ const float ToolBarAnimationDuration = 0.1f;
     
     
     enum EditingStatus theStatus;
+    
+    //hold a set of string that is file name will be not be show on table view
+    NSArray *hiddenFiles;
     
     //the content in current directory
     NSMutableArray *filesArray;
@@ -118,6 +127,12 @@ const float ToolBarAnimationDuration = 0.1f;
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
+    if(hiddenFiles == nil)
+    {
+        //add any file's name that will not show on table view
+        hiddenFiles = [NSArray arrayWithObjects:@".DS_Store", nil];
+    }
+    
     if(filesArray == nil)
     {
         [self findContentInWorkingPath:self.workingPath];
@@ -178,14 +193,17 @@ const float ToolBarAnimationDuration = 0.1f;
         toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 431, 320, 44)];
         
         //add tool bar items
-        //add Add folder items
+        //add Add folder item
         UIBarButtonItem *addFolderButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Add folder", @"Add folder") style:UIBarButtonItemStyleDone target:self action:@selector(addFolder)];
         
-        //add Rename items
+        //add Rename item
         UIBarButtonItem *renameButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Rename", @"Rename") style:UIBarButtonSystemItemAction target:self action:@selector(renameFiles)];
+        
+        //add action item
+        UIBarButtonItem *actionButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(filesAction)];
                
         
-        NSArray *buttonItems = [NSArray arrayWithObjects:addFolderButton, renameButton, nil];
+        NSArray *buttonItems = [NSArray arrayWithObjects:addFolderButton, renameButton, actionButton, nil];
         toolbar.items = buttonItems;
     }
     
@@ -371,17 +389,35 @@ const float ToolBarAnimationDuration = 0.1f;
         //store content
         for(NSString *theContent in contents)
         {
-            //init file info object
-            MDFiles *file = [[MDFiles alloc] initWithFilePath:self.workingPath FileName:theContent];
-            
-            //add to diectoryContents
-            [filesArray addObject:file];
+            if([self canShowFileWithName:theContent])
+            {
+                //init file info object
+                MDFiles *file = [[MDFiles alloc] initWithFilePath:self.workingPath FileName:theContent];
+                
+                //add to diectoryContents
+                [filesArray addObject:file];
+            }
+
         }
     }
     else
     {
         NSLog(@"There is a error while getting content at %@\n error:%@ ", self.workingPath, error);
     }
+}
+
+//can given file name be shown on table view?
+-(BOOL)canShowFileWithName:(NSString *)filename
+{
+    for(NSString *hiddenFile in hiddenFiles)
+    {
+        if([filename isEqualToString:hiddenFile])
+        {
+            return NO;
+        }
+    }
+    
+    return YES;
 }
 
 #pragma mark - Configure cell
@@ -519,7 +555,7 @@ const float ToolBarAnimationDuration = 0.1f;
             selectedIndicator.image = [UIImage imageNamed:cell.notSelectedIndicatorName];
         }
         
-        selectedIndexPaths = nil;
+        [selectedIndexPaths removeAllObjects];
     }
 }
 
@@ -641,6 +677,70 @@ const float ToolBarAnimationDuration = 0.1f;
     theStatus = StatusRename;
 }
 
+-(void)filesAction
+{
+    NSString *deselectAllButton = NSLocalizedString(@"Deselect all", @"Deselect all");
+    NSString *selectAllButton = NSLocalizedString(@"Select all", @"Select all");
+    NSString *moveButton = NSLocalizedString(@"Move", @"Move");
+    
+    if([selectedIndexPaths count] != 0)
+    {
+        //user has select more than one file
+
+        
+        UIActionSheet *selectedActionSheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Action", @"Action") delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel") destructiveButtonTitle:NSLocalizedString(@"Delete", @"Delete") otherButtonTitles:deselectAllButton, selectAllButton, moveButton, nil];
+        
+        [selectedActionSheet showFromTabBar:self.tabBarController.tabBar];
+    }
+    else
+    {
+        //user did not select any of file
+        UIActionSheet *nonSelectedActionSheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Action", @"Action") delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel") destructiveButtonTitle:nil otherButtonTitles:selectAllButton, nil];
+        
+        [nonSelectedActionSheet showFromTabBar:self.tabBarController.tabBar];
+        
+    }
+}
+
+#pragma mark - UIActionSheet delegate
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+    if([selectedIndexPaths count] != 0)
+    {
+        /**user has select more than one file**/
+        if(buttonIndex == 0)
+        {
+            /**delete selected**/
+            [self doDeleteSelect];
+        }
+        else if(buttonIndex == 1)
+        {
+            /**deselect all**/
+            [self doDeselectAll];
+        }
+        else if(buttonIndex == 2)
+        {
+            /**select all action**/
+            [self doSelectAll];
+        }
+        else if(buttonIndex == 3)
+        {
+            //move files
+        }
+        
+    }
+    else
+    {
+        /**user did not select any of file**/
+        if(buttonIndex == 0)
+        {
+            /**select all action**/
+            [self doSelectAll];
+
+        }
+    }
+}
+
 #pragma mark - Add folder UIAlertView delegate
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
@@ -658,7 +758,7 @@ const float ToolBarAnimationDuration = 0.1f;
             else
             {
                 //create folder
-                BOOL success =[self AddFolderAtPath:self.workingPath WithFolderName:newFolderNameTextField.text];
+                BOOL success =[self doAddFolderAtPath:self.workingPath WithFolderName:newFolderNameTextField.text];
                 
                 if(success)
                 {
@@ -696,11 +796,10 @@ const float ToolBarAnimationDuration = 0.1f;
             }
             else
             {
-                //check if name has been used 
-                NSIndexPath *indexPath = [selectedIndexPaths lastObject];
-                MDFiles *file = [filesArray objectAtIndex:indexPath.row];
+                
                 NSString *checkedFilePath = [self.workingPath stringByAppendingPathComponent:renameFileTextField.text];
                 
+                //check if name has been used 
                 if([[NSFileManager defaultManager] fileExistsAtPath:checkedFilePath])
                 {
                     NSString *msg = [NSString stringWithFormat:NSLocalizedString(@"The name %@ had been used", @"The name %@ had been used"), renameFileTextField.text];
@@ -712,74 +811,7 @@ const float ToolBarAnimationDuration = 0.1f;
                 else
                 {
                     /**Rename**/
-                    NSError *error;
-                    NSString *fileExtension = nil;
-                    NSString *newPath;
-                    NSString *newFileName;
-                    
-                    //if it is file get back file extension that mean .xxx
-                    if(file.isFile)
-                    {
-                        NSArray *splitString = [file.filePath componentsSeparatedByString:@"."];
-                        fileExtension = [splitString lastObject];
-                    }
-                    
-                    //find new file path
-                    if(fileExtension != nil)
-                    {
-                        //it is file 
-                        newFileName = [NSString stringWithFormat:@"%@.%@", renameFileTextField.text, fileExtension];
-                        newPath = [self.workingPath stringByAppendingPathComponent:newFileName];
-                    }
-                    else
-                    {
-                        //it is directory
-                        newPath = [self.workingPath stringByAppendingPathComponent:renameFileTextField.text];
-                    }
-                    
-                    //use move item to rename
-                    [[NSFileManager defaultManager] moveItemAtPath:file.filePath toPath:newPath error:&error];
-                    
-                    if(error != nil)
-                    {
-                        NSLog(@"There is an error while rename file error:%@", error);
-                    }
-                    
-                    //since move item will create new file we need to delete old one
-                    [[NSFileManager defaultManager] removeItemAtPath:file.filePath error:&error];
-                    
-                    
-                    MDFiles *newfile;
-                    //create a new file representation
-                    if(fileExtension != nil)
-                    {
-                        newfile = [[MDFiles alloc] initWithFilePath:self.workingPath FileName:newFileName];
-                    }
-                    else
-                    {
-                        newfile = [[MDFiles alloc] initWithFilePath:self.workingPath FileName:renameFileTextField.text];
-                    }
-                    
-                    NSIndexPath *indexPath = [selectedIndexPaths lastObject];
-                    int objectIndex = [filesArray indexOfObject:[filesArray objectAtIndex:indexPath.row]];
-                    
-                    //remove old file representation from files array
-                    [filesArray removeObjectAtIndex:indexPath.row];
-                    
-                    //delete cell
-                    [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
-                    
-                    //insert new file representation
-                    [filesArray insertObject:newfile atIndex:indexPath.row];
-                    
-                    NSArray *insertIndexPaths = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:objectIndex inSection:0]];
-                    
-                    //insert cell
-                    [self.tableView insertRowsAtIndexPaths:insertIndexPaths withRowAnimation:UITableViewRowAnimationNone];
-
-                    
-                    //finally we remove selected IndexPath
-                    [selectedIndexPaths removeAllObjects];
+                    [self doRenameFile];
 
                 }
             }
@@ -790,13 +822,103 @@ const float ToolBarAnimationDuration = 0.1f;
 
 }
 
-#pragma mark - Add folder method
+#pragma mark - UIActionSheet delegate related methods
+-(void)doDeleteSelect
+{
+    
+    //check if there at least one file selected 
+    if([selectedIndexPaths count] != 0)
+    {
+        //go through each selected IndexPath
+        for(NSIndexPath *indexPath in selectedIndexPaths)
+        {
+            NSError *error;
+            
+            MDFiles *file = [filesArray objectAtIndex:indexPath.row];
+            
+            //delete file
+            [[NSFileManager defaultManager] removeItemAtPath:file.filePath error:&error];
+            
+            if(error != nil)
+            {
+                NSLog(@"There is an error %@ while deleting file at path %@", error, file.filePath);
+            }
+        }
+        
+        //clrear selected IndexPaths
+        [selectedIndexPaths removeAllObjects];
+    }
+    else
+    {
+        NSLog(@"no selected file IndexPath to perform delete action");
+    }
+    
+    [self reloadTableViewData];
+}
+
+-(void)doDeselectAll
+{
+    //check if there at least one file selected
+    if([selectedIndexPaths count] != 0)
+    {
+        //go through each selected IndexPath
+        for(NSIndexPath *indexPath in selectedIndexPaths)
+        {
+            MDFiles *file = [filesArray objectAtIndex:indexPath.row];
+            file.isSelected = NO;
+            
+            MDFilesTableViewCell *cell = (MDFilesTableViewCell*)[self.tableView cellForRowAtIndexPath:indexPath];
+            UIImageView *selectedIndicator = cell.selectionIndicator;
+            
+            selectedIndicator.image = [UIImage imageNamed:cell.notSelectedIndicatorName];
+        }
+        
+        //clrear selected IndexPaths
+        [selectedIndexPaths removeAllObjects];
+    }
+    else
+    {
+        NSLog(@"no file selected to perform deselect all action");
+    }
+}
+
+-(void)doSelectAll
+{
+    if(selectedIndexPaths == nil)
+    {
+        selectedIndexPaths = [[NSMutableArray alloc] init];
+    }
+    
+    if([selectedIndexPaths count] != 0)
+    {
+        //clear selected IndexPaths first
+        [selectedIndexPaths removeAllObjects];
+    }
+    
+    //go through each file
+    for(int i=0; i<[filesArray count]; i++)
+    {
+        //make file selected
+        MDFiles *file = [filesArray objectAtIndex:i];
+        file.isSelected = YES;
+        
+        //store into selected indexs
+        
+        NSIndexPath *selectedIndex = [NSIndexPath indexPathForRow:i inSection:0];
+        
+        [self addSelectEditableCellAtIndexPath:selectedIndex];
+    }
+    
+    [self.tableView reloadData];
+}
+
+#pragma mark - UIAlertView delegate related methods
 //path should not contain folder name
--(BOOL)AddFolderAtPath:(NSString *)path WithFolderName:(NSString *)folderName
+-(BOOL)doAddFolderAtPath:(NSString *)workingPath WithFolderName:(NSString *)folderName
 {
     NSError *error;
     
-    NSString *fullPath = [path stringByAppendingPathComponent:folderName];
+    NSString *fullPath = [workingPath stringByAppendingPathComponent:folderName];
     
     //check if folder name exists or not
     if([[NSFileManager defaultManager] fileExistsAtPath:fullPath])
@@ -815,7 +937,7 @@ const float ToolBarAnimationDuration = 0.1f;
         
         if(error != nil)
         {
-            NSLog(@"There is an error while creating a directory %@, at path %@", folderName, path);
+            NSLog(@"There is an error while creating a directory %@, at path %@", folderName, workingPath);
             
             return NO;
         }
@@ -823,6 +945,79 @@ const float ToolBarAnimationDuration = 0.1f;
         return YES;
     }
     
+}
+
+-(void)doRenameFile
+{
+    NSError *error;
+    NSIndexPath *indexPath = [selectedIndexPaths lastObject];
+    MDFiles *file = [filesArray objectAtIndex:indexPath.row];
+    NSString *fileExtension = nil;
+    NSString *newPath;
+    NSString *newFileName;
+    
+    //if it is file get back file extension that mean .xxx
+    if(file.isFile)
+    {
+        NSArray *splitString = [file.filePath componentsSeparatedByString:@"."];
+        fileExtension = [splitString lastObject];
+    }
+    
+    //find new file path
+    if(fileExtension != nil)
+    {
+        //it is file 
+        newFileName = [NSString stringWithFormat:@"%@.%@", renameFileTextField.text, fileExtension];
+        newPath = [self.workingPath stringByAppendingPathComponent:newFileName];
+    }
+    else
+    {
+        //it is directory
+        newPath = [self.workingPath stringByAppendingPathComponent:renameFileTextField.text];
+    }
+    
+    //use move item to rename
+    [[NSFileManager defaultManager] moveItemAtPath:file.filePath toPath:newPath error:&error];
+    
+    if(error != nil)
+    {
+        NSLog(@"There is an error while rename file error:%@", error);
+    }
+    
+    //since move item will create new file we need to delete old one
+    [[NSFileManager defaultManager] removeItemAtPath:file.filePath error:&error];
+    
+    
+    MDFiles *newfile;
+    //create a new file representation
+    if(fileExtension != nil)
+    {
+        newfile = [[MDFiles alloc] initWithFilePath:self.workingPath FileName:newFileName];
+    }
+    else
+    {
+        newfile = [[MDFiles alloc] initWithFilePath:self.workingPath FileName:renameFileTextField.text];
+    }
+    
+    int objectIndex = [filesArray indexOfObject:[filesArray objectAtIndex:indexPath.row]];
+    
+    //remove old file representation from files array
+    [filesArray removeObjectAtIndex:indexPath.row];
+    
+    //delete cell
+    [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
+    
+    //insert new file representation
+    [filesArray insertObject:newfile atIndex:indexPath.row];
+    
+    NSArray *insertIndexPaths = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:objectIndex inSection:0]];
+    
+    //insert cell
+    [self.tableView insertRowsAtIndexPaths:insertIndexPaths withRowAnimation:UITableViewRowAnimationNone];
+    
+    
+    //finally we remove selected IndexPath
+    [selectedIndexPaths removeAllObjects];
 }
 
 @end

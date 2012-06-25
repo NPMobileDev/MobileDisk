@@ -22,7 +22,7 @@ enum EditingStatus{
     StatusRename
 };
 
-@interface MDFilesViewController : UITableViewController <UIAlertViewDelegate>
+@interface MDFilesViewController : UITableViewController <UIAlertViewDelegate, UIActionSheetDelegate>
 
 //current path
 @property (nonatomic, copy) NSString *workingPath;

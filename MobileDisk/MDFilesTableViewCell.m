@@ -115,7 +115,7 @@ const NSString *NotSelectedImageName = @"NotSelected";
     self.detailTextLabel.text = nil;
     self.imageView.image = nil;
     self.accessoryType = UITableViewCellAccessoryNone;
-    
+    self.selectionIndicator.image = [UIImage imageNamed:self.notSelectedIndicatorName];
 }
 
 #pragma mark - getter
