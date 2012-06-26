@@ -16,7 +16,7 @@
 
 @implementation MDNonSelectedActionSheet{
     
-    id<MDNonSelectedActionSheetDelegate> delegate;
+    __weak id<MDNonSelectedActionSheetDelegate> delegate;
     
     UIActionSheet *theActionSheet;
 }
@@ -30,6 +30,11 @@
         theActionSheet = [self createActionSheet];
     }
     return self;
+}
+
+-(void)dealloc
+{
+    NSLog(@"MDNonSelectedActionSheet dealloc");
 }
 
 -(UIActionSheet *)createActionSheet

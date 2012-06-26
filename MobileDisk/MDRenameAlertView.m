@@ -16,7 +16,7 @@
 
 @implementation MDRenameAlertView{
     
-    id<MDRenameAlertViewDelegate> delegate;
+    __weak id<MDRenameAlertViewDelegate> delegate;
     
     UIAlertView *theAlertView;
     
@@ -34,6 +34,11 @@
 
     }
     return self;
+}
+
+-(void)dealloc
+{
+    NSLog(@"MDRenameAlertView dealloc");
 }
 
 -(UIAlertView*)createAlertView

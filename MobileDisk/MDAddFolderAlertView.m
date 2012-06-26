@@ -16,7 +16,7 @@
 
 @implementation MDAddFolderAlertView{
     
-    id<MDAddFolderAlertViewDelegate> delegate;
+    __weak id<MDAddFolderAlertViewDelegate> delegate;
     
     UIAlertView *theAlertView;
     
@@ -34,6 +34,11 @@
     }
     
     return self;
+}
+
+-(void)dealloc
+{
+    NSLog(@"MDAddFolderAlertView dealloc");
 }
 
 -(UIAlertView*)createAlertView

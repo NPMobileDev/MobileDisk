@@ -144,6 +144,11 @@ const float ToolBarAnimationDuration = 0.1f;
         hiddenFiles = [NSArray arrayWithObjects:@".DS_Store", nil];
     }
     
+    /**
+     We don't do "findContentInWorkingPath" but we call "reloadTableViewData"
+      in viewWillAppear. This can avoid double processing. "findContentInWorkingPath"
+     called in "reloadTableViewData"
+     **/
     
     //find content in working path
     //[self findContentInWorkingPath:self.workingPath];
