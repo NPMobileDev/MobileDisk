@@ -15,16 +15,18 @@
 
 #import <UIKit/UIKit.h>
 #import "MDMoveFilesNavigationController.h"
+#import "MDRenameAlertView.h"
+#import "MDAddFolderAlertView.h"
+#import "MDNonSelectedActionSheet.h"
+#import "MDSelectedActionSheet.h"
 
-enum EditingStatus{
-  
-    StatusNone,
-    StatusAddFolder,
-    StatusRename,
-    statusMoveFiles
-};
 
-@interface MDFilesViewController : UITableViewController <UIAlertViewDelegate, UIActionSheetDelegate, MDMoveFilesNavigationControllerDelegate>
+@interface MDFilesViewController : UITableViewController <UIAlertViewDelegate,  UIActionSheetDelegate, 
+    MDMoveFilesNavigationControllerDelegate, 
+    MDRenameAlertViewDelegate,
+    MDAddFolderAlertViewDelegate,
+    MDNonSelectedActionSheetDelegate,
+    MDSelectedActionSheetDelegate>
 
 //current path
 @property (nonatomic, copy) NSString *workingPath;

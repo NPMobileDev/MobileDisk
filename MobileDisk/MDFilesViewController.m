@@ -11,6 +11,7 @@
 #import "MDFilesTableViewCell.h"
 
 
+
 @interface MDFilesViewController ()
 
 -(void)findContentInWorkingPath:(NSString *)path;
@@ -27,11 +28,11 @@
 -(void)filesAction;
 -(void)updateToolBar;
 -(BOOL)doAddFolderAtPath:(NSString *)workingPath WithFolderName:(NSString *)folderName;
--(void)doRenameFile;
+-(void)doRenameFileWithName:(NSString *)name;
 -(void)doDeleteSelect;
 -(void)doDeselectAll;
 -(void)doSelectAll;
--(void)MoveFiles;
+-(void)doMoveFiles;
 -(void)doMoveFiles:(NSArray *)filesToMove ToDestinationPath:(NSString *)destPath;
 
 @end
@@ -41,7 +42,7 @@ const float ToolBarAnimationDuration = 0.1f;
 @implementation MDFilesViewController{
     
     
-    enum EditingStatus theStatus;
+    id currentAction;
     
     //hold a set of string that is file name will be not be show on table view
     NSArray *hiddenFiles;
@@ -55,11 +56,10 @@ const float ToolBarAnimationDuration = 0.1f;
     //toolbar
     UIToolbar *toolbar;
     
-    //text field to type in name for new folder
-    UITextField *newFolderNameTextField;
+    //flag determind if is in move file mode
+    BOOL isMovingFiles;
     
-    //text field to type in name for new folder
-    UITextField *renameFileTextField;
+
 }
 
 @synthesize workingPath = _workingPath;
@@ -89,7 +89,7 @@ const float ToolBarAnimationDuration = 0.1f;
     
     self.title = self.controllerTitle;
     
-    
+    [self reloadTableViewData];
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -109,14 +109,13 @@ const float ToolBarAnimationDuration = 0.1f;
 {
     [super viewWillDisappear:animated];
     
-    if(theStatus != statusMoveFiles)
+    if(isMovingFiles != YES)
     {
         self.title = NSLocalizedString(@"Back", @"Back");
         
         if(self.tableView.isEditing)
             [self doneEditTabelView];
         
-        theStatus = StatusNone;
     }
   
 }
@@ -147,7 +146,7 @@ const float ToolBarAnimationDuration = 0.1f;
     
     
     //find content in working path
-    [self findContentInWorkingPath:self.workingPath];
+    //[self findContentInWorkingPath:self.workingPath];
     
     //creat navigation right button
     [self createNaviRightButton];
@@ -155,7 +154,7 @@ const float ToolBarAnimationDuration = 0.1f;
     //create tool bar
     [self createToolBar];
     
-    theStatus = StatusNone;
+
 }
 
 - (void)viewDidUnload
@@ -167,6 +166,7 @@ const float ToolBarAnimationDuration = 0.1f;
     hiddenFiles = nil;
     filesArray = nil;
     toolbar =nil;
+    currentAction = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -583,6 +583,8 @@ const float ToolBarAnimationDuration = 0.1f;
         
         [selectedIndexPaths removeAllObjects];
     }
+    
+    [self updateToolBar];
 }
 
 //take care add  cell selection in table view edit mode
@@ -656,102 +658,88 @@ const float ToolBarAnimationDuration = 0.1f;
 #pragma mark - ToolBar items' method
 -(void)addFolder
 {
-    /**
-        create text field if needed
-     **/
-    if(newFolderNameTextField == nil)
-    {
-        newFolderNameTextField = [[UITextField alloc] initWithFrame:CGRectMake(12, 45, 260, 25)];
-        newFolderNameTextField.placeholder = NSLocalizedString(@"Folder name", @"Folder name");
-        newFolderNameTextField.backgroundColor = [UIColor whiteColor];
-        newFolderNameTextField.borderStyle = UITextBorderStyleRoundedRect;
-        newFolderNameTextField.text = nil;
-    }
     
-    //use alert view to let user to type in folder name
-    UIAlertView *addFolderAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Add folder", @"Add folder") message:@"this gets covered" delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel") otherButtonTitles:NSLocalizedString(@"Add", @"Add"), nil];
+    MDAddFolderAlertView *action = [[MDAddFolderAlertView alloc] initAlertViewWithDelegate:self];
+    [action showAlertView];
     
-    [addFolderAlert addSubview:newFolderNameTextField];
-    [addFolderAlert show];
+    currentAction = action;
     
-    [newFolderNameTextField becomeFirstResponder];
-    
-    //change status to add folder
-    theStatus = StatusAddFolder;
 }
 
 -(void)renameFiles
 {
-    if(renameFileTextField == nil)
-    {
-        renameFileTextField = [[UITextField alloc] initWithFrame:CGRectMake(12, 45, 260, 25)];
-        renameFileTextField.placeholder = NSLocalizedString(@"New name", @"New name");
-        renameFileTextField.backgroundColor = [UIColor whiteColor];
-        renameFileTextField.borderStyle = UITextBorderStyleRoundedRect;
-        renameFileTextField.text = nil;
-    }
+    MDRenameAlertView *action = [[MDRenameAlertView alloc] initAlertViewWithDelegate:self];
+    [action showAlertView];
     
-    //use alert view to let user to type in new name
-    UIAlertView *renameAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Rename", @"Rename") message:@"this gets covered" delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel") otherButtonTitles:NSLocalizedString(@"Rename", @"Rename"), nil];
-    
-    [renameAlert addSubview:renameFileTextField];
-    [renameAlert show];
-    
-    [renameFileTextField becomeFirstResponder];
-    
-    //change status to rename
-    theStatus = StatusRename;
+    currentAction = action;
 }
 
 -(void)filesAction
 {
+    /*
     NSString *deselectAllButton = NSLocalizedString(@"Deselect all", @"Deselect all");
     NSString *selectAllButton = NSLocalizedString(@"Select all", @"Select all");
     NSString *moveButton = NSLocalizedString(@"Move", @"Move");
+    */
     
     if([selectedIndexPaths count] != 0)
     {
         //user has select more than one file
 
-        
+        /*
         UIActionSheet *selectedActionSheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Action", @"Action") delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel") destructiveButtonTitle:NSLocalizedString(@"Delete", @"Delete") otherButtonTitles:deselectAllButton, selectAllButton, moveButton, nil];
         
         [selectedActionSheet showFromTabBar:self.tabBarController.tabBar];
+         */
+        
+        MDSelectedActionSheet *action = [[MDSelectedActionSheet alloc] initActionSheetWithDelegate:self];
+        
+        [action showFromTabBar:self.tabBarController.tabBar];
+        
+        currentAction = action;
     }
     else
     {
         //user did not select any of file
+        /*
         UIActionSheet *nonSelectedActionSheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Action", @"Action") delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel") destructiveButtonTitle:nil otherButtonTitles:selectAllButton, nil];
         
         [nonSelectedActionSheet showFromTabBar:self.tabBarController.tabBar];
+         */
+        MDNonSelectedActionSheet *action = [[MDNonSelectedActionSheet alloc] initActionSheetWithDelegate:self];
+    
+        [action showFromTabBar:self.tabBarController.tabBar];
+        
+        currentAction = action;
         
     }
 }
 
+/*
 #pragma mark - UIActionSheet delegate
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
     if([selectedIndexPaths count] != 0)
     {
-        /**user has select more than one file**/
+        
         if(buttonIndex == 0)
         {
-            /**delete selected**/
+            
             [self doDeleteSelect];
         }
         else if(buttonIndex == 1)
         {
-            /**deselect all**/
+            
             [self doDeselectAll];
         }
         else if(buttonIndex == 2)
         {
-            /**select all action**/
+            
             [self doSelectAll];
         }
         else if(buttonIndex == 3)
         {
-            /**move files**/
+           
             theStatus = statusMoveFiles;
             [self MoveFiles];
         }
@@ -759,96 +747,112 @@ const float ToolBarAnimationDuration = 0.1f;
     }
     else
     {
-        /**user did not select any of file**/
+        
         if(buttonIndex == 0)
         {
-            /**select all action**/
+            
             [self doSelectAll];
 
         }
     }
 }
+ */
 
-#pragma mark - Add folder UIAlertView delegate
-- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
+#pragma mark - MDSelectedActionSheet delegate
+-(void)MDSDidClickedDeleteButton:(MDSelectedActionSheet *)object
 {
-    if(theStatus == StatusAddFolder)
-    {
-        if(buttonIndex == 1)
-        {
-            //check if text field's text is empty
-            if([newFolderNameTextField.text isEqualToString:@""])
-            {
-                UIAlertView *addFolderinvaildAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", @"Error") message:NSLocalizedString(@"You have to give a name for a new folder", @"You have to give a name for a new folder") delegate:nil cancelButtonTitle:nil otherButtonTitles:NSLocalizedString(@"OK", @"OK"), nil];
-                
-                [addFolderinvaildAlert show];
-            }
-            else
-            {
-                //create folder
-                BOOL success =[self doAddFolderAtPath:self.workingPath WithFolderName:newFolderNameTextField.text];
-                
-                if(success)
-                {
-                    //reload table view data
-                    //[self reloadTableViewData];
-                    //we don't reload whole data instead of adding a new file to data and add a cell to table
-                    MDFiles *file = [[MDFiles alloc] initWithFilePath:self.workingPath FileName:newFolderNameTextField.text];
-                    
-                    [filesArray addObject:file];
-                    
-                    //insert cell to table view
-                    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[filesArray count]-1 inSection:0];
-                    
-                    [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-                }
-            }
-            
-            //clear text field
-            newFolderNameTextField.text = nil;
-            
-            //change status to none
-            theStatus = StatusNone;
-        }
-    }
-    else if(theStatus == StatusRename)
-    {
-        if(buttonIndex == 1)
-        {
-            //check if text field's text is empty
-            if([renameFileTextField.text isEqualToString:@""])
-            {
-                UIAlertView *renameInvaildAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", @"Error") message:NSLocalizedString(@"Name can not be blank", @"Name can not be blank") delegate:nil cancelButtonTitle:nil otherButtonTitles:NSLocalizedString(@"OK", @"OK"), nil];
-                
-                [renameInvaildAlert show];
-            }
-            else
-            {
-                
-                NSString *checkedFilePath = [self.workingPath stringByAppendingPathComponent:renameFileTextField.text];
-                
-                //check if name has been used 
-                if([[NSFileManager defaultManager] fileExistsAtPath:checkedFilePath])
-                {
-                    NSString *msg = [NSString stringWithFormat:NSLocalizedString(@"The name %@ had been used", @"The name %@ had been used"), renameFileTextField.text];
-                    
-                    UIAlertView *duplicateNameAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", @"Error") message:msg delegate:nil cancelButtonTitle:nil otherButtonTitles:NSLocalizedString(@"OK", @"OK"), nil];
-                    
-                    [duplicateNameAlert show];
-                }
-                else
-                {
-                    /**Rename**/
-                    [self doRenameFile];
+    /**delete selected**/
+    [self doDeleteSelect];
+}
 
-                }
-            }
-        }
-        
-        theStatus = StatusNone;
-    }
+-(void)MDSDidClickedDeselectAllButton:(MDSelectedActionSheet *)object
+{
+    /**deselect all**/
+    [self doDeselectAll];
+}
+
+-(void)MDSDidClickedSelectAllButton:(MDSelectedActionSheet *)object
+{
+    /**select all action**/
+    [self doSelectAll];
 
 }
+
+-(void)MDSDidClickedMoveButton:(MDSelectedActionSheet *)object
+{
+    /**move files**/
+    isMovingFiles = YES;
+    [self doMoveFiles];
+}
+
+#pragma mark - MDNonSelectedActionSheet delegate
+-(void)MDNSDidClickedSelectAllButton:(MDNonSelectedActionSheet *)object
+{
+    /**select all action**/
+    [self doSelectAll];
+}
+
+#pragma mark - MDAddFolderAlertView delegate
+-(void)AddFolderInputNameWasEmpty:(MDAddFolderAlertView *)object
+{
+    //check if text field's text is empty
+    UIAlertView *addFolderinvaildAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", @"Error") message:NSLocalizedString(@"You have to give a name for a new folder", @"You have to give a name for a new folder") delegate:nil cancelButtonTitle:nil otherButtonTitles:NSLocalizedString(@"OK", @"OK"), nil];
+    
+    [addFolderinvaildAlert show];
+    
+}
+-(void)MDAddFolderAlertView:(MDAddFolderAlertView *)object didAddFolderWithName:(NSString *)folderName
+{
+    //create folder
+    BOOL success =[self doAddFolderAtPath:self.workingPath WithFolderName:folderName];
+    
+    if(success)
+    {
+        //reload table view data
+        //[self reloadTableViewData];
+        //we don't reload whole data instead of adding a new file to data and add a cell to table
+        MDFiles *file = [[MDFiles alloc] initWithFilePath:self.workingPath FileName:folderName];
+        
+        [filesArray addObject:file];
+        
+        //insert cell to table view
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[filesArray count]-1 inSection:0];
+        
+        [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+    }
+}
+
+#pragma mark - MDRenameAlertView delegate
+-(void)RenameInputNameWasEmpty:(MDRenameAlertView *)object
+{
+    //check if text field's text is empty
+    UIAlertView *renameInvaildAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", @"Error") message:NSLocalizedString(@"Name can not be blank", @"Name can not be blank") delegate:nil cancelButtonTitle:nil otherButtonTitles:NSLocalizedString(@"OK", @"OK"), nil];
+    
+    [renameInvaildAlert show];
+}
+
+-(void)MDRenameAlertView:(MDRenameAlertView *)object didInputNameWithName:(NSString *)inputName
+{
+    NSString *checkedFilePath = [self.workingPath stringByAppendingPathComponent:inputName];
+    
+    //check if name has been used 
+    if([[NSFileManager defaultManager] fileExistsAtPath:checkedFilePath])
+    {
+        NSString *msg = [NSString stringWithFormat:NSLocalizedString(@"The name %@ had been used", @"The name %@ had been used"), inputName];
+        
+        UIAlertView *duplicateNameAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", @"Error") message:msg delegate:nil cancelButtonTitle:nil otherButtonTitles:NSLocalizedString(@"OK", @"OK"), nil];
+        
+        [duplicateNameAlert show];
+    }
+    else
+    {
+        /**Rename**/
+        [self doRenameFileWithName:inputName];
+        
+    }
+}
+
+
 
 #pragma mark - UIActionSheet delegate related methods
 -(void)doDeleteSelect
@@ -940,16 +944,17 @@ const float ToolBarAnimationDuration = 0.1f;
     [self.tableView reloadData];
 }
 
--(void)MoveFiles
+-(void)doMoveFiles
 {
     MDMoveFilesNavigationController *navController = [self.storyboard instantiateViewControllerWithIdentifier:@"MDMoveFilesNavigationController"];
     
     navController.theDelegate = self;
     
     [self.navigationController presentModalViewController:navController animated:YES];
+
 }
 
-#pragma mark - UIAlertView delegate related methods
+#pragma mark - AddFolder methods
 //path should not contain folder name
 -(BOOL)doAddFolderAtPath:(NSString *)workingPath WithFolderName:(NSString *)folderName
 {
@@ -984,7 +989,7 @@ const float ToolBarAnimationDuration = 0.1f;
     
 }
 
--(void)doRenameFile
+-(void)doRenameFileWithName:(NSString *)name
 {
     NSError *error;
     NSIndexPath *indexPath = [selectedIndexPaths lastObject];
@@ -1004,13 +1009,13 @@ const float ToolBarAnimationDuration = 0.1f;
     if(fileExtension != nil)
     {
         //it is file 
-        newFileName = [NSString stringWithFormat:@"%@.%@", renameFileTextField.text, fileExtension];
+        newFileName = [NSString stringWithFormat:@"%@.%@", name, fileExtension];
         newPath = [self.workingPath stringByAppendingPathComponent:newFileName];
     }
     else
     {
         //it is directory
-        newPath = [self.workingPath stringByAppendingPathComponent:renameFileTextField.text];
+        newPath = [self.workingPath stringByAppendingPathComponent:name];
     }
     
     //use move item to rename
@@ -1033,7 +1038,7 @@ const float ToolBarAnimationDuration = 0.1f;
     }
     else
     {
-        newfile = [[MDFiles alloc] initWithFilePath:self.workingPath FileName:renameFileTextField.text];
+        newfile = [[MDFiles alloc] initWithFilePath:self.workingPath FileName:name];
     }
     
     int objectIndex = [filesArray indexOfObject:[filesArray objectAtIndex:indexPath.row]];
@@ -1081,9 +1086,12 @@ const float ToolBarAnimationDuration = 0.1f;
         //check if folder move by it self
         if(file.isFile == NO)
         {
-            if([file.fileName isEqualToString:destFolderName])
+            if([splitePath containsObject:file.fileName])
             {
                 selfFiles = file;
+                
+                int objectIndex = [splitePath indexOfObject:file.fileName];
+                destFolderName = [splitePath objectAtIndex:objectIndex];
                 
                 break;
             }
@@ -1102,8 +1110,8 @@ const float ToolBarAnimationDuration = 0.1f;
 
     if(selfFiles != nil)
     {
-        //there are some duplicate file at destination
-        NSString *msg = [NSString stringWithFormat:NSLocalizedString(@"You can not move the folder \"%@\" to the same folder \"%@\"", @"You can not move the folder \"%@\" to the same folder \"%@\""), selfFiles.fileName, destFolderName];
+        //folder move into self folder or sub folder
+        NSString *msg = [NSString stringWithFormat:NSLocalizedString(@"You can not move the folder \"%@\" to the same folder \"%@\" or any subfolders of \"%@\"", @"You can not move the folder \"%@\" to the same folder \"%@\" or any subfolders of \"%@\""), selfFiles.fileName, destFolderName, destFolderName];
         
         UIAlertView *theAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", @"Error") message:msg delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles: nil];
         
@@ -1132,8 +1140,8 @@ const float ToolBarAnimationDuration = 0.1f;
  
     }
     
-    //change status to none
-    theStatus = StatusNone;
+    isMovingFiles = NO;
+    
 }
 
 -(void)MDMoveFilesNavigationControllerDidCancelWithController:(MDMoveFilesNavigationController *)controller
@@ -1142,8 +1150,8 @@ const float ToolBarAnimationDuration = 0.1f;
     
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
     
-    //change status to none
-    theStatus = StatusNone;
+    isMovingFiles = NO;
+
     
 }
 

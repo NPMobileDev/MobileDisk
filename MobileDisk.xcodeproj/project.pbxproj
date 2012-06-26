@@ -17,6 +17,10 @@
 		4440BB721591B8360073BBAA /* IPResolver.m in Sources */ = {isa = PBXBuildFile; fileRef = 4440BB711591B8360073BBAA /* IPResolver.m */; };
 		445D13ED1599391300B7D777 /* MDMoveFilesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 445D13EC1599391300B7D777 /* MDMoveFilesViewController.m */; };
 		445D13F115993AAB00B7D777 /* MDMoveFilesNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 445D13F015993AAB00B7D777 /* MDMoveFilesNavigationController.m */; };
+		445D13F81599A7FE00B7D777 /* MDRenameAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 445D13F71599A7FE00B7D777 /* MDRenameAlertView.m */; };
+		445D13FB1599AF1300B7D777 /* MDAddFolderAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 445D13FA1599AF1300B7D777 /* MDAddFolderAlertView.m */; };
+		445D13FE1599B50200B7D777 /* MDNonSelectedActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 445D13FD1599B50200B7D777 /* MDNonSelectedActionSheet.m */; };
+		445D14011599BB4800B7D777 /* MDSelectedActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 445D14001599BB4800B7D777 /* MDSelectedActionSheet.m */; };
 		4494309C158EB4C000ADAE89 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4494309B158EB4C000ADAE89 /* UIKit.framework */; };
 		4494309E158EB4C000ADAE89 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4494309D158EB4C000ADAE89 /* Foundation.framework */; };
 		449430A0158EB4C000ADAE89 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4494309F158EB4C000ADAE89 /* CoreGraphics.framework */; };
@@ -72,6 +76,14 @@
 		445D13EC1599391300B7D777 /* MDMoveFilesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDMoveFilesViewController.m; sourceTree = "<group>"; };
 		445D13EF15993AAB00B7D777 /* MDMoveFilesNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDMoveFilesNavigationController.h; sourceTree = "<group>"; };
 		445D13F015993AAB00B7D777 /* MDMoveFilesNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDMoveFilesNavigationController.m; sourceTree = "<group>"; };
+		445D13F61599A7FE00B7D777 /* MDRenameAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDRenameAlertView.h; sourceTree = "<group>"; };
+		445D13F71599A7FE00B7D777 /* MDRenameAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDRenameAlertView.m; sourceTree = "<group>"; };
+		445D13F91599AF1300B7D777 /* MDAddFolderAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDAddFolderAlertView.h; sourceTree = "<group>"; };
+		445D13FA1599AF1300B7D777 /* MDAddFolderAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDAddFolderAlertView.m; sourceTree = "<group>"; };
+		445D13FC1599B50200B7D777 /* MDNonSelectedActionSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDNonSelectedActionSheet.h; sourceTree = "<group>"; };
+		445D13FD1599B50200B7D777 /* MDNonSelectedActionSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDNonSelectedActionSheet.m; sourceTree = "<group>"; };
+		445D13FF1599BB4800B7D777 /* MDSelectedActionSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDSelectedActionSheet.h; sourceTree = "<group>"; };
+		445D14001599BB4800B7D777 /* MDSelectedActionSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDSelectedActionSheet.m; sourceTree = "<group>"; };
 		44943097158EB4C000ADAE89 /* MobileDisk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MobileDisk.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4494309B158EB4C000ADAE89 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		4494309D158EB4C000ADAE89 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -191,6 +203,21 @@
 			name = "IP-Resolver";
 			sourceTree = "<group>";
 		};
+		445D13F21599A75A00B7D777 /* Actions */ = {
+			isa = PBXGroup;
+			children = (
+				445D13F61599A7FE00B7D777 /* MDRenameAlertView.h */,
+				445D13F71599A7FE00B7D777 /* MDRenameAlertView.m */,
+				445D13F91599AF1300B7D777 /* MDAddFolderAlertView.h */,
+				445D13FA1599AF1300B7D777 /* MDAddFolderAlertView.m */,
+				445D13FC1599B50200B7D777 /* MDNonSelectedActionSheet.h */,
+				445D13FD1599B50200B7D777 /* MDNonSelectedActionSheet.m */,
+				445D13FF1599BB4800B7D777 /* MDSelectedActionSheet.h */,
+				445D14001599BB4800B7D777 /* MDSelectedActionSheet.m */,
+			);
+			name = Actions;
+			sourceTree = "<group>";
+		};
 		4494308C158EB4C000ADAE89 = {
 			isa = PBXGroup;
 			children = (
@@ -223,6 +250,7 @@
 		449430A1158EB4C000ADAE89 /* MobileDisk */ = {
 			isa = PBXGroup;
 			children = (
+				445D13F21599A75A00B7D777 /* Actions */,
 				443ACDFE1592EF76008B4DF2 /* Files */,
 				4440BB5E1591A9190073BBAA /* Settings */,
 				449430AA158EB4C000ADAE89 /* MobileDiskAppDelegate.h */,
@@ -454,6 +482,10 @@
 				443D004C159410CD008CCCBE /* MDFilesTableViewCell.m in Sources */,
 				445D13ED1599391300B7D777 /* MDMoveFilesViewController.m in Sources */,
 				445D13F115993AAB00B7D777 /* MDMoveFilesNavigationController.m in Sources */,
+				445D13F81599A7FE00B7D777 /* MDRenameAlertView.m in Sources */,
+				445D13FB1599AF1300B7D777 /* MDAddFolderAlertView.m in Sources */,
+				445D13FE1599B50200B7D777 /* MDNonSelectedActionSheet.m in Sources */,
+				445D14011599BB4800B7D777 /* MDSelectedActionSheet.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
