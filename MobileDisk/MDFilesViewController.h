@@ -14,15 +14,17 @@
  ******/
 
 #import <UIKit/UIKit.h>
+#import "MDMoveFilesNavigationController.h"
 
 enum EditingStatus{
   
     StatusNone,
     StatusAddFolder,
-    StatusRename
+    StatusRename,
+    statusMoveFiles
 };
 
-@interface MDFilesViewController : UITableViewController <UIAlertViewDelegate, UIActionSheetDelegate>
+@interface MDFilesViewController : UITableViewController <UIAlertViewDelegate, UIActionSheetDelegate, MDMoveFilesNavigationControllerDelegate>
 
 //current path
 @property (nonatomic, copy) NSString *workingPath;

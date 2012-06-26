@@ -1,22 +1,22 @@
 //
-//  MDFilesNavigationController.m
+//  MDMoveFilesNavigationController.m
 //  MobileDisk
 //
-//  Created by Mac-mini Nelson on 6/21/12.
+//  Created by Mac-mini Nelson on 6/26/12.
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
-#import "MDFilesNavigationController.h"
-#import "MDFilesViewController.h"
-#import "HTTPServer.h"
+#import "MDMoveFilesNavigationController.h"
+#import "MDMoveFilesViewController.h"
 #import "MobileDiskAppDelegate.h"
 
-@interface MDFilesNavigationController ()
+@interface MDMoveFilesNavigationController ()
 
 @end
 
-@implementation MDFilesNavigationController
+@implementation MDMoveFilesNavigationController
 
+@synthesize theDelegate = _theDelegate;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -33,16 +33,15 @@
 	// Do any additional setup after loading the view.
     
     //instantiate a root view controller from storyboard
-    MDFilesViewController *rootController = [self.storyboard instantiateViewControllerWithIdentifier:@"MDFilesViewController"];
+    MDMoveFilesViewController *rootController = [self.storyboard instantiateViewControllerWithIdentifier:@"MDMoveFilesViewController"];
     
     //set it's working path
     rootController.workingPath = [MobileDiskAppDelegate documentDirectory];
     //set controller title
-    rootController.controllerTitle = NSLocalizedString(@"Files", @"Files");
+    rootController.controllerTitle = NSLocalizedString(@"Root", @"Root");
     
     //set view controllers for navigation controller, here it's only root controller
-    [self setViewControllers:[NSArray arrayWithObject:rootController]];
-    
+    self.viewControllers = [NSArray arrayWithObject:rootController];
 }
 
 - (void)viewDidUnload
@@ -54,6 +53,16 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
+-(void)moveFilesTo:(NSString *)movingDest
+{
+    [self.theDelegate MDMoveFilesNavigationController:self DidMoveFilesToDestination:movingDest];
+}
+
+-(void)dismissNavigationController
+{
+    [self.theDelegate MDMoveFilesNavigationControllerDidCancelWithController:self];
 }
 
 @end

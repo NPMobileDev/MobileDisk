@@ -15,6 +15,8 @@
 		443D00511594219C008CCCBE /* NotSelected.png in Resources */ = {isa = PBXBuildFile; fileRef = 443D004F1594219C008CCCBE /* NotSelected.png */; };
 		4440BB621591A9740073BBAA /* MDSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4440BB611591A9740073BBAA /* MDSettingsViewController.m */; };
 		4440BB721591B8360073BBAA /* IPResolver.m in Sources */ = {isa = PBXBuildFile; fileRef = 4440BB711591B8360073BBAA /* IPResolver.m */; };
+		445D13ED1599391300B7D777 /* MDMoveFilesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 445D13EC1599391300B7D777 /* MDMoveFilesViewController.m */; };
+		445D13F115993AAB00B7D777 /* MDMoveFilesNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 445D13F015993AAB00B7D777 /* MDMoveFilesNavigationController.m */; };
 		4494309C158EB4C000ADAE89 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4494309B158EB4C000ADAE89 /* UIKit.framework */; };
 		4494309E158EB4C000ADAE89 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4494309D158EB4C000ADAE89 /* Foundation.framework */; };
 		449430A0158EB4C000ADAE89 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4494309F158EB4C000ADAE89 /* CoreGraphics.framework */; };
@@ -66,6 +68,10 @@
 		4440BB611591A9740073BBAA /* MDSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDSettingsViewController.m; sourceTree = "<group>"; };
 		4440BB701591B8360073BBAA /* IPResolver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IPResolver.h; sourceTree = "<group>"; };
 		4440BB711591B8360073BBAA /* IPResolver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IPResolver.m; sourceTree = "<group>"; };
+		445D13EB1599391300B7D777 /* MDMoveFilesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDMoveFilesViewController.h; sourceTree = "<group>"; };
+		445D13EC1599391300B7D777 /* MDMoveFilesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDMoveFilesViewController.m; sourceTree = "<group>"; };
+		445D13EF15993AAB00B7D777 /* MDMoveFilesNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDMoveFilesNavigationController.h; sourceTree = "<group>"; };
+		445D13F015993AAB00B7D777 /* MDMoveFilesNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDMoveFilesNavigationController.m; sourceTree = "<group>"; };
 		44943097158EB4C000ADAE89 /* MobileDisk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MobileDisk.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4494309B158EB4C000ADAE89 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		4494309D158EB4C000ADAE89 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -159,6 +165,10 @@
 				443ACE0D1593018D008B4DF2 /* MDFiles.m */,
 				443D004A159410CD008CCCBE /* MDFilesTableViewCell.h */,
 				443D004B159410CD008CCCBE /* MDFilesTableViewCell.m */,
+				445D13EB1599391300B7D777 /* MDMoveFilesViewController.h */,
+				445D13EC1599391300B7D777 /* MDMoveFilesViewController.m */,
+				445D13EF15993AAB00B7D777 /* MDMoveFilesNavigationController.h */,
+				445D13F015993AAB00B7D777 /* MDMoveFilesNavigationController.m */,
 			);
 			name = Files;
 			sourceTree = "<group>";
@@ -442,6 +452,8 @@
 				443ACE0B1592F52E008B4DF2 /* MDFilesViewController.m in Sources */,
 				443ACE0E1593018D008B4DF2 /* MDFiles.m in Sources */,
 				443D004C159410CD008CCCBE /* MDFilesTableViewCell.m in Sources */,
+				445D13ED1599391300B7D777 /* MDMoveFilesViewController.m in Sources */,
+				445D13F115993AAB00B7D777 /* MDMoveFilesNavigationController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

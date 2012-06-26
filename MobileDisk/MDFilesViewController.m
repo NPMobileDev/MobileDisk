@@ -10,6 +10,7 @@
 #import "MDFiles.h"
 #import "MDFilesTableViewCell.h"
 
+
 @interface MDFilesViewController ()
 
 -(void)findContentInWorkingPath:(NSString *)path;
@@ -30,6 +31,8 @@
 -(void)doDeleteSelect;
 -(void)doDeselectAll;
 -(void)doSelectAll;
+-(void)MoveFiles;
+-(void)doMoveFiles:(NSArray *)filesToMove ToDestinationPath:(NSString *)destPath;
 
 @end
 
@@ -77,6 +80,7 @@ const float ToolBarAnimationDuration = 0.1f;
 -(void)dealloc
 {
     self.workingPath = nil;
+    self.controllerTitle = nil;
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -84,6 +88,7 @@ const float ToolBarAnimationDuration = 0.1f;
     [super viewWillAppear:animated];
     
     self.title = self.controllerTitle;
+    
     
 }
 
@@ -95,20 +100,25 @@ const float ToolBarAnimationDuration = 0.1f;
      we add tool bar to view here because we want it to be on this view controller
      then we add to navigation controller's view
      **/
-    [self.navigationController.view addSubview:toolbar];
     
+    [self.navigationController.view addSubview:toolbar];
+   
 }
 
 -(void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
     
-    self.title = NSLocalizedString(@"Back", @"Back");
-    
-    [self.tableView setEditing:NO animated:YES];
-    
-    theStatus = StatusNone;
-    
+    if(theStatus != statusMoveFiles)
+    {
+        self.title = NSLocalizedString(@"Back", @"Back");
+        
+        if(self.tableView.isEditing)
+            [self doneEditTabelView];
+        
+        theStatus = StatusNone;
+    }
+  
 }
 
 -(void)viewDidDisappear:(BOOL)animated
@@ -250,7 +260,7 @@ const float ToolBarAnimationDuration = 0.1f;
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
+    static NSString *CellIdentifier = @"FilesCell";
     MDFilesTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
     if(cell == nil)
@@ -741,7 +751,9 @@ const float ToolBarAnimationDuration = 0.1f;
         }
         else if(buttonIndex == 3)
         {
-            //move files
+            /**move files**/
+            theStatus = statusMoveFiles;
+            [self MoveFiles];
         }
         
     }
@@ -928,6 +940,15 @@ const float ToolBarAnimationDuration = 0.1f;
     [self.tableView reloadData];
 }
 
+-(void)MoveFiles
+{
+    MDMoveFilesNavigationController *navController = [self.storyboard instantiateViewControllerWithIdentifier:@"MDMoveFilesNavigationController"];
+    
+    navController.theDelegate = self;
+    
+    [self.navigationController presentModalViewController:navController animated:YES];
+}
+
 #pragma mark - UIAlertView delegate related methods
 //path should not contain folder name
 -(BOOL)doAddFolderAtPath:(NSString *)workingPath WithFolderName:(NSString *)folderName
@@ -1034,6 +1055,139 @@ const float ToolBarAnimationDuration = 0.1f;
     
     //finally we remove selected IndexPath
     [selectedIndexPaths removeAllObjects];
+}
+
+#pragma mark - MDMoveFilesNavigationController delegate
+-(void)MDMoveFilesNavigationController:(MDMoveFilesNavigationController *)controller DidMoveFilesToDestination:(NSString *)folderDest
+{
+    NSMutableArray *filesToMove = [[NSMutableArray alloc] init];
+    NSMutableArray *duplicateFiles = [[NSMutableArray alloc] init];
+    
+    /**if value not nil mean user move a folder to a same folder***/
+    //used to determind if folder move by it self
+    MDFiles *selfFiles = nil;
+    NSArray *splitePath = [folderDest componentsSeparatedByString:@"/"];
+    NSString *destFolderName = [splitePath lastObject];
+    
+    if([destFolderName isEqualToString:@"Documents"])
+        destFolderName = @"Root";
+    
+    //check if file exist in path
+    for(NSIndexPath *indexPath in selectedIndexPaths)
+    {
+        MDFiles *file = [filesArray objectAtIndex:indexPath.row];
+        NSString *checkedPath = [folderDest stringByAppendingPathComponent:file.fileName];
+        
+        //check if folder move by it self
+        if(file.isFile == NO)
+        {
+            if([file.fileName isEqualToString:destFolderName])
+            {
+                selfFiles = file;
+                
+                break;
+            }
+
+        }
+        
+        if([[NSFileManager defaultManager] fileExistsAtPath:checkedPath])
+        {
+            [duplicateFiles addObject:[file.fileName copy]];
+        }
+        else
+        {
+            [filesToMove addObject:file];
+        }
+    }
+
+    if(selfFiles != nil)
+    {
+        //there are some duplicate file at destination
+        NSString *msg = [NSString stringWithFormat:NSLocalizedString(@"You can not move the folder \"%@\" to the same folder \"%@\"", @"You can not move the folder \"%@\" to the same folder \"%@\""), selfFiles.fileName, destFolderName];
+        
+        UIAlertView *theAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", @"Error") message:msg delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles: nil];
+        
+        [theAlert show];
+    }
+    else if([duplicateFiles count] != 0)
+    {
+        //there are some duplicate file at destination
+        NSString *msg = [NSString stringWithFormat:NSLocalizedString(@"Please make sure there is no same file or folder at destination folder \"%@\"", @"Please make sure there is no same file or folder at destination folder \"%@\""), destFolderName];
+        
+        UIAlertView *duplicateAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", @"Error") message:msg delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles: nil];
+        
+        [duplicateAlert show];
+    }
+    else
+    {
+        //we are save to move files
+        
+        [self doneEditTabelView];
+        
+        [self doMoveFiles:filesToMove ToDestinationPath:folderDest];
+        
+        [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+        
+        [self reloadTableViewData];
+ 
+    }
+    
+    //change status to none
+    theStatus = StatusNone;
+}
+
+-(void)MDMoveFilesNavigationControllerDidCancelWithController:(MDMoveFilesNavigationController *)controller
+{
+    [self doneEditTabelView];
+    
+    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+    
+    //change status to none
+    theStatus = StatusNone;
+    
+}
+
+#pragma mark - move file method
+-(void)doMoveFiles:(NSArray *)filesToMove ToDestinationPath:(NSString *)destPath
+{
+
+    NSError *error;
+    
+    
+    if([filesToMove count] == 0)
+    {
+        NSLog(@"No file selected to perform move action");
+        return;
+    }
+    
+    for(MDFiles *file in filesToMove)
+    {
+        //the destPath is directory not a file so we need to apped file's name to make full path
+        NSString *targetPath = [destPath stringByAppendingPathComponent:file.fileName];
+        
+        //move file to dest path
+        [[NSFileManager defaultManager] moveItemAtPath:file.filePath toPath:targetPath error:&error];
+        
+        if(error != nil)
+        {
+            NSLog(@"move file from %@ to %@ fail error:%@", file.filePath, targetPath, error);
+        }
+        
+        
+        int objectIndex = [filesArray indexOfObject:file];
+        NSArray *deletedIndexPaths = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:objectIndex inSection:0]];
+        
+        //remove file representation
+        [filesArray removeObject:file];
+        
+        //remove table row
+        [self.tableView deleteRowsAtIndexPaths:deletedIndexPaths withRowAnimation:UITableViewRowAnimationNone];
+        
+    }
+    
+    //remove all selected Indexpaths
+    [selectedIndexPaths removeAllObjects];
+    
 }
 
 @end
