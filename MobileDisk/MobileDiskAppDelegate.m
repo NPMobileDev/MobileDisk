@@ -10,12 +10,16 @@
 #import "HTTPServer.h"
 #import "MDHTTPConnection.h"
 #import "MDSettingsViewController.h"
+#import "MDFilesNavigationController.h"
+#import "MDFileSupporter.h"
 
 
 
 @implementation MobileDiskAppDelegate{
     
     HTTPServer *httpServer;
+    
+    MDFileSupporter *fileSupporter;
 }
 
 
@@ -69,14 +73,27 @@
 {
     // Override point for customization after application launch.
     
+    //create file supporter
+    fileSupporter = [[MDFileSupporter alloc] initFileSupporter];
+    
     //configure and create http server
     [self configureHttpServer];
     
     //get settings controller and set http server
     UITabBarController *tabbarController = (UITabBarController*)self.window.rootViewController;
+    
+    //settings
     UINavigationController *navController = [tabbarController.viewControllers objectAtIndex:1];
-    MDSettingsViewController *settingsController = [navController.viewControllers objectAtIndex:0];    
+    MDSettingsViewController *settingsController = [navController.viewControllers objectAtIndex:0];  
+    
     settingsController.httpServer = httpServer;
+    
+    
+    //files
+    MDFilesNavigationController *filesNavController = [tabbarController.viewControllers objectAtIndex:0];
+    
+    filesNavController.fileSupporter = fileSupporter;
+    
     
     return YES;
 }

@@ -11,6 +11,7 @@
 #ifdef __OBJC__
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
+
 #endif
 
 #ifndef MD_Custom_Notification
@@ -19,4 +20,11 @@
 
 #ifndef MD_HttpServer
     #define kHttpServerPort 8080
+#endif
+
+#ifndef __UTI__
+
+    #import <MobileCoreServices/UTCoreTypes.h>
+    #import <MobileCoreServices/UTType.h>
+
 #endif

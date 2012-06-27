@@ -15,7 +15,9 @@
 
 #import <UIKit/UIKit.h>
 
+@class MDFileSupporter;
+
 @interface MDFilesNavigationController : UINavigationController 
 
-
+@property (nonatomic, weak) MDFileSupporter *fileSupporter;
 @end

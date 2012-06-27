@@ -17,6 +17,8 @@
 
 @implementation MDFilesNavigationController
 
+@synthesize fileSupporter = _fileSupporter;
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -39,6 +41,9 @@
     rootController.workingPath = [MobileDiskAppDelegate documentDirectory];
     //set controller title
     rootController.controllerTitle = NSLocalizedString(@"Files", @"Files");
+    
+    //set supported file extensions
+    rootController.fileSupporter = self.fileSupporter;
     
     //set view controllers for navigation controller, here it's only root controller
     [self setViewControllers:[NSArray arrayWithObject:rootController]];

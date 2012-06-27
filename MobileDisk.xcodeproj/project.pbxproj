@@ -15,6 +15,10 @@
 		443D00511594219C008CCCBE /* NotSelected.png in Resources */ = {isa = PBXBuildFile; fileRef = 443D004F1594219C008CCCBE /* NotSelected.png */; };
 		4440BB621591A9740073BBAA /* MDSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4440BB611591A9740073BBAA /* MDSettingsViewController.m */; };
 		4440BB721591B8360073BBAA /* IPResolver.m in Sources */ = {isa = PBXBuildFile; fileRef = 4440BB711591B8360073BBAA /* IPResolver.m */; };
+		444FF9D4159AA0770033BB3B /* MobileDiskInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 444FF9D3159AA0770033BB3B /* MobileDiskInfo.plist */; };
+		444FF9D6159AB6120033BB3B /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 444FF9D5159AB6120033BB3B /* MobileCoreServices.framework */; };
+		444FF9DA159AD45F0033BB3B /* MDFileSupporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 444FF9D9159AD45F0033BB3B /* MDFileSupporter.m */; };
+		444FF9E3159B2BF70033BB3B /* MDPDFViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 444FF9E2159B2BF70033BB3B /* MDPDFViewController.m */; };
 		445D13ED1599391300B7D777 /* MDMoveFilesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 445D13EC1599391300B7D777 /* MDMoveFilesViewController.m */; };
 		445D13F115993AAB00B7D777 /* MDMoveFilesNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 445D13F015993AAB00B7D777 /* MDMoveFilesNavigationController.m */; };
 		445D13F81599A7FE00B7D777 /* MDRenameAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 445D13F71599A7FE00B7D777 /* MDRenameAlertView.m */; };
@@ -72,6 +76,12 @@
 		4440BB611591A9740073BBAA /* MDSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDSettingsViewController.m; sourceTree = "<group>"; };
 		4440BB701591B8360073BBAA /* IPResolver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IPResolver.h; sourceTree = "<group>"; };
 		4440BB711591B8360073BBAA /* IPResolver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IPResolver.m; sourceTree = "<group>"; };
+		444FF9D3159AA0770033BB3B /* MobileDiskInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = MobileDiskInfo.plist; sourceTree = "<group>"; };
+		444FF9D5159AB6120033BB3B /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		444FF9D8159AD45F0033BB3B /* MDFileSupporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDFileSupporter.h; sourceTree = "<group>"; };
+		444FF9D9159AD45F0033BB3B /* MDFileSupporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDFileSupporter.m; sourceTree = "<group>"; };
+		444FF9E1159B2BF70033BB3B /* MDPDFViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDPDFViewController.h; sourceTree = "<group>"; };
+		444FF9E2159B2BF70033BB3B /* MDPDFViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDPDFViewController.m; sourceTree = "<group>"; };
 		445D13EB1599391300B7D777 /* MDMoveFilesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDMoveFilesViewController.h; sourceTree = "<group>"; };
 		445D13EC1599391300B7D777 /* MDMoveFilesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDMoveFilesViewController.m; sourceTree = "<group>"; };
 		445D13EF15993AAB00B7D777 /* MDMoveFilesNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDMoveFilesNavigationController.h; sourceTree = "<group>"; };
@@ -155,6 +165,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				444FF9D6159AB6120033BB3B /* MobileCoreServices.framework in Frameworks */,
 				4494311D158EBBCB00ADAE89 /* Security.framework in Frameworks */,
 				4494311B158EBBC500ADAE89 /* CFNetwork.framework in Frameworks */,
 				4494309C158EB4C000ADAE89 /* UIKit.framework in Frameworks */,
@@ -203,6 +214,32 @@
 			name = "IP-Resolver";
 			sourceTree = "<group>";
 		};
+		444FF9CF159A9FC60033BB3B /* SupportedFilePlist */ = {
+			isa = PBXGroup;
+			children = (
+				444FF9D3159AA0770033BB3B /* MobileDiskInfo.plist */,
+			);
+			name = SupportedFilePlist;
+			sourceTree = "<group>";
+		};
+		444FF9D7159AD4200033BB3B /* FileSupporter */ = {
+			isa = PBXGroup;
+			children = (
+				444FF9D8159AD45F0033BB3B /* MDFileSupporter.h */,
+				444FF9D9159AD45F0033BB3B /* MDFileSupporter.m */,
+			);
+			name = FileSupporter;
+			sourceTree = "<group>";
+		};
+		444FF9E0159B2BCD0033BB3B /* PDFViewer */ = {
+			isa = PBXGroup;
+			children = (
+				444FF9E1159B2BF70033BB3B /* MDPDFViewController.h */,
+				444FF9E2159B2BF70033BB3B /* MDPDFViewController.m */,
+			);
+			name = PDFViewer;
+			sourceTree = "<group>";
+		};
 		445D13F21599A75A00B7D777 /* Actions */ = {
 			isa = PBXGroup;
 			children = (
@@ -238,6 +275,7 @@
 		4494309A158EB4C000ADAE89 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				444FF9D5159AB6120033BB3B /* MobileCoreServices.framework */,
 				4494311C158EBBCB00ADAE89 /* Security.framework */,
 				4494311A158EBBC500ADAE89 /* CFNetwork.framework */,
 				4494309B158EB4C000ADAE89 /* UIKit.framework */,
@@ -250,6 +288,8 @@
 		449430A1158EB4C000ADAE89 /* MobileDisk */ = {
 			isa = PBXGroup;
 			children = (
+				444FF9E0159B2BCD0033BB3B /* PDFViewer */,
+				444FF9D7159AD4200033BB3B /* FileSupporter */,
 				445D13F21599A75A00B7D777 /* Actions */,
 				443ACDFE1592EF76008B4DF2 /* Files */,
 				4440BB5E1591A9190073BBAA /* Settings */,
@@ -267,6 +307,7 @@
 		449430A2158EB4C000ADAE89 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				444FF9CF159A9FC60033BB3B /* SupportedFilePlist */,
 				443D004E1594219C008CCCBE /* IsSelected.png */,
 				443D004F1594219C008CCCBE /* NotSelected.png */,
 				44943132158F245A00ADAE89 /* index.html */,
@@ -438,6 +479,7 @@
 				44943133158F245A00ADAE89 /* index.html in Resources */,
 				443D00501594219C008CCCBE /* IsSelected.png in Resources */,
 				443D00511594219C008CCCBE /* NotSelected.png in Resources */,
+				444FF9D4159AA0770033BB3B /* MobileDiskInfo.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -486,6 +528,8 @@
 				445D13FB1599AF1300B7D777 /* MDAddFolderAlertView.m in Sources */,
 				445D13FE1599B50200B7D777 /* MDNonSelectedActionSheet.m in Sources */,
 				445D14011599BB4800B7D777 /* MDSelectedActionSheet.m in Sources */,
+				444FF9DA159AD45F0033BB3B /* MDFileSupporter.m in Sources */,
+				444FF9E3159B2BF70033BB3B /* MDPDFViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -12,6 +12,8 @@
 
 
 
+
+
 @interface MDFilesViewController ()
 
 -(void)findContentInWorkingPath:(NSString *)path;
@@ -64,6 +66,7 @@ const float ToolBarAnimationDuration = 0.1f;
 
 @synthesize workingPath = _workingPath;
 @synthesize controllerTitle = _controllerTitle;
+@synthesize fileSupporter = _fileSupporter;
 
 #pragma mark - Override methods 
 /*
@@ -353,11 +356,38 @@ const float ToolBarAnimationDuration = 0.1f;
             //set property
             fileController.workingPath = [self.workingPath stringByAppendingPathComponent:file.fileName];
             fileController.controllerTitle = file.fileName;
+            fileController.fileSupporter = self.fileSupporter;
             
             //push view controller
             [self.navigationController pushViewController:fileController animated:YES];
             
         }
+        else
+        {
+            //is a file
+            //check if file is supported
+            if([self.fileSupporter isFileSupported:file.filePath])
+            {
+                UIViewController *theController = [self.fileSupporter findControllerToOpenFile:file.filePath WithStoryboard:self.storyboard];
+                
+                if(theController != nil)
+                {
+                    //present controller
+                    [self.navigationController presentModalViewController:theController animated:YES];
+                    
+                }
+            }
+            else
+            {
+                NSString *msg = [NSString stringWithFormat:NSLocalizedString(@"The file \"%@\" does not supported to open in this app", @"The file \"%@\" does not supported to open in this app"), file.fileName];
+                
+                UIAlertView *notSupportAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Not support", @"Not support") message:msg delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles: nil];
+                
+                [notSupportAlert show];
+            }
+        }
+        
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
     }
     else
     {

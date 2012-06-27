@@ -183,6 +183,51 @@
             </objects>
             <point key="canvasLocation" x="1218" y="107"/>
         </scene>
+        <!--View Controller-->
+        <scene sceneID="rjD-2Z-1mU">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="mw0-ZK-GlK" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <viewController storyboardIdentifier="MDPDFViewController" id="YTN-b1-pDy" customClass="MDPDFViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="xVJ-Ew-jqB">
+                        <rect key="frame" x="0.0" y="20" width="320" height="460"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="rq7-o2-vXe">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <items>
+                                    <barButtonItem title="Done" style="done" id="Esd-yK-S9d">
+                                        <connections>
+                                            <action selector="doneReadingPDF:" destination="YTN-b1-pDy" id="mZo-Jm-P3S"/>
+                                        </connections>
+                                    </barButtonItem>
+                                </items>
+                            </toolbar>
+                            <webView contentMode="scaleToFill" scalesPageToFit="YES" id="4t4-IF-jTA">
+                                <rect key="frame" x="0.0" y="44" width="320" height="416"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            </webView>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Title" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="HtJ-cQ-gsC">
+                                <rect key="frame" x="71" y="11" width="182" height="25"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                                <color key="shadowColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <size key="shadowOffset" width="0.0" height="1"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <connections>
+                        <outlet property="titleLabel" destination="HtJ-cQ-gsC" id="MjH-Lz-jTL"/>
+                        <outlet property="webView" destination="4t4-IF-jTA" id="Ot6-Ti-fdX"/>
+                    </connections>
+                </viewController>
+            </objects>
+            <point key="canvasLocation" x="1218" y="713"/>
+        </scene>
         <!--Move Files View Controller-->
         <scene sceneID="SZ4-uh-VZM">
             <objects>
@@ -254,6 +299,14 @@
         </class>
         <class className="MDMoveFilesViewController" superclassName="UITableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/MDMoveFilesViewController.h"/>
+        </class>
+        <class className="MDPDFViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/MDPDFViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="doneReadingPDF:"/>
+                <relationship kind="outlet" name="titleLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="webView" candidateClass="UIWebView"/>
+            </relationships>
         </class>
         <class className="MDSettingsViewController" superclassName="UITableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/MDSettingsViewController.h"/>

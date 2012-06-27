@@ -19,6 +19,7 @@
 #import "MDAddFolderAlertView.h"
 #import "MDNonSelectedActionSheet.h"
 #import "MDSelectedActionSheet.h"
+#import "MDFileSupporter.h"
 
 
 @interface MDFilesViewController : UITableViewController <UIAlertViewDelegate,  UIActionSheetDelegate, 
@@ -31,5 +32,6 @@
 //current path
 @property (nonatomic, copy) NSString *workingPath;
 @property (nonatomic, copy) NSString *controllerTitle;
+@property (nonatomic, weak) MDFileSupporter *fileSupporter;
 
 @end

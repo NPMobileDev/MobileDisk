@@ -11,8 +11,8 @@
 @interface MDFilesTableViewCell : UITableViewCell
 
 @property (nonatomic, strong) UIImageView *selectionIndicator;
-@property (nonatomic, readonly) NSString *selectedIndicatorName;
-@property (nonatomic, readonly) NSString *notSelectedIndicatorName;
+@property (nonatomic, readonly, getter = selectedIndicatorName) NSString *selectedIndicatorName;
+@property (nonatomic, readonly, getter = notSelectedIndicatorName) NSString *notSelectedIndicatorName;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier withTableView:(UITableView *)tableView;
 
