@@ -14,6 +14,7 @@
 
 
 
+
 @interface MDFilesViewController ()
 
 -(void)findContentInWorkingPath:(NSString *)path;
@@ -373,7 +374,7 @@ const float ToolBarAnimationDuration = 0.1f;
                 if(theController != nil)
                 {
                     //present controller
-                    [self.navigationController presentModalViewController:theController animated:YES];
+                    [self.navigationController presentViewController:theController animated:YES completion:nil];
                     
                 }
             }

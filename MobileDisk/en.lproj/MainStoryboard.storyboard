@@ -330,6 +330,20 @@
             </objects>
             <point key="canvasLocation" x="1218" y="1356"/>
         </scene>
+        <!--Player Controller-->
+        <scene sceneID="5ST-dm-GoM">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="65r-OA-PqI" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <viewController storyboardIdentifier="MDAVPlayerController" id="hHu-Hu-HBp" customClass="MDAVPlayerController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="9lU-yf-yh4">
+                        <rect key="frame" x="0.0" y="20" width="320" height="460"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+            </objects>
+            <point key="canvasLocation" x="1218" y="1995"/>
+        </scene>
     </scenes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>

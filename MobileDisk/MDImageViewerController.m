@@ -113,5 +113,10 @@
     return imageView;
 }
 
+-(void)launch
+{
+    NSLog(@"image viewer launch");
+}
+
 
 @end

@@ -10,6 +10,7 @@
 #import "MDFilesViewController.h"
 #import "MDPDFViewController.h"
 #import "MDImageViewerController.h"
+#import "MDAVPlayerController.h"
 
 @interface MDFileSupporter()
 
@@ -17,6 +18,8 @@
 -(id)findControllerForImageTypeFile:(CFStringRef)compareUTI;
 -(id)findControllerForAudioVideoTypeFile:(CFStringRef)compareUTI;
 -(id)findControllerForOtherTypeFile:(CFStringRef)compareUTI;
+-(id)findImageViewerController;
+-(id)findAudioVideoController;
 
 @end
 
@@ -135,13 +138,32 @@
         
         controller = [self findImageViewerController];
     }
+
     
     return controller; 
 }
 
 -(id)findControllerForAudioVideoTypeFile:(CFStringRef)compareUTI
 {
-    return nil;
+    id controller = nil;
+    
+    if(UTTypeConformsTo(compareUTI, kUTTypeMPEG4))
+    {
+        //mp4 video
+        controller = [self findAudioVideoController];
+    }
+    else if(UTTypeConformsTo(compareUTI, kUTTypeMP3))
+    {
+        //mp3 audio
+        controller = [self findAudioVideoController];
+    }
+    else if(UTTypeConformsTo(compareUTI, kUTTypeQuickTimeMovie))
+    {
+        //quick time movie
+        controller = [self findAudioVideoController];
+    }
+    
+    return controller;
 }
 
 -(id)findControllerForOtherTypeFile:(CFStringRef)compareUTI
@@ -177,6 +199,17 @@
     imageController.imageURL = imageURL;
     
     return navController;
+}
+
+-(id)findAudioVideoController
+{
+    NSURL *avFileURL = [NSURL fileURLWithPath:operateFilePath];
+    
+    MDAVPlayerController *avPlayerController = [operateStoryboard instantiateViewControllerWithIdentifier:@"MDAVPlayerController"];
+    
+    avPlayerController.avFileURL = avFileURL;
+    
+    return avPlayerController;
 }
 
 
