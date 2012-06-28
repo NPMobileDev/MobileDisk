@@ -9,13 +9,14 @@
 #import "MDFileSupporter.h"
 #import "MDFilesViewController.h"
 #import "MDPDFViewController.h"
+#import "MDImageViewerController.h"
 
 @interface MDFileSupporter()
 
 -(void)loadSupportedFileExtensions;
--(id)findControllerForImageTypeFile:(CFStringRef)compareUTI WithStoryboard:(UIStoryboard *)storyboard;
--(id)findControllerForAudioVideoTypeFile:(CFStringRef)compareUTI WithStoryboard:(UIStoryboard *)storyboard;
--(id)findControllerForOtherTypeFile:(CFStringRef)compareUTI WithStoryboard:(UIStoryboard *)storyboard;
+-(id)findControllerForImageTypeFile:(CFStringRef)compareUTI;
+-(id)findControllerForAudioVideoTypeFile:(CFStringRef)compareUTI;
+-(id)findControllerForOtherTypeFile:(CFStringRef)compareUTI;
 
 @end
 
@@ -32,6 +33,7 @@
     NSMutableArray *supportedExtensionsUTI;
     
     NSString *operateFilePath;
+    __weak UIStoryboard *operateStoryboard;
     
 }
 
@@ -65,6 +67,8 @@
 #pragma mark find controller to open specific file type
 -(id)findControllerToOpenFile:(NSString *)filePath WithStoryboard:(UIStoryboard *)storyboard
 {
+    operateStoryboard = storyboard;
+    
     id theController = nil;
     operateFilePath = filePath;
     NSString *filename = [filePath lastPathComponent];
@@ -83,6 +87,7 @@
     //get back UTI info
     CFDictionaryRef declareInfo = UTTypeCopyDeclaration(compareUTI);
     CFArrayRef conformType = CFDictionaryGetValue(declareInfo, kUTTypeConformsToKey);
+
     
     NSLog(@"declare info:%@", declareInfo);
     NSLog(@"conform types:%@", conformType);
@@ -92,17 +97,17 @@
     if (UTTypeConformsTo(compareUTI, kUTTypeImage)) 
     {
         //file is image type abstract
-        theController = [self findControllerForImageTypeFile:compareUTI WithStoryboard:storyboard];
+        theController = [self findControllerForImageTypeFile:compareUTI];
     }
     else if(UTTypeConformsTo(compareUTI, kUTTypeAudiovisualContent))
     {
         //file is audio or video type abstract
-        theController = [self findControllerForAudioVideoTypeFile:compareUTI WithStoryboard:storyboard];
+        theController = [self findControllerForAudioVideoTypeFile:compareUTI];
     }
     else
     {
         //file is other type
-        theController = [self findControllerForOtherTypeFile:compareUTI WithStoryboard:storyboard];
+        theController = [self findControllerForOtherTypeFile:compareUTI];
     }
     
     //free memory
@@ -112,26 +117,34 @@
     return theController;
 }
 
--(id)findControllerForImageTypeFile:(CFStringRef)compareUTI WithStoryboard:(UIStoryboard *)storyboard
+-(id)findControllerForImageTypeFile:(CFStringRef)compareUTI
 {
+    id controller = nil;
+    
     if(UTTypeConformsTo(compareUTI, kUTTypePNG))
     {
+        //is png image
         NSLog(@"return png controller");
+        
+        controller = [self findImageViewerController];
     }
     else if(UTTypeConformsTo(compareUTI, kUTTypeJPEG))
     {
+        //is jpeg image
         NSLog(@"return jpeg controller");
+        
+        controller = [self findImageViewerController];
     }
     
-    return nil; 
+    return controller; 
 }
 
--(id)findControllerForAudioVideoTypeFile:(CFStringRef)compareUTI WithStoryboard:(UIStoryboard *)storyboard
+-(id)findControllerForAudioVideoTypeFile:(CFStringRef)compareUTI
 {
     return nil;
 }
 
--(id)findControllerForOtherTypeFile:(CFStringRef)compareUTI WithStoryboard:(UIStoryboard *)storyboard
+-(id)findControllerForOtherTypeFile:(CFStringRef)compareUTI
 {
     if(UTTypeConformsTo(compareUTI, kUTTypePDF))
     {
@@ -140,14 +153,30 @@
         
         NSURL *pdfURL = [NSURL fileURLWithPath:operateFilePath];
         
-        MDPDFViewController *pdfController = [storyboard instantiateViewControllerWithIdentifier:@"MDPDFViewController"];
+        UINavigationController *navController = [operateStoryboard instantiateViewControllerWithIdentifier:@"MDPDFViewController"];
+        
+        MDPDFViewController * pdfController = [navController.viewControllers objectAtIndex:0];
         
         pdfController.pdfURL = pdfURL;
         
-        return pdfController;
+        return navController;
     }
     
     return nil;
+}
+
+-(id)findImageViewerController
+{
+    //find image viewer controller
+    NSURL *imageURL = [NSURL fileURLWithPath:operateFilePath];
+    
+    UINavigationController *navController = [operateStoryboard instantiateViewControllerWithIdentifier:@"MDImageViewerController"];
+    
+    MDImageViewerController * imageController = [navController.viewControllers objectAtIndex:0];
+    
+    imageController.imageURL = imageURL;
+    
+    return navController;
 }
 
 

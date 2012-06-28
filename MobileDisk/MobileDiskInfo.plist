@@ -4,6 +4,11 @@
 <dict>
 	<key>SupportedFileExtensions</key>
 	<dict>
+		<key>Image</key>
+		<array>
+			<string>png</string>
+			<string>jpeg</string>
+		</array>
 		<key>Document</key>
 		<array>
 			<string>pdf</string>

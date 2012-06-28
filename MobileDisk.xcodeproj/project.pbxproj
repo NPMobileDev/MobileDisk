@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		441AB991159C646B00BAAA19 /* MDScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 441AB990159C646B00BAAA19 /* MDScrollView.m */; };
 		443ACE081592F395008B4DF2 /* MDFilesNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 443ACE071592F395008B4DF2 /* MDFilesNavigationController.m */; };
 		443ACE0B1592F52E008B4DF2 /* MDFilesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 443ACE0A1592F52E008B4DF2 /* MDFilesViewController.m */; };
 		443ACE0E1593018D008B4DF2 /* MDFiles.m in Sources */ = {isa = PBXBuildFile; fileRef = 443ACE0D1593018D008B4DF2 /* MDFiles.m */; };
@@ -25,6 +26,8 @@
 		445D13FB1599AF1300B7D777 /* MDAddFolderAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 445D13FA1599AF1300B7D777 /* MDAddFolderAlertView.m */; };
 		445D13FE1599B50200B7D777 /* MDNonSelectedActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 445D13FD1599B50200B7D777 /* MDNonSelectedActionSheet.m */; };
 		445D14011599BB4800B7D777 /* MDSelectedActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 445D14001599BB4800B7D777 /* MDSelectedActionSheet.m */; };
+		447CD7EC159C04AE00464D28 /* MDImageViewerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 447CD7EB159C04AE00464D28 /* MDImageViewerController.m */; };
+		447CD7EF159C37A700464D28 /* UIImage+Resize.m in Sources */ = {isa = PBXBuildFile; fileRef = 447CD7EE159C37A700464D28 /* UIImage+Resize.m */; };
 		4494309C158EB4C000ADAE89 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4494309B158EB4C000ADAE89 /* UIKit.framework */; };
 		4494309E158EB4C000ADAE89 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4494309D158EB4C000ADAE89 /* Foundation.framework */; };
 		449430A0158EB4C000ADAE89 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4494309F158EB4C000ADAE89 /* CoreGraphics.framework */; };
@@ -62,6 +65,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		441AB98F159C646B00BAAA19 /* MDScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDScrollView.h; sourceTree = "<group>"; };
+		441AB990159C646B00BAAA19 /* MDScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDScrollView.m; sourceTree = "<group>"; };
 		443ACE061592F395008B4DF2 /* MDFilesNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDFilesNavigationController.h; sourceTree = "<group>"; };
 		443ACE071592F395008B4DF2 /* MDFilesNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDFilesNavigationController.m; sourceTree = "<group>"; };
 		443ACE091592F52E008B4DF2 /* MDFilesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDFilesViewController.h; sourceTree = "<group>"; };
@@ -94,6 +99,10 @@
 		445D13FD1599B50200B7D777 /* MDNonSelectedActionSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDNonSelectedActionSheet.m; sourceTree = "<group>"; };
 		445D13FF1599BB4800B7D777 /* MDSelectedActionSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDSelectedActionSheet.h; sourceTree = "<group>"; };
 		445D14001599BB4800B7D777 /* MDSelectedActionSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDSelectedActionSheet.m; sourceTree = "<group>"; };
+		447CD7EA159C04AE00464D28 /* MDImageViewerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDImageViewerController.h; sourceTree = "<group>"; };
+		447CD7EB159C04AE00464D28 /* MDImageViewerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDImageViewerController.m; sourceTree = "<group>"; };
+		447CD7ED159C37A700464D28 /* UIImage+Resize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Resize.h"; sourceTree = "<group>"; };
+		447CD7EE159C37A700464D28 /* UIImage+Resize.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Resize.m"; sourceTree = "<group>"; };
 		44943097158EB4C000ADAE89 /* MobileDisk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MobileDisk.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4494309B158EB4C000ADAE89 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		4494309D158EB4C000ADAE89 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -255,6 +264,19 @@
 			name = Actions;
 			sourceTree = "<group>";
 		};
+		447CD7E8159C047600464D28 /* ImageViewer */ = {
+			isa = PBXGroup;
+			children = (
+				447CD7EA159C04AE00464D28 /* MDImageViewerController.h */,
+				447CD7EB159C04AE00464D28 /* MDImageViewerController.m */,
+				447CD7ED159C37A700464D28 /* UIImage+Resize.h */,
+				447CD7EE159C37A700464D28 /* UIImage+Resize.m */,
+				441AB98F159C646B00BAAA19 /* MDScrollView.h */,
+				441AB990159C646B00BAAA19 /* MDScrollView.m */,
+			);
+			name = ImageViewer;
+			sourceTree = "<group>";
+		};
 		4494308C158EB4C000ADAE89 = {
 			isa = PBXGroup;
 			children = (
@@ -288,6 +310,7 @@
 		449430A1158EB4C000ADAE89 /* MobileDisk */ = {
 			isa = PBXGroup;
 			children = (
+				447CD7E8159C047600464D28 /* ImageViewer */,
 				444FF9E0159B2BCD0033BB3B /* PDFViewer */,
 				444FF9D7159AD4200033BB3B /* FileSupporter */,
 				445D13F21599A75A00B7D777 /* Actions */,
@@ -530,6 +553,9 @@
 				445D14011599BB4800B7D777 /* MDSelectedActionSheet.m in Sources */,
 				444FF9DA159AD45F0033BB3B /* MDFileSupporter.m in Sources */,
 				444FF9E3159B2BF70033BB3B /* MDPDFViewController.m in Sources */,
+				447CD7EC159C04AE00464D28 /* MDImageViewerController.m in Sources */,
+				447CD7EF159C37A700464D28 /* UIImage+Resize.m in Sources */,
+				441AB991159C646B00BAAA19 /* MDScrollView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

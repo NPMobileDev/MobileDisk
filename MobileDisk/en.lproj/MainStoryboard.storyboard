@@ -187,46 +187,54 @@
         <scene sceneID="rjD-2Z-1mU">
             <objects>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mw0-ZK-GlK" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <viewController storyboardIdentifier="MDPDFViewController" id="YTN-b1-pDy" customClass="MDPDFViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="" id="YTN-b1-pDy" customClass="MDPDFViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="xVJ-Ew-jqB">
-                        <rect key="frame" x="0.0" y="20" width="320" height="460"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="rq7-o2-vXe">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                <items>
-                                    <barButtonItem title="Done" style="done" id="Esd-yK-S9d">
-                                        <connections>
-                                            <action selector="doneReadingPDF:" destination="YTN-b1-pDy" id="mZo-Jm-P3S"/>
-                                        </connections>
-                                    </barButtonItem>
-                                </items>
-                            </toolbar>
                             <webView contentMode="scaleToFill" scalesPageToFit="YES" id="4t4-IF-jTA">
-                                <rect key="frame" x="0.0" y="44" width="320" height="416"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="460"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             </webView>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Title" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="HtJ-cQ-gsC">
-                                <rect key="frame" x="71" y="11" width="182" height="25"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <nil key="highlightedColor"/>
-                                <color key="shadowColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <size key="shadowOffset" width="0.0" height="1"/>
-                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
+                    <navigationItem key="navigationItem" id="uAD-o7-dbt"/>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
-                        <outlet property="titleLabel" destination="HtJ-cQ-gsC" id="MjH-Lz-jTL"/>
                         <outlet property="webView" destination="4t4-IF-jTA" id="Ot6-Ti-fdX"/>
                     </connections>
                 </viewController>
             </objects>
-            <point key="canvasLocation" x="1218" y="713"/>
+            <point key="canvasLocation" x="1744" y="713"/>
+        </scene>
+        <!--Image Viewer Controller-->
+        <scene sceneID="dxb-Yg-26S">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="WCT-eT-JJJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <viewController id="Lef-Xy-TAU" customClass="MDImageViewerController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="TCQ-yl-XZl">
+                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="4ZF-i3-Ehx" customClass="MDScrollView">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="416"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <connections>
+                                    <outlet property="delegate" destination="Lef-Xy-TAU" id="Pk4-zc-QO7"/>
+                                </connections>
+                            </scrollView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="Nq9-jP-Fnm"/>
+                    <connections>
+                        <outlet property="imageScrolleView" destination="4ZF-i3-Ehx" id="kVc-3W-KNn"/>
+                    </connections>
+                </viewController>
+            </objects>
+            <point key="canvasLocation" x="1744" y="1356"/>
         </scene>
         <!--Move Files View Controller-->
         <scene sceneID="SZ4-uh-VZM">
@@ -286,32 +294,43 @@
             </objects>
             <point key="canvasLocation" x="280" y="-532"/>
         </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="IwW-pV-QjP">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="EcJ-yb-sr7" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <navigationController storyboardIdentifier="MDPDFViewController" id="v5a-oK-tF0" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="G8Y-UY-hdG">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="YTN-b1-pDy" kind="relationship" relationship="rootViewController" id="7sv-3K-bvt"/>
+                    </connections>
+                </navigationController>
+            </objects>
+            <point key="canvasLocation" x="1218" y="713"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="zDT-fP-fhs">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dO6-dc-AHe" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <navigationController storyboardIdentifier="MDImageViewerController" id="fqG-GL-aEU" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="IRw-e8-26U">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="Lef-Xy-TAU" kind="relationship" relationship="rootViewController" id="Kpg-aT-nbK"/>
+                    </connections>
+                </navigationController>
+            </objects>
+            <point key="canvasLocation" x="1218" y="1356"/>
+        </scene>
     </scenes>
-    <classes>
-        <class className="MDFilesNavigationController" superclassName="UINavigationController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MDFilesNavigationController.h"/>
-        </class>
-        <class className="MDFilesViewController" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MDFilesViewController.h"/>
-        </class>
-        <class className="MDMoveFilesNavigationController" superclassName="UINavigationController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MDMoveFilesNavigationController.h"/>
-        </class>
-        <class className="MDMoveFilesViewController" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MDMoveFilesViewController.h"/>
-        </class>
-        <class className="MDPDFViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MDPDFViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="doneReadingPDF:"/>
-                <relationship kind="outlet" name="titleLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="webView" candidateClass="UIWebView"/>
-            </relationships>
-        </class>
-        <class className="MDSettingsViewController" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MDSettingsViewController.h"/>
-        </class>
-    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

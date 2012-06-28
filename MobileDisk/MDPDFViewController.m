@@ -11,16 +11,13 @@
 @interface MDPDFViewController ()
 
 @property (nonatomic, weak) IBOutlet UIWebView *webView;
-@property (nonatomic, weak) IBOutlet UILabel *titleLabel;
 
--(IBAction)doneReadingPDF:(id)sender;
 
 @end
 
 @implementation MDPDFViewController
 
 @synthesize webView = _webView;
-@synthesize titleLabel = _titleLabel;
 @synthesize pdfURL = _pdfURL;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -32,6 +29,11 @@
     return self;
 }
 
+-(void)dealloc
+{
+    NSLog(@"pdf view deallocate");
+}
+
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
@@ -41,11 +43,18 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+
+    self.title = [self.pdfURL lastPathComponent];
+
+    //give right button on navigation bar
+    UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Done", @"Done") style:UIBarButtonItemStyleDone target:self action:@selector(doneReadingPDF)];
     
-    NSString *title = [self.pdfURL lastPathComponent];
-    self.titleLabel.text = title;
+    self.navigationItem.rightBarButtonItem = rightButton;
     
+    //load pdf on web view
     [self.webView loadRequest:[NSURLRequest requestWithURL:self.pdfURL]];
+    
+    
 }
 
 - (void)viewDidUnload
@@ -59,7 +68,7 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
--(IBAction)doneReadingPDF:(id)sender
+-(void)doneReadingPDF
 {
     [self dismissModalViewControllerAnimated:YES];
 }
