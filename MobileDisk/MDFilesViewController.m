@@ -194,12 +194,13 @@ const float ToolBarAnimationDuration = 0.1f;
     //refresh button
     UIBarButtonItem *refreshButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(reloadTableViewData)];
     
-    //create a tool bar 
+    //create a tool bar 44.01 perfect fit
     UIToolbar *rightToolBar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, 90, 44.01)];
     rightToolBar.items = [NSArray arrayWithObjects:editButton, refreshButton, nil];
     
     //create right button with tool bar in it
     UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithCustomView:rightToolBar];
+    rightButton.style = UIBarButtonItemStylePlain;
     
     self.navigationItem.rightBarButtonItem = rightButton;
 }

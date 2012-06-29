@@ -11,6 +11,7 @@
 #import "MDPDFViewController.h"
 #import "MDImageViewerController.h"
 #import "MDAVPlayerController.h"
+#import "MDMusicPlayerController.h"
 
 @interface MDFileSupporter()
 
@@ -20,6 +21,7 @@
 -(id)findControllerForOtherTypeFile:(CFStringRef)compareUTI;
 -(id)findImageViewerController;
 -(id)findAudioVideoController;
+-(id)findAudioController;
 
 @end
 
@@ -155,7 +157,7 @@
     else if(UTTypeConformsTo(compareUTI, kUTTypeMP3))
     {
         //mp3 audio
-        controller = [self findAudioVideoController];
+        controller = [self findAudioController];
     }
     else if(UTTypeConformsTo(compareUTI, kUTTypeQuickTimeMovie))
     {
@@ -210,6 +212,17 @@
     avPlayerController.avFileURL = avFileURL;
     
     return avPlayerController;
+}
+
+-(id)findAudioController
+{
+    NSURL *audioFileURL = [NSURL fileURLWithPath:operateFilePath];
+    
+    MDMusicPlayerController *musicPlayerController = [operateStoryboard instantiateViewControllerWithIdentifier:@"MDMusicPlayerController"];
+    
+    musicPlayerController.musicFileURL = audioFileURL;
+    
+    return musicPlayerController;
 }
 
 

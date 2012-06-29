@@ -56,7 +56,8 @@
     
     //set style and scaling mode
     avPlayer.controlStyle = MPMovieControlStyleFullscreen;
-    avPlayer.scalingMode = MPMovieScalingModeAspectFill;
+    avPlayer.scalingMode = MPMovieScalingModeAspectFit;
+    avPlayer.movieSourceType = MPMovieSourceTypeFile;
     
     [avPlayer prepareToPlay];
     
