@@ -100,6 +100,12 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     
+    //create music player
+    musicPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:self.musicFileURL error:nil];
+    musicPlayer.delegate = self;
+    
+    [musicPlayer prepareToPlay];
+    
     self.titleLabel.text = [self.musicFileURL lastPathComponent];
     
     //find info for music
@@ -115,12 +121,6 @@
     self.authorLabel.text = musicAuthor;
     self.artistLabel.text = musicArtist;
     self.lyricsTextView.text = musiclyrics;
-    
-    //create music player
-    musicPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:self.musicFileURL error:nil];
-    musicPlayer.delegate = self;
-    
-    [musicPlayer prepareToPlay];
     
     //set play button for action
     UIBarButtonItem *playButton = [self.toolbar.items objectAtIndex:1];

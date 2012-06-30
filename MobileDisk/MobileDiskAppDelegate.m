@@ -12,6 +12,7 @@
 #import "MDSettingsViewController.h"
 #import "MDFilesNavigationController.h"
 #import "MDFileSupporter.h"
+#import <AVFoundation/AVAudioPlayer.h>
 
 
 
@@ -69,9 +70,24 @@
     return docPath;
 }
 
+-(void)initiateAudioPlayer
+{
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"dummy" ofType:@"mp3"];
+    NSURL *url = [NSURL fileURLWithPath:path];
+    
+    AVAudioPlayer *player = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:nil];
+    [player prepareToPlay];
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
+    
+    /**
+     initate AVAudioPlayer because it take time to init so we init when app start
+     otherwise init of AVAudioPlayer will block any of view controller
+     **/
+    [self initiateAudioPlayer];
     
     //create file supporter
     fileSupporter = [[MDFileSupporter alloc] initFileSupporter];
@@ -93,7 +109,6 @@
     MDFilesNavigationController *filesNavController = [tabbarController.viewControllers objectAtIndex:0];
     
     filesNavController.fileSupporter = fileSupporter;
-    
     
     return YES;
 }

@@ -11,6 +11,7 @@
 #import "HTTPServer.h"
 #import "MobileDiskAppDelegate.h"
 
+
 @interface MDFilesNavigationController ()
 
 @end
@@ -47,6 +48,7 @@
     
     //set view controllers for navigation controller, here it's only root controller
     [self setViewControllers:[NSArray arrayWithObject:rootController]];
+
     
 }
 

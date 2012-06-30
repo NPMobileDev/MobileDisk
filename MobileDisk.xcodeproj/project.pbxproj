@@ -10,6 +10,7 @@
 		441AB991159C646B00BAAA19 /* MDScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 441AB990159C646B00BAAA19 /* MDScrollView.m */; };
 		441AB99D159C75B600BAAA19 /* MDAVPlayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 441AB99C159C75B600BAAA19 /* MDAVPlayerController.m */; };
 		441AB99F159C766C00BAAA19 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 441AB99E159C766C00BAAA19 /* MediaPlayer.framework */; };
+		4437BB70159EA2D100F3C8E7 /* dummy.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4437BB6F159EA2D100F3C8E7 /* dummy.mp3 */; };
 		443ACE081592F395008B4DF2 /* MDFilesNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 443ACE071592F395008B4DF2 /* MDFilesNavigationController.m */; };
 		443ACE0B1592F52E008B4DF2 /* MDFilesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 443ACE0A1592F52E008B4DF2 /* MDFilesViewController.m */; };
 		443ACE0E1593018D008B4DF2 /* MDFiles.m in Sources */ = {isa = PBXBuildFile; fileRef = 443ACE0D1593018D008B4DF2 /* MDFiles.m */; };
@@ -74,6 +75,7 @@
 		441AB99B159C75B600BAAA19 /* MDAVPlayerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDAVPlayerController.h; sourceTree = "<group>"; };
 		441AB99C159C75B600BAAA19 /* MDAVPlayerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDAVPlayerController.m; sourceTree = "<group>"; };
 		441AB99E159C766C00BAAA19 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
+		4437BB6F159EA2D100F3C8E7 /* dummy.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = dummy.mp3; sourceTree = "<group>"; };
 		443ACE061592F395008B4DF2 /* MDFilesNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDFilesNavigationController.h; sourceTree = "<group>"; };
 		443ACE071592F395008B4DF2 /* MDFilesNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDFilesNavigationController.m; sourceTree = "<group>"; };
 		443ACE091592F52E008B4DF2 /* MDFilesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDFilesViewController.h; sourceTree = "<group>"; };
@@ -364,6 +366,7 @@
 		449430A2158EB4C000ADAE89 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				4437BB6F159EA2D100F3C8E7 /* dummy.mp3 */,
 				444FF9CF159A9FC60033BB3B /* SupportedFilePlist */,
 				443D004E1594219C008CCCBE /* IsSelected.png */,
 				443D004F1594219C008CCCBE /* NotSelected.png */,
@@ -537,6 +540,7 @@
 				443D00501594219C008CCCBE /* IsSelected.png in Resources */,
 				443D00511594219C008CCCBE /* NotSelected.png in Resources */,
 				444FF9D4159AA0770033BB3B /* MobileDiskInfo.plist in Resources */,
+				4437BB70159EA2D100F3C8E7 /* dummy.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
