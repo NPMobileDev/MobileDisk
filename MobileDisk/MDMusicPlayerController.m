@@ -269,6 +269,9 @@
     if(updateTimer == nil)
     {
         updateTimer = [NSTimer scheduledTimerWithTimeInterval:.01 target:self selector:@selector(updateTimeline) userInfo:nil repeats:YES];
+        
+        //this way can make sure timer can perform it's selector without been blocked
+        [[NSRunLoop mainRunLoop] addTimer:updateTimer forMode:NSRunLoopCommonModes];
     }
     
     //start timer
@@ -356,9 +359,9 @@
         self.timeLineSlider.value = round(musicPlayer.currentTime);
         
         [self updateTimeLabels];
+        
     }
 
-    
     //NSLog(@"total %f", self.timeLineSlider.maximumValue);
     //NSLog(@"current %f", self.timeLineSlider.value);
 }
