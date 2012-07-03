@@ -12,18 +12,25 @@
 #import "MDImageViewerController.h"
 #import "MDAVPlayerController.h"
 #import "MDMusicPlayerController.h"
+#import "MDUnarchiveNavigationController.h"
+#import "MDUnarchiveViewController.h"
 
 @interface MDFileSupporter()
 
 -(void)loadSupportedFileExtensions;
 -(id)findControllerForImageTypeFile:(CFStringRef)compareUTI;
 -(id)findControllerForAudioVideoTypeFile:(CFStringRef)compareUTI;
+-(id)findControllerForArchiveTypeFile:(CFStringRef)compareUTI;
 -(id)findControllerForOtherTypeFile:(CFStringRef)compareUTI;
 -(id)findImageViewerController;
 -(id)findAudioVideoController;
 -(id)findAudioController;
 
 @end
+
+/**define our own UTI type**/
+//zip archive
+const CFStringRef kUTTypeZipArchive = (__bridge CFStringRef)@"com.pkware.zip-archive";
 
 @implementation MDFileSupporter{
     
@@ -64,6 +71,7 @@
             CFStringRef uti = [value pointerValue];
             
             CFRelease(uti);
+            
         }
     }
 
@@ -108,6 +116,10 @@
     {
         //file is audio or video type abstract
         theController = [self findControllerForAudioVideoTypeFile:compareUTI];
+    }
+    else if(UTTypeConformsTo(compareUTI, kUTTypeArchive))
+    {
+        theController = [self findControllerForArchiveTypeFile:compareUTI];
     }
     else
     {
@@ -168,8 +180,31 @@
     return controller;
 }
 
+-(id)findControllerForArchiveTypeFile:(CFStringRef)compareUTI
+{
+    id controller = nil;
+    
+    if(UTTypeConformsTo(compareUTI, kUTTypeZipArchive))
+    {
+        //zip archive
+        NSLog(@"return zip archive controller");
+        
+        NSURL *archiveFileURL = [NSURL fileURLWithPath:operateFilePath];
+        
+        MDUnarchiveNavigationController *navController = [operateStoryboard instantiateViewControllerWithIdentifier:@"MDUnarchiveNavigationController"];
+        
+        navController.archiveFilePath = archiveFileURL;
+        
+        controller = navController;
+    }
+    
+    return controller;
+}
+
 -(id)findControllerForOtherTypeFile:(CFStringRef)compareUTI
 {
+    id controller = nil;
+    
     if(UTTypeConformsTo(compareUTI, kUTTypePDF))
     {
         //file is pdf
@@ -183,10 +218,10 @@
         
         pdfController.pdfURL = pdfURL;
         
-        return navController;
+        controller = navController;
     }
     
-    return nil;
+    return controller;
 }
 
 -(id)findImageViewerController

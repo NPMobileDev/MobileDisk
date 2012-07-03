@@ -7,6 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4416081D15A29E6900770FF5 /* ioapi.c in Sources */ = {isa = PBXBuildFile; fileRef = 4416081315A29E6900770FF5 /* ioapi.c */; };
+		4416081E15A29E6900770FF5 /* mztools.c in Sources */ = {isa = PBXBuildFile; fileRef = 4416081515A29E6900770FF5 /* mztools.c */; };
+		4416081F15A29E6900770FF5 /* unzip.c in Sources */ = {isa = PBXBuildFile; fileRef = 4416081715A29E6900770FF5 /* unzip.c */; };
+		4416082015A29E6900770FF5 /* zip.c in Sources */ = {isa = PBXBuildFile; fileRef = 4416081915A29E6900770FF5 /* zip.c */; };
+		4416082115A29E6900770FF5 /* SSZipArchive.m in Sources */ = {isa = PBXBuildFile; fileRef = 4416081C15A29E6900770FF5 /* SSZipArchive.m */; };
+		4416082315A29E9000770FF5 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4416082215A29E9000770FF5 /* libz.dylib */; };
+		4416082B15A29F9A00770FF5 /* MDUnarchiveViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4416082A15A29F9A00770FF5 /* MDUnarchiveViewController.m */; };
+		4416082E15A29FDD00770FF5 /* MDUnarchiveNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4416082D15A29FDD00770FF5 /* MDUnarchiveNavigationController.m */; };
+		4416083915A32B0600770FF5 /* MDProgressViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4416083815A32B0600770FF5 /* MDProgressViewController.m */; };
 		441AB991159C646B00BAAA19 /* MDScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 441AB990159C646B00BAAA19 /* MDScrollView.m */; };
 		441AB99D159C75B600BAAA19 /* MDAVPlayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 441AB99C159C75B600BAAA19 /* MDAVPlayerController.m */; };
 		441AB99F159C766C00BAAA19 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 441AB99E159C766C00BAAA19 /* MediaPlayer.framework */; };
@@ -71,6 +80,24 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4416081215A29E6900770FF5 /* crypt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crypt.h; sourceTree = "<group>"; };
+		4416081315A29E6900770FF5 /* ioapi.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ioapi.c; sourceTree = "<group>"; };
+		4416081415A29E6900770FF5 /* ioapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ioapi.h; sourceTree = "<group>"; };
+		4416081515A29E6900770FF5 /* mztools.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mztools.c; sourceTree = "<group>"; };
+		4416081615A29E6900770FF5 /* mztools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mztools.h; sourceTree = "<group>"; };
+		4416081715A29E6900770FF5 /* unzip.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = unzip.c; sourceTree = "<group>"; };
+		4416081815A29E6900770FF5 /* unzip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = unzip.h; sourceTree = "<group>"; };
+		4416081915A29E6900770FF5 /* zip.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip.c; sourceTree = "<group>"; };
+		4416081A15A29E6900770FF5 /* zip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zip.h; sourceTree = "<group>"; };
+		4416081B15A29E6900770FF5 /* SSZipArchive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSZipArchive.h; sourceTree = "<group>"; };
+		4416081C15A29E6900770FF5 /* SSZipArchive.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSZipArchive.m; sourceTree = "<group>"; };
+		4416082215A29E9000770FF5 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		4416082915A29F9A00770FF5 /* MDUnarchiveViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDUnarchiveViewController.h; sourceTree = "<group>"; };
+		4416082A15A29F9A00770FF5 /* MDUnarchiveViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDUnarchiveViewController.m; sourceTree = "<group>"; };
+		4416082C15A29FDD00770FF5 /* MDUnarchiveNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDUnarchiveNavigationController.h; sourceTree = "<group>"; };
+		4416082D15A29FDD00770FF5 /* MDUnarchiveNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDUnarchiveNavigationController.m; sourceTree = "<group>"; };
+		4416083715A32B0600770FF5 /* MDProgressViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDProgressViewController.h; sourceTree = "<group>"; };
+		4416083815A32B0600770FF5 /* MDProgressViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDProgressViewController.m; sourceTree = "<group>"; };
 		441AB98F159C646B00BAAA19 /* MDScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDScrollView.h; sourceTree = "<group>"; };
 		441AB990159C646B00BAAA19 /* MDScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDScrollView.m; sourceTree = "<group>"; };
 		441AB99B159C75B600BAAA19 /* MDAVPlayerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDAVPlayerController.h; sourceTree = "<group>"; };
@@ -189,6 +216,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4416082315A29E9000770FF5 /* libz.dylib in Frameworks */,
 				44538B00159D4D6200CE7730 /* AVFoundation.framework in Frameworks */,
 				441AB99F159C766C00BAAA19 /* MediaPlayer.framework in Frameworks */,
 				444FF9D6159AB6120033BB3B /* MobileCoreServices.framework in Frameworks */,
@@ -203,6 +231,60 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4416080F15A29E4A00770FF5 /* ZipLib */ = {
+			isa = PBXGroup;
+			children = (
+				4416081115A29E6900770FF5 /* minizip */,
+				4416081B15A29E6900770FF5 /* SSZipArchive.h */,
+				4416081C15A29E6900770FF5 /* SSZipArchive.m */,
+			);
+			name = ZipLib;
+			sourceTree = "<group>";
+		};
+		4416081115A29E6900770FF5 /* minizip */ = {
+			isa = PBXGroup;
+			children = (
+				4416081215A29E6900770FF5 /* crypt.h */,
+				4416081315A29E6900770FF5 /* ioapi.c */,
+				4416081415A29E6900770FF5 /* ioapi.h */,
+				4416081515A29E6900770FF5 /* mztools.c */,
+				4416081615A29E6900770FF5 /* mztools.h */,
+				4416081715A29E6900770FF5 /* unzip.c */,
+				4416081815A29E6900770FF5 /* unzip.h */,
+				4416081915A29E6900770FF5 /* zip.c */,
+				4416081A15A29E6900770FF5 /* zip.h */,
+			);
+			path = minizip;
+			sourceTree = "<group>";
+		};
+		4416082415A29EF900770FF5 /* UnzipView */ = {
+			isa = PBXGroup;
+			children = (
+				4416082915A29F9A00770FF5 /* MDUnarchiveViewController.h */,
+				4416082A15A29F9A00770FF5 /* MDUnarchiveViewController.m */,
+				4416082C15A29FDD00770FF5 /* MDUnarchiveNavigationController.h */,
+				4416082D15A29FDD00770FF5 /* MDUnarchiveNavigationController.m */,
+			);
+			name = UnzipView;
+			sourceTree = "<group>";
+		};
+		4416082815A29F4C00770FF5 /* ThirdLib */ = {
+			isa = PBXGroup;
+			children = (
+				4416080F15A29E4A00770FF5 /* ZipLib */,
+			);
+			name = ThirdLib;
+			sourceTree = "<group>";
+		};
+		4416083B15A335B300770FF5 /* ProgressHUD */ = {
+			isa = PBXGroup;
+			children = (
+				4416083715A32B0600770FF5 /* MDProgressViewController.h */,
+				4416083815A32B0600770FF5 /* MDProgressViewController.m */,
+			);
+			name = ProgressHUD;
+			sourceTree = "<group>";
+		};
 		441AB997159C747000BAAA19 /* AVPlayer */ = {
 			isa = PBXGroup;
 			children = (
@@ -349,6 +431,9 @@
 		449430A1158EB4C000ADAE89 /* MobileDisk */ = {
 			isa = PBXGroup;
 			children = (
+				4416082815A29F4C00770FF5 /* ThirdLib */,
+				4416083B15A335B300770FF5 /* ProgressHUD */,
+				4416082415A29EF900770FF5 /* UnzipView */,
 				44538AED159D31CB00CE7730 /* MusicPlayer */,
 				441AB997159C747000BAAA19 /* AVPlayer */,
 				447CD7E8159C047600464D28 /* ImageViewer */,
@@ -371,6 +456,7 @@
 		449430A2158EB4C000ADAE89 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				4416082215A29E9000770FF5 /* libz.dylib */,
 				4437BB6F159EA2D100F3C8E7 /* dummy.mp3 */,
 				444FF9CF159A9FC60033BB3B /* SupportedFilePlist */,
 				443D004E1594219C008CCCBE /* IsSelected.png */,
@@ -602,6 +688,14 @@
 				441AB99D159C75B600BAAA19 /* MDAVPlayerController.m in Sources */,
 				44538AFE159D4D4200CE7730 /* MDMusicPlayerController.m in Sources */,
 				4424E2C115A137A300A430D4 /* MDTimelineView.m in Sources */,
+				4416081D15A29E6900770FF5 /* ioapi.c in Sources */,
+				4416081E15A29E6900770FF5 /* mztools.c in Sources */,
+				4416081F15A29E6900770FF5 /* unzip.c in Sources */,
+				4416082015A29E6900770FF5 /* zip.c in Sources */,
+				4416082115A29E6900770FF5 /* SSZipArchive.m in Sources */,
+				4416082B15A29F9A00770FF5 /* MDUnarchiveViewController.m in Sources */,
+				4416082E15A29FDD00770FF5 /* MDUnarchiveNavigationController.m in Sources */,
+				4416083915A32B0600770FF5 /* MDProgressViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -154,8 +154,8 @@ const float ToolBarAnimationDuration = 0.1f;
     
     if(hiddenFiles == nil)
     {
-        //add any file's name that will not show on table view
-        hiddenFiles = [NSArray arrayWithObjects:@".DS_Store", nil];
+        //add any file directory's name that will not show on table view
+        hiddenFiles = [NSArray arrayWithObjects:@".DS_Store", @"__MACOSX", nil];
     }
     
     /**

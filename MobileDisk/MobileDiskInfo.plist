@@ -4,6 +4,10 @@
 <dict>
 	<key>SupportedFileExtensions</key>
 	<dict>
+		<key>File</key>
+		<array>
+			<string>zip</string>
+		</array>
 		<key>VideoAudio</key>
 		<array>
 			<string>mp4</string>
