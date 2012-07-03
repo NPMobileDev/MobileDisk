@@ -98,16 +98,22 @@
     progressView = [self.storyboard instantiateViewControllerWithIdentifier:@"MDProgressViewController"];
     
     [progressView presentInParentViewController:self];
+    [progressView setStatusWithMessage:NSLocalizedString(@"Prepare to unarchive!", @"Prepare to unarchive!")];
     
     dispatch_async(unarchiveQueue, ^(void){
         
         success = [SSZipArchive unzipFileAtPath:pathOfArchive toDestination:unarchivePath delegate:self];
     
-        /*
-        dispatch_async(dispatch_get_main_queue(), ^(void){
         
-        });
-         */
+        if(!success)
+        {
+            dispatch_async(dispatch_get_main_queue(), ^(void){
+                
+                [progressView setStatusWithMessage:NSLocalizedString(@"Unarchive failed!", @"Unarchive failed!")];
+            });
+        }
+        
+         
     });
 
     
@@ -145,7 +151,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^(void){
         
-            [progressView setStatusWithMessage:@"Unarchive successful!"];
+            [progressView setStatusWithMessage:NSLocalizedString(@"Unarchive successful!", @"Unarchive successful!")];
             
             [self performSelector:@selector(unarchiveFinished) withObject:nil afterDelay:2.0f];
         });
