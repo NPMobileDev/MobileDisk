@@ -37,6 +37,8 @@
 -(void)doSelectAll;
 -(void)doMoveFiles;
 -(void)doMoveFiles:(NSArray *)filesToMove ToDestinationPath:(NSString *)destPath;
+-(void)prepareNavigationBarButtonsForEditTable;
+-(void)prepareNavigationBarButtonsForDoneEditingTable;
 
 @end
 
@@ -101,10 +103,18 @@ const float ToolBarAnimationDuration = 0.1f;
     [super viewDidAppear:animated];
     
     /**
+     we do not create navigation bar's right buttons at viewDidLoad
+     since at that point new controller's(this controller) navigation item has not 
+     been added yet, therefore we done creation in viewDidAppear.
+     
+     When viewDidAppear new navigation item is already added
+     **/
+    [self createNaviRightButton];
+    
+    /**
      we add tool bar to view here because we want it to be on this view controller
      then we add to navigation controller's view
      **/
-    
     [self.navigationController.view addSubview:toolbar];
    
 }
@@ -158,7 +168,7 @@ const float ToolBarAnimationDuration = 0.1f;
     //[self findContentInWorkingPath:self.workingPath];
     
     //creat navigation right button
-    [self createNaviRightButton];
+    //[self createNaviRightButton];
     
     //create tool bar
     [self createToolBar];
@@ -188,12 +198,28 @@ const float ToolBarAnimationDuration = 0.1f;
 {
     /**we want two bar buttons on right side of navigation bar**/
     
+    //get navigation item which current controller has
+    UINavigationItem *navItem = [self.navigationController.navigationBar.items lastObject];
+    
+    //prevent recreate button 
+    if(navItem.rightBarButtonItem != nil)
+        return;
+    
     //edit button
     UIBarButtonItem *editButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(editTableView)];
     
     //refresh button
     UIBarButtonItem *refreshButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(reloadTableViewData)];
+    refreshButton.style = UIBarButtonItemStyleBordered;
     
+    //assign right buttons
+    navItem.rightBarButtonItems = [NSArray arrayWithObjects:refreshButton, editButton, nil];
+    
+    
+    
+    
+    //old implement
+    /*
     //create a tool bar 44.01 perfect fit
     UIToolbar *rightToolBar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, 90, 44.01)];
     rightToolBar.items = [NSArray arrayWithObjects:editButton, refreshButton, nil];
@@ -201,8 +227,11 @@ const float ToolBarAnimationDuration = 0.1f;
     //create right button with tool bar in it
     UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithCustomView:rightToolBar];
     rightButton.style = UIBarButtonItemStylePlain;
+    */
     
-    self.navigationItem.rightBarButtonItem = rightButton;
+    //self.navigationItem.rightBarButtonItem = rightButton;
+    
+    
 }
 
 #pragma mark - Create tool bar
@@ -539,26 +568,8 @@ const float ToolBarAnimationDuration = 0.1f;
     NSLog(@"Editing table");
     [self.tableView setEditing:YES animated:YES];
     
-    /**Here we cnage edit button to done button**/
-    //get right tool bar on navigation bar
-    UIToolbar *rightToolBar = (UIToolbar*)self.navigationItem.rightBarButtonItem.customView;
-    
-    //disable refresh button
-    UIBarButtonItem *refreshButton = [rightToolBar.items objectAtIndex:1];
-    refreshButton.enabled = NO;
-    
-    //get back second button(refresh) from tool bar and create a items
-    NSMutableArray *items = [[NSMutableArray alloc] initWithObjects:refreshButton, nil];
-    
-    //create done button
-    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneEditTabelView)];
-    
-    //insert done button to first element in items
-    [items insertObject:doneButton atIndex:0];
-    
-    //reassign button to tool bar
-    [rightToolBar setItems:items animated:YES];
-    
+
+    [self prepareNavigationBarButtonsForEditTable];
     
     //allow table selection while editing
     self.tableView.allowsSelectionDuringEditing = YES;
@@ -573,27 +584,7 @@ const float ToolBarAnimationDuration = 0.1f;
     
     [self.tableView setEditing:NO animated:YES];
     
-    
-    /**Here we cnage done button to edit button**/
-    //get right tool bar on navigation bar
-    UIToolbar *rightToolBar = (UIToolbar*)self.navigationItem.rightBarButtonItem.customView;
-    
-    //enable refresh button
-    UIBarButtonItem *refreshButton = [rightToolBar.items objectAtIndex:1];
-    refreshButton.enabled = YES;
-    
-    //get back second button(refresh) from tool bar and create a items
-    NSMutableArray *items = [[NSMutableArray alloc] initWithObjects:refreshButton, nil];
-    
-    //create edit button
-    UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(editTableView)];
-    
-    //insert edit button to first element in items
-    [items insertObject:rightButton atIndex:0];
-    
-    //reassign button to tool bar
-    [rightToolBar setItems:items animated:YES];
-    
+    [self prepareNavigationBarButtonsForDoneEditingTable];
     
     self.tableView.allowsSelectionDuringEditing = NO;
     
@@ -622,6 +613,85 @@ const float ToolBarAnimationDuration = 0.1f;
     }
     
     [self updateToolBar];
+}
+
+-(void)prepareNavigationBarButtonsForEditTable
+{
+    //get topmost navigation item which current controller has
+    UINavigationItem *navItem = [self.navigationController.navigationBar.items lastObject];
+    
+    //create done button
+    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneEditTabelView)];
+    
+    //refresh button
+    UIBarButtonItem *refreshButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(reloadTableViewData)];
+    refreshButton.style = UIBarButtonItemStyleBordered;
+    
+    refreshButton.enabled = NO;
+    
+    NSArray *rightButtons = [NSArray arrayWithObjects:refreshButton, doneButton, nil];
+    
+    //reassign right buttons
+    [navItem setRightBarButtonItems:rightButtons animated:YES];
+    
+    
+    //old implement
+    /**Here we cnage edit button to done button**/
+    //get right tool bar on navigation bar
+    //UIToolbar *rightToolBar = (UIToolbar*)self.navigationItem.rightBarButtonItem.customView;
+    
+    //disable refresh button
+    //UIBarButtonItem *refreshButton = [rightToolBar.items objectAtIndex:1];
+    //refreshButton.enabled = NO;
+    
+    //get back second button(refresh) from tool bar and create a items
+    //NSMutableArray *items = [[NSMutableArray alloc] initWithObjects:refreshButton, nil];
+    
+    //insert done button to first element in items
+    //[items insertObject:doneButton atIndex:0];
+    
+    //reassign button to tool bar
+    //[rightToolBar setItems:items animated:YES];
+}
+
+-(void)prepareNavigationBarButtonsForDoneEditingTable
+{
+    //get topmost navigation item which current controller has
+    UINavigationItem *navItem = [self.navigationController.navigationBar.items lastObject];
+    
+    
+    //create edit button
+    UIBarButtonItem *editButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(editTableView)];
+    
+    //refresh button
+    UIBarButtonItem *refreshButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(reloadTableViewData)];
+    refreshButton.style = UIBarButtonItemStyleBordered;
+    
+    refreshButton.enabled = YES;
+    
+    NSArray * rightButtons = [NSArray arrayWithObjects:refreshButton, editButton, nil];
+    
+    //reassign right buttons
+    [navItem setRightBarButtonItems:rightButtons animated:YES];
+    
+    
+    //old implement
+    /**Here we cnage done button to edit button**/
+    //get right tool bar on navigation bar
+    //UIToolbar *rightToolBar = (UIToolbar*)self.navigationItem.rightBarButtonItem.customView;
+    
+    //enable refresh button
+    //UIBarButtonItem *refreshButton = [rightToolBar.items objectAtIndex:1];
+    //refreshButton.enabled = YES;
+    
+    //get back second button(refresh) from tool bar and create a items
+    // NSMutableArray *items = [[NSMutableArray alloc] initWithObjects:refreshButton, nil];
+    
+    //insert edit button to first element in items
+    //[items insertObject:rightButton atIndex:0];
+    
+    //reassign button to tool bar
+    //[rightToolBar setItems:items animated:YES];
 }
 
 //take care add  cell selection in table view edit mode

@@ -10,6 +10,7 @@
 #import <MediaPlayer/MPMusicPlayerController.h>
 #import <AVFoundation/AVAsset.h>
 #import <AVFoundation/AVMetadataItem.h>
+#import <QuartzCore/QuartzCore.h>
 
 
 @interface MDMusicPlayerController ()
@@ -18,12 +19,13 @@
 @property (nonatomic, weak) IBOutlet UILabel *currentTimeLabel;
 @property (nonatomic, weak) IBOutlet UILabel *timeLeftLabel;
 @property (nonatomic, weak) IBOutlet UIToolbar *toolbar;
-@property (nonatomic, weak) IBOutlet UILabel *titleLabel;
 @property (nonatomic, weak) IBOutlet UIImageView *musicImageView;
 @property (nonatomic, weak) IBOutlet UILabel *albumNameLabel;
-@property (nonatomic, weak) IBOutlet UILabel *authorLabel;
+@property (nonatomic, weak) IBOutlet UILabel *titleLabel;
 @property (nonatomic, weak) IBOutlet UILabel *artistLabel;
 @property (nonatomic, weak) IBOutlet UITextView *lyricsTextView;
+@property (nonatomic, weak) IBOutlet UIView *timelineBackgroundView;
+@property (nonatomic, weak) IBOutlet UINavigationBar *navBar;
 
 
 -(IBAction)rewind:(id)sender;
@@ -39,6 +41,7 @@
 -(void)changePlayButtonToPause;
 -(void)findMusicInfoWithMusicPath:(NSURL *)musicPath;
 -(IBAction)volumeSliderChange:(id)sender;
+-(void)customizedNavigationBar;
 
 @end
 
@@ -71,12 +74,13 @@
 @synthesize currentTimeLabel = _currentTimeLabel;
 @synthesize timeLeftLabel = _timeLeftLabel;
 @synthesize toolbar = _toolbar;
-@synthesize titleLabel = _titleLabel;
 @synthesize musicImageView = _musicImageView;
 @synthesize albumNameLabel =_albumNameLabel;
-@synthesize authorLabel = _authorLabel;
+@synthesize titleLabel = _titleLabel;
 @synthesize artistLabel = _artistLabel;
 @synthesize lyricsTextView = _lyricsTextView;
+@synthesize timelineBackgroundView = _timelineBackgroundView;
+@synthesize navBar = _navBar;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -106,26 +110,56 @@
     
     [musicPlayer prepareToPlay];
     
-    self.titleLabel.text = [self.musicFileURL lastPathComponent];
+    [self customizedNavigationBar];
     
     //find info for music
     [self findMusicInfoWithMusicPath:self.musicFileURL];
     
     //half alpha for music image
-    self.musicImageView.alpha = 0.3f;
+    self.musicImageView.alpha = 0.65f;
     self.musicImageView.image = musicArtwork;
     
-    self.lyricsTextView.backgroundColor = [UIColor clearColor];
+    //self.lyricsTextView.backgroundColor = [UIColor clearColor];
     
-    self.albumNameLabel.text = musicAlbumName;
-    self.authorLabel.text = musicAuthor;
-    self.artistLabel.text = musicArtist;
+    if(musicArtist)
+    {
+        self.artistLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Artist: %@", @"Artist: %@"), musicArtist];
+    }
+    else
+    {
+        self.artistLabel.text = NSLocalizedString(@"Artist: Unknow", @"Artist: Unknow");
+    }
+    
+    if(musicTitle)
+    {
+        self.titleLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Title: %@", @"Title: %@"), musicTitle];
+    }
+    else
+    {
+        self.artistLabel.text = NSLocalizedString(@"Title: Unknow", @"Title: Unknow");
+    }
+    
+    if(musicAlbumName)
+    {
+        self.albumNameLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Album: %@", @"Album: %@"), musicAlbumName];
+    }
+    else
+    {
+        self.artistLabel.text = NSLocalizedString(@"Album: Unknow", @"Album: Unknow");
+    }
+    
+    
     self.lyricsTextView.text = musiclyrics;
+    
+    //self.timelineBackgroundView.layer.borderColor = [UIColor whiteColor].CGColor;
+    //self.timelineBackgroundView.layer.borderWidth = 1.0f;
     
     //set play button for action
     UIBarButtonItem *playButton = [self.toolbar.items objectAtIndex:1];
     playButton.target =self;
     playButton.action = @selector(play);
+    
+    
     
     
     [self createVolumeSlider];
@@ -138,7 +172,8 @@
     self.timeLeftLabel.text = [@"-" stringByAppendingString:[self secondsToString:self.timeLineSlider.maximumValue]];
     self.currentTimeLabel.text = [self secondsToString:0.0f];
     
-    canUpdateTimeline = YES; 
+    canUpdateTimeline = YES;
+
 }
 
 - (void)viewDidUnload
@@ -150,6 +185,27 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
+-(void)customizedNavigationBar
+{
+    UINavigationItem *title = [[UINavigationItem alloc] initWithTitle:[self.musicFileURL lastPathComponent]];
+    
+    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneListening:)];
+    
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 250, 21)];
+    titleLabel.text = [self.musicFileURL lastPathComponent];
+    titleLabel.textColor = [UIColor whiteColor];
+    titleLabel.shadowColor = [UIColor whiteColor];
+    titleLabel.shadowOffset = CGSizeMake(0, 1);
+    titleLabel.textAlignment = UITextAlignmentCenter;
+    titleLabel.adjustsFontSizeToFitWidth = YES;
+    titleLabel.backgroundColor = [UIColor clearColor];
+    
+    title.titleView = titleLabel;
+    title.rightBarButtonItem = doneButton;
+    
+    self.navBar.items = [NSArray arrayWithObject:title];
 }
 
 -(void)createVolumeSlider
@@ -176,6 +232,7 @@
     //test 
     volumeSlider.value = 0.5f;
     musicPlayer.volume = 0.5f;
+    
     
     [volumeSlider addTarget:self action:@selector(volumeSliderChange:) forControlEvents:UIControlEventValueChanged];
     

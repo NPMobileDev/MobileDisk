@@ -8,6 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
+#define kRewindAmount 10.0f
+#define kFastForwardAmount 10.0f
+#define kFadeOutUIDuration 1.0f
+#define kFadeInUIDuration 0.2f
+#define kVideoScale 2.0f;
+
 @interface MDAVPlayerController : UIViewController
 
 @property (nonatomic, copy) NSURL *avFileURL;
