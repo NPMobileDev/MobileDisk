@@ -9,7 +9,7 @@
 #import "MDFilesViewController.h"
 #import "MDFiles.h"
 #import "MDFilesTableViewCell.h"
-
+#import "MDFileSupporter.h"
 
 
 
@@ -22,7 +22,7 @@
 -(void)addSelectEditableCellAtIndexPath:(NSIndexPath *)indexPath;
 -(void)deleteSelectEditableCellAtIndexPath:(NSIndexPath *)indexPath;
 -(void)createToolBar;
--(void)createNaviRightButton;
+-(void)customizedNavigationBar;
 -(void)showToolBar;
 -(void)hideToolBar;
 -(void)addFolder;
@@ -49,9 +49,6 @@ const float ToolBarAnimationDuration = 0.1f;
     
     id currentAction;
     
-    //hold a set of string that is file name will be not be show on table view
-    NSArray *hiddenFiles;
-    
     //the content in current directory
     NSMutableArray *filesArray;
     
@@ -70,6 +67,7 @@ const float ToolBarAnimationDuration = 0.1f;
 @synthesize workingPath = _workingPath;
 @synthesize controllerTitle = _controllerTitle;
 @synthesize fileSupporter = _fileSupporter;
+
 
 #pragma mark - Override methods 
 /*
@@ -93,7 +91,7 @@ const float ToolBarAnimationDuration = 0.1f;
 {
     [super viewWillAppear:animated];
     
-    self.title = self.controllerTitle;
+    //self.title = self.controllerTitle;
     
     [self reloadTableViewData];
 }
@@ -109,7 +107,7 @@ const float ToolBarAnimationDuration = 0.1f;
      
      When viewDidAppear new navigation item is already added
      **/
-    [self createNaviRightButton];
+    [self customizedNavigationBar];
     
     /**
      we add tool bar to view here because we want it to be on this view controller
@@ -125,7 +123,7 @@ const float ToolBarAnimationDuration = 0.1f;
     
     if(isMovingFiles != YES)
     {
-        self.title = NSLocalizedString(@"Back", @"Back");
+        //self.title = NSLocalizedString(@"Back", @"Back");
         
         if(self.tableView.isEditing)
             [self doneEditTabelView];
@@ -152,11 +150,6 @@ const float ToolBarAnimationDuration = 0.1f;
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
-    if(hiddenFiles == nil)
-    {
-        //add any file directory's name that will not show on table view
-        hiddenFiles = [NSArray arrayWithObjects:@".DS_Store", @"__MACOSX", nil];
-    }
     
     /**
      We don't do "findContentInWorkingPath" but we call "reloadTableViewData"
@@ -168,7 +161,7 @@ const float ToolBarAnimationDuration = 0.1f;
     //[self findContentInWorkingPath:self.workingPath];
     
     //creat navigation right button
-    //[self createNaviRightButton];
+    //[self customizedNavigationBar];
     
     //create tool bar
     [self createToolBar];
@@ -182,7 +175,6 @@ const float ToolBarAnimationDuration = 0.1f;
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
     
-    hiddenFiles = nil;
     filesArray = nil;
     toolbar =nil;
     currentAction = nil;
@@ -193,13 +185,15 @@ const float ToolBarAnimationDuration = 0.1f;
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
-#pragma mark - Create navigation right button
--(void)createNaviRightButton
+#pragma mark - Customized navigation bar
+-(void)customizedNavigationBar
 {
     /**we want two bar buttons on right side of navigation bar**/
     
     //get navigation item which current controller has
     UINavigationItem *navItem = [self.navigationController.navigationBar.items lastObject];
+    
+    navItem.title = self.controllerTitle;
     
     //prevent recreate button 
     if(navItem.rightBarButtonItem != nil)
@@ -481,7 +475,7 @@ const float ToolBarAnimationDuration = 0.1f;
         //store content
         for(NSString *theContent in contents)
         {
-            if([self canShowFileWithName:theContent])
+            if([MDFileSupporter canShowFileName:theContent])
             {
                 //init file info object
                 MDFiles *file = [[MDFiles alloc] initWithFilePath:self.workingPath FileName:theContent];
@@ -496,20 +490,6 @@ const float ToolBarAnimationDuration = 0.1f;
     {
         NSLog(@"There is a error while getting content at %@\n error:%@ ", self.workingPath, error);
     }
-}
-
-//can given file name be shown on table view?
--(BOOL)canShowFileWithName:(NSString *)filename
-{
-    for(NSString *hiddenFile in hiddenFiles)
-    {
-        if([filename isEqualToString:hiddenFile])
-        {
-            return NO;
-        }
-    }
-    
-    return YES;
 }
 
 #pragma mark - Configure cell

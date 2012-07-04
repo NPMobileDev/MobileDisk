@@ -7,6 +7,7 @@
 //
 
 #import "MDProgressViewController.h"
+#import "MDProgressGradientView.h"
 
 @interface MDProgressViewController ()
 
@@ -16,7 +17,10 @@
 
 @end
 
-@implementation MDProgressViewController
+@implementation MDProgressViewController{
+    
+    MDProgressGradientView *gradientView;
+}
 
 @synthesize percentLabel = _percentLabel;
 @synthesize progressView = _progressView;
@@ -37,6 +41,7 @@
 	// Do any additional setup after loading the view.
     
     self.progressView.progress = 0.0f;
+    
 }
 
 - (void)viewDidUnload
@@ -72,6 +77,11 @@
 
 -(void)presentInParentViewController:(UIViewController *)parentController
 {
+    //gradient view
+    gradientView = [[MDProgressGradientView alloc] initWithFrame:parentController.view.bounds];
+    [self.view addSubview:gradientView];
+    [self.view sendSubviewToBack:gradientView];
+    
     self.view.bounds = parentController.view.bounds;
     [parentController.view addSubview:self.view];
     [parentController addChildViewController:self];
@@ -80,6 +90,9 @@
 -(void)dismiss
 {
     [self willMoveToParentViewController:nil];
+    
+    [gradientView removeFromSuperview];
+    
     [self.view removeFromSuperview];
     [self removeFromParentViewController];
 }

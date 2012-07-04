@@ -25,12 +25,15 @@
 -(id)findImageViewerController;
 -(id)findAudioVideoController;
 -(id)findAudioController;
+-(void)loadHiddenFileName;
 
 @end
 
 /**define our own UTI type**/
 //zip archive
 const CFStringRef kUTTypeZipArchive = (__bridge CFStringRef)@"com.pkware.zip-archive";
+
+static NSArray *hiddenFileName;
 
 @implementation MDFileSupporter{
     
@@ -56,6 +59,7 @@ const CFStringRef kUTTypeZipArchive = (__bridge CFStringRef)@"com.pkware.zip-arc
 {
     if((self = [super init]))
     {
+        [self loadHiddenFileName];
         [self loadSupportedFileExtensions];
         
     }
@@ -75,6 +79,29 @@ const CFStringRef kUTTypeZipArchive = (__bridge CFStringRef)@"com.pkware.zip-arc
         }
     }
 
+}
+
+-(void)loadHiddenFileName
+{
+
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"MobileDiskInfo" ofType:@"plist"];
+    
+    NSDictionary *mobileDiskInfo = [NSDictionary dictionaryWithContentsOfFile:path];
+    
+    hiddenFileName = [[mobileDiskInfo objectForKey:@"HiddenFlieName"] copy];
+}
+
++(BOOL)canShowFileName:(NSString *)fileName
+{
+    for(NSString *hiddenName in hiddenFileName)
+    {
+        if([fileName isEqualToString:hiddenName])
+        {
+            return NO;
+        }
+    }
+    
+    return YES;
 }
 
 #pragma mark find controller to open specific file type

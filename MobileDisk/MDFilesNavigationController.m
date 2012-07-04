@@ -14,9 +14,12 @@
 
 @interface MDFilesNavigationController ()
 
+
 @end
 
-@implementation MDFilesNavigationController
+@implementation MDFilesNavigationController{
+    
+}
 
 @synthesize fileSupporter = _fileSupporter;
 
@@ -34,6 +37,7 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+    
     
     //instantiate a root view controller from storyboard
     MDFilesViewController *rootController = [self.storyboard instantiateViewControllerWithIdentifier:@"MDFilesViewController"];
@@ -62,5 +66,6 @@
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
+
 
 @end

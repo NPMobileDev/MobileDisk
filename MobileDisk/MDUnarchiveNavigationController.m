@@ -153,7 +153,7 @@
         
             [progressView setStatusWithMessage:NSLocalizedString(@"Unarchive successful!", @"Unarchive successful!")];
             
-            [self performSelector:@selector(unarchiveFinished) withObject:nil afterDelay:2.0f];
+            [self performSelector:@selector(unarchiveFinished) withObject:nil afterDelay:1.5f];
         });
 
     }

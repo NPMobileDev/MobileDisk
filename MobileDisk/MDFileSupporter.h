@@ -16,5 +16,5 @@
 -(id)initFileSupporter;
 -(BOOL)isFileSupported:(NSString *)filePath;
 -(id)findControllerToOpenFile:(NSString *)filePath WithStoryboard:(UIStoryboard *)storyboard;
-
++(BOOL)canShowFileName:(NSString *)fileName;
 @end

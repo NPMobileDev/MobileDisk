@@ -24,5 +24,10 @@
 			<string>pdf</string>
 		</array>
 	</dict>
+	<key>HiddenFlieName</key>
+	<array>
+		<string>.DS_Store</string>
+		<string>__MACOSX</string>
+	</array>
 </dict>
 </plist>

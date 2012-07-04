@@ -8,12 +8,13 @@
 
 #import "MDUnarchiveViewController.h"
 #import "MDUnarchiveNavigationController.h"
+#import "MDFileSupporter.h"
 
 @interface MDUnarchiveViewController ()
 
 -(void)findContentDirectoriesInWorkingPath:(NSString *)path;
 -(void)configureCell:(UITableViewCell *)cell WithIndexPath:(NSIndexPath *)indexPath;
--(void)createNaviRightButton;
+-(void)customizedNavigationBar;
 -(void)createToolBar;
 -(void)cancel;
 -(void)unarchive;
@@ -52,7 +53,7 @@
 {
     [super viewWillAppear:animated];
     
-    self.title = self.controllerTitle;
+    //self.title = self.controllerTitle;
     
 }
 
@@ -67,13 +68,21 @@
     
     [self.navigationController.view addSubview:theToolBar];
     
+    /**
+     we do not create navigation bar's right buttons at viewDidLoad
+     since at that point new controller's(this controller) navigation item has not 
+     been added yet, therefore we done creation in viewDidAppear.
+     
+     When viewDidAppear new navigation item is already added
+     **/
+    [self customizedNavigationBar];
 }
 
 -(void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
     
-    self.title = NSLocalizedString(@"Back", @"Back");
+    //self.title = NSLocalizedString(@"Back", @"Back");
     
 }
 
@@ -97,7 +106,7 @@
     
     [self findContentDirectoriesInWorkingPath:self.workingPath];
     
-    [self createNaviRightButton];
+    //[self customizedNavigationBar];
     
     [self createToolBar];
 }
@@ -257,24 +266,27 @@
         //store content
         for(NSString *theContent in contents)
         {
-            
-            NSString *filePath = [self.workingPath stringByAppendingPathComponent:theContent];
-            
-            //check filePath is a directory or not
-            //get file attributes
-            NSDictionary *fileAttributs = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:&error];
-            
-            if(error != nil)
+            if([MDFileSupporter canShowFileName:theContent])
             {
-                NSLog(@"There is an error while check the path is a directory path: %@", filePath);
-                return;
+                NSString *filePath = [self.workingPath stringByAppendingPathComponent:theContent];
+                
+                //check filePath is a directory or not
+                //get file attributes
+                NSDictionary *fileAttributs = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:&error];
+                
+                if(error != nil)
+                {
+                    NSLog(@"There is an error while check the path is a directory path: %@", filePath);
+                    return;
+                }
+                
+                if([[fileAttributs objectForKey:NSFileType] isEqualToString:NSFileTypeDirectory])
+                {
+                    //file is directory path add directory name to array
+                    [directoryArray addObject:[NSString stringWithString:theContent]];
+                }
             }
             
-            if([[fileAttributs objectForKey:NSFileType] isEqualToString:NSFileTypeDirectory])
-            {
-                //file is directory path add directory name to array
-                [directoryArray addObject:[NSString stringWithString:theContent]];
-            }
         }
     }
     else
@@ -283,13 +295,21 @@
     }
 }
 
-#pragma mark - Create navigation right button
--(void)createNaviRightButton
+#pragma mark - Customized navigation bar
+-(void)customizedNavigationBar
 {
+    //get navigation item which current controller has
+    UINavigationItem *navItem = [self.navigationController.navigationBar.items lastObject];
+    
+    navItem.title = self.controllerTitle;
+    
+    if(navItem.rightBarButtonItem != nil)
+        return;
+    
     //create cancel button
     UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel)];
     
-    self.navigationItem.rightBarButtonItem = cancelButton;
+    navItem.rightBarButtonItem = cancelButton;
 }
 
 #pragma mark - Create tool bar

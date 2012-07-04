@@ -12,9 +12,14 @@
 
 @interface MDMoveFilesNavigationController ()
 
+
+
 @end
 
-@implementation MDMoveFilesNavigationController
+@implementation MDMoveFilesNavigationController{
+    
+    
+}
 
 @synthesize theDelegate = _theDelegate;
 
@@ -31,6 +36,7 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+    
     
     //instantiate a root view controller from storyboard
     MDMoveFilesViewController *rootController = [self.storyboard instantiateViewControllerWithIdentifier:@"MDMoveFilesViewController"];
@@ -54,6 +60,8 @@
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
+
+
 
 -(void)moveFilesTo:(NSString *)movingDest
 {
