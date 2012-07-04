@@ -18,7 +18,6 @@
 @interface MDFilesViewController ()
 
 -(void)findContentInWorkingPath:(NSString *)path;
--(void)configureCell:(MDFilesTableViewCell *)cell WithIndexPath:(NSIndexPath *)indexPath;
 -(void)addSelectEditableCellAtIndexPath:(NSIndexPath *)indexPath;
 -(void)deleteSelectEditableCellAtIndexPath:(NSIndexPath *)indexPath;
 -(void)createToolBar;
@@ -61,12 +60,13 @@ const float ToolBarAnimationDuration = 0.1f;
     //flag determind if is in move file mode
     BOOL isMovingFiles;
     
+    MDFileSupporter *fileSupporter;
 
 }
 
 @synthesize workingPath = _workingPath;
 @synthesize controllerTitle = _controllerTitle;
-@synthesize fileSupporter = _fileSupporter;
+
 
 
 #pragma mark - Override methods 
@@ -163,10 +163,16 @@ const float ToolBarAnimationDuration = 0.1f;
     //creat navigation right button
     //[self customizedNavigationBar];
     
+    fileSupporter = [MDFileSupporter sharedFileSupporter];
+    
     //create tool bar
     [self createToolBar];
     
-
+    UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] init];
+    [longPress setDelegate:self];
+    
+    [self.tableView addGestureRecognizer:longPress];
+    
 }
 
 - (void)viewDidUnload
@@ -183,6 +189,41 @@ const float ToolBarAnimationDuration = 0.1f;
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
+//used for UIMenuController
+-(BOOL)canBecomeFirstResponder
+{
+    return YES;
+}
+
+#pragma mark - Long press gesture delegate
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
+{
+    //get touch point
+    CGPoint touchPoint = [gestureRecognizer locationInView:self.tableView];
+    //get row index by touch point
+    NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:touchPoint];
+    
+    MDFiles *file = [filesArray objectAtIndex:indexPath.row];
+    
+    //create UIMenuItem
+    UIMenuItem *menuItem = [[UIMenuItem alloc] initWithTitle:file.fileName action:@selector(noActionSelector)];
+    
+    //show UIMenuController and setup 
+    UIMenuController *menu = [UIMenuController sharedMenuController];
+    [menu setMenuItems:[NSArray arrayWithObject:menuItem]];
+    [menu setTargetRect:CGRectMake(touchPoint.x, touchPoint.y, menu.menuFrame.size.width, menu.menuFrame.size.height) inView:self.tableView];
+    [menu setMenuVisible:YES animated:YES];
+    [menu update];
+    
+    return YES;
+}
+
+//used for create UIMenuItem
+-(void)noActionSelector
+{
+    //a dummy selector
 }
 
 #pragma mark - Customized navigation bar
@@ -302,8 +343,10 @@ const float ToolBarAnimationDuration = 0.1f;
         cell = [[MDFilesTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier withTableView:tableView];     
     }
     
+    MDFiles *theFile = [filesArray objectAtIndex:indexPath.row];
+    
     // Configure the cell...
-    [self configureCell:cell WithIndexPath:indexPath];
+    [cell configureCellForFile:theFile];
     
     return cell;
 }
@@ -381,7 +424,6 @@ const float ToolBarAnimationDuration = 0.1f;
             //set property
             fileController.workingPath = [self.workingPath stringByAppendingPathComponent:file.fileName];
             fileController.controllerTitle = file.fileName;
-            fileController.fileSupporter = self.fileSupporter;
             
             //push view controller
             [self.navigationController pushViewController:fileController animated:YES];
@@ -391,9 +433,9 @@ const float ToolBarAnimationDuration = 0.1f;
         {
             //is a file
             //check if file is supported
-            if([self.fileSupporter isFileSupported:file.filePath])
+            if([fileSupporter isFileSupported:file.filePath])
             {
-                UIViewController *theController = [self.fileSupporter findControllerToOpenFile:file.filePath WithStoryboard:self.storyboard];
+                UIViewController *theController = [fileSupporter findControllerToOpenFile:file.filePath WithStoryboard:self.storyboard];
                 
                 if(theController != nil)
                 {
@@ -475,7 +517,7 @@ const float ToolBarAnimationDuration = 0.1f;
         //store content
         for(NSString *theContent in contents)
         {
-            if([MDFileSupporter canShowFileName:theContent])
+            if([fileSupporter canShowFileName:theContent])
             {
                 //init file info object
                 MDFiles *file = [[MDFiles alloc] initWithFilePath:self.workingPath FileName:theContent];
@@ -490,48 +532,6 @@ const float ToolBarAnimationDuration = 0.1f;
     {
         NSLog(@"There is a error while getting content at %@\n error:%@ ", self.workingPath, error);
     }
-}
-
-#pragma mark - Configure cell
--(void)configureCell:(MDFilesTableViewCell *)cell WithIndexPath:(NSIndexPath *)indexPath
-{
-    MDFiles *file = [filesArray objectAtIndex:indexPath.row];
-
-    
-    if(file.isFile)
-    {
-        cell.textLabel.text = file.fileName;
-    }
-    else
-    {
-        //is a folder
-        cell.textLabel.text = [file.fileName stringByAppendingString:@" /"];
-    }
-    
-    if(file.isFile)
-    {
-        //is a file 
-        cell.detailTextLabel.text = [NSString stringWithFormat:NSLocalizedString(@"File size: %@", @"File size string format"), file.fileSizeString];
-    }
-    
-    if(!file.isFile)
-    {
-        //is directory
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    }
-    
-    //set image for selected and not selected for edit mode
-    UIImageView *selectIndicator = cell.selectionIndicator;
-    if(file.isSelected)
-    {
-
-        selectIndicator.image = [UIImage imageNamed:cell.selectedIndicatorName];
-    }
-    else
-    {
-        selectIndicator.image = [UIImage imageNamed:cell.notSelectedIndicatorName];
-    }
-    
 }
 
 #pragma mark Reload table view data

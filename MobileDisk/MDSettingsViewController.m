@@ -11,6 +11,7 @@
 #import "DDLog.h"
 #import "DDTTYLogger.h"
 #import "IPResolver.h"
+#import "MobileDiskAppDelegate.h"
 
 @interface MDSettingsViewController ()
 
@@ -18,7 +19,7 @@
 -(void)resolveIPAddress;
 -(void)createTableViewData;
 -(void)configureCell:(UITableViewCell *)cell WithIndexPath:(NSIndexPath *)indexPath;
-- (void)WifiSwitch:(id)sender;
+- (void)wifiSwitch:(id)sender;
 -(void)reloadTableViewSection:(NSUInteger)section WithAnimation:(BOOL)yesOrNO;
 -(void)calculateDiskSpace;
 
@@ -69,11 +70,23 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     if((self=[super initWithCoder:aDecoder]))
     {
         //we create tabel data
-        [self createTableViewData];
+        //[self createTableViewData];
         
     }
     
     return self;
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    [self calculateDiskSpace];
+    
+    //we create tabel data
+    [self createTableViewData];
+    
+    [self.tableView reloadData];
 }
 
 - (void)viewDidLoad
@@ -94,8 +107,12 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
         DDLogIsSet = YES;
     }
     
+    cellModels = [[NSMutableArray alloc] init];
+    
     //we calculate disk space
-    [self calculateDiskSpace];
+    //[self calculateDiskSpace];
+    
+    
 }
 
 - (void)viewDidUnload
@@ -347,11 +364,17 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     //add prototype cell identifier for section 1, two row
     [cellModels addObject:[NSArray arrayWithObjects:@"S1-R0-DiskSpace", @"S1-R1-FreeSpace", nil]];
     
+    //add prototype cell identifier for section 2, one row
+    [cellModels addObject:[NSArray arrayWithObjects:@"S2-R0-GenerateThumbnail", nil]];
+    
     //add header for section 0
     [sectionHeaders addObject:NSLocalizedString(@"Wi-Fi Transfer", @"WiFi Transfer")];
     
     //add header for section 1
     [sectionHeaders addObject:NSLocalizedString(@"Usage", @"Usage")];
+    
+    //add header for section 2
+    [sectionHeaders addObject:NSLocalizedString(@"File", @"File")];
     
 }
 
@@ -380,7 +403,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
                 [wifiSwitch setOn:httpServerON];
                 
                 //we add a action to switch which can turn on/off http server
-                [wifiSwitch addTarget:self action:@selector(WifiSwitch:) forControlEvents:UIControlEventValueChanged];
+                [wifiSwitch addTarget:self action:@selector(wifiSwitch:) forControlEvents:UIControlEventValueChanged];
             }
             else if(indexPath.row == 1)
             {
@@ -419,6 +442,21 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
             }
             
             break;
+            /**
+             configure cells at section 2
+             **/
+        case 2:
+            if(indexPath.row == 0)
+            {
+                //get value for generate thumbnail setting
+                BOOL generateThumbnail = [[NSUserDefaults standardUserDefaults] boolForKey:sysGenerateThumbnail];
+                
+                UISwitch *theSwitch = (UISwitch*)[cell viewWithTag:1004];
+                theSwitch.on = generateThumbnail;
+                
+                [theSwitch addTarget:self action:@selector(generateThumbnail:) forControlEvents:UIControlEventValueChanged];
+            }
+            
             
         default:
             break;
@@ -481,7 +519,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 }
 
 #pragma mark - WiFi switcher
-- (void)WifiSwitch:(id)sender {
+- (void)wifiSwitch:(id)sender {
 
     UISwitch *wifiSwitcher = sender;
     
@@ -523,5 +561,16 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
         //reload table section
         [self reloadTableViewSection:0 WithAnimation:YES];
     }
+}
+
+#pragma mark - Generate thumbnail switcher
+-(void)generateThumbnail:(id)sender
+{
+    UISwitch *theSwitch = sender;
+    BOOL genThumb = theSwitch.on;
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    
+    [userDefaults setObject:[NSNumber numberWithBool:genThumb] forKey:sysGenerateThumbnail];
+    [userDefaults synchronize];
 }
 @end

@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+#define sysGenerateThumbnail @"GenerateThumbnail"
+
 @interface MobileDiskAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;

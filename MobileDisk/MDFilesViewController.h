@@ -27,12 +27,12 @@
     MDRenameAlertViewDelegate,
     MDAddFolderAlertViewDelegate,
     MDNonSelectedActionSheetDelegate,
-    MDSelectedActionSheetDelegate>
+    MDSelectedActionSheetDelegate,
+    UIGestureRecognizerDelegate>
 
 //current path
 @property (nonatomic, copy) NSString *workingPath;
 @property (nonatomic, copy) NSString *controllerTitle;
-@property (nonatomic, weak) MDFileSupporter *fileSupporter;
 
 
 @end

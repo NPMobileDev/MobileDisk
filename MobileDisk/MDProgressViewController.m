@@ -59,8 +59,10 @@
 {
     float theValue = value;
     
+    /*
     if(theValue >= 0.9f)
         theValue = 1.0f;
+    */
     
     //NSLog(@"progress:%f", theValue);
     [self.progressView setProgress:theValue animated:YES];

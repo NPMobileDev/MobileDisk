@@ -20,9 +20,6 @@
     
     HTTPServer *httpServer;
     
-    MDFileSupporter *fileSupporter;
-    
-   
 }
 
 
@@ -81,18 +78,24 @@
     [player prepareToPlay];
 }
 
+-(void)registerUserDefaults
+{
+    NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], sysGenerateThumbnail, nil];
+    
+    [[NSUserDefaults standardUserDefaults] registerDefaults:dic];
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
+    
+    [self registerUserDefaults];
     
     /**
      initate AVAudioPlayer because it take time to init so we init when app start
      otherwise init of AVAudioPlayer will block any of view controller
      **/
     [self initiateAudioPlayer];
-    
-    //create file supporter
-    fileSupporter = [[MDFileSupporter alloc] initFileSupporter];
     
     //configure and create http server
     [self configureHttpServer];
@@ -106,11 +109,6 @@
     
     settingsController.httpServer = httpServer;
     
-    
-    //files
-    MDFilesNavigationController *filesNavController = [tabbarController.viewControllers objectAtIndex:0];
-    
-    filesNavController.fileSupporter = fileSupporter;
     
     return YES;
 }

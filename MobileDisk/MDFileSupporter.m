@@ -14,6 +14,11 @@
 #import "MDMusicPlayerController.h"
 #import "MDUnarchiveNavigationController.h"
 #import "MDUnarchiveViewController.h"
+#import "UIImage+Resize.h"
+#import <AVFoundation/AVAsset.h>
+#import <AVFoundation/AVAssetImageGenerator.h>
+#import <CoreMedia/CMTime.h>
+#import "MobileDiskAppDelegate.h"
 
 @interface MDFileSupporter()
 
@@ -26,6 +31,8 @@
 -(id)findAudioVideoController;
 -(id)findAudioController;
 -(void)loadHiddenFileName;
+-(UIImage*)generateMovieThumbnailImageAtPath:(NSURL*)moviePath;
+-(void)createThumbnailImageCache;
 
 @end
 
@@ -33,6 +40,7 @@
 //zip archive
 const CFStringRef kUTTypeZipArchive = (__bridge CFStringRef)@"com.pkware.zip-archive";
 
+static MDFileSupporter *fileSupporterInstance;
 static NSArray *hiddenFileName;
 
 @implementation MDFileSupporter{
@@ -50,20 +58,41 @@ static NSArray *hiddenFileName;
     NSString *operateFilePath;
     __weak UIStoryboard *operateStoryboard;
     
+    NSCache *thumbnailImageCache;
+    
 }
 
 @synthesize supportLists = _supportLists;
 @synthesize supportListInUTI = _supportListInUTI;
 
--(id)initFileSupporter
++(MDFileSupporter *)sharedFileSupporter
 {
-    if((self = [super init]))
+    //create one if needed
+    if(fileSupporterInstance == nil)
     {
-        [self loadHiddenFileName];
-        [self loadSupportedFileExtensions];
+        fileSupporterInstance = [MDFileSupporter alloc];
         
+        if(fileSupporterInstance)
+        {
+            //init 
+            [fileSupporterInstance initFileSupporter];
+            
+            return fileSupporterInstance;
+        }
+        else
+        {
+            return nil;
+        }
     }
-    return self;
+    
+    return fileSupporterInstance;
+}
+
+-(void)initFileSupporter
+{
+    [self loadHiddenFileName];
+    [self loadSupportedFileExtensions];
+    [self createThumbnailImageCache];
 }
 
 -(void)dealloc
@@ -91,7 +120,7 @@ static NSArray *hiddenFileName;
     hiddenFileName = [[mobileDiskInfo objectForKey:@"HiddenFlieName"] copy];
 }
 
-+(BOOL)canShowFileName:(NSString *)fileName
+-(BOOL)canShowFileName:(NSString *)fileName
 {
     for(NSString *hiddenName in hiddenFileName)
     {
@@ -102,6 +131,17 @@ static NSArray *hiddenFileName;
     }
     
     return YES;
+}
+
+-(void)createThumbnailImageCache
+{
+    if(thumbnailImageCache == nil)
+    {
+        thumbnailImageCache = [[NSCache alloc] init];
+        [thumbnailImageCache setName:kThumbnailCacheName];
+        [thumbnailImageCache setCountLimit:kThumbnailCacheCountLimit];
+        
+    }
 }
 
 #pragma mark find controller to open specific file type
@@ -368,6 +408,135 @@ static NSArray *hiddenFileName;
     CFRelease(comparedUTI);
     
     return isSupport;
+}
+
+#pragma mark - Find thumbnail for file
+-(UIImage*)findThumbnailImageForFileAtPath:(NSString *)filePath thumbnailSize:(CGSize)imageSize
+{
+    BOOL canGenerateThumbnail;
+    UIImage *thumbnailImage = nil;
+    NSURL *fileURLPath = [NSURL fileURLWithPath:filePath];
+    NSString *filename = [filePath lastPathComponent];
+    NSString *extension = [filename pathExtension];
+    CFStringRef extensionTag = (__bridge CFStringRef)extension;
+    
+    if([extension isEqualToString:@""])
+        return nil;
+    
+    //is system allow to generate thumbnail
+    canGenerateThumbnail = [[NSUserDefaults standardUserDefaults] boolForKey:sysGenerateThumbnail];
+    
+    if(canGenerateThumbnail)
+    {
+        //check if thumbnail is existed
+        UIImage *thumb = [thumbnailImageCache objectForKey:filePath];
+        
+        if(thumb != nil)
+            return thumb;
+    }
+
+    
+    //create UTI for file extension
+    CFStringRef compareUTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, extensionTag, NULL);
+    
+    /*
+     //get back UTI info
+     CFDictionaryRef declareInfo = UTTypeCopyDeclaration(compareUTI);
+     CFArrayRef conformType = CFDictionaryGetValue(declareInfo, kUTTypeConformsToKey);
+     
+     
+     NSLog(@"declare info:%@", declareInfo);
+     NSLog(@"conform types:%@", conformType);
+     */
+    
+    
+    if (UTTypeConformsTo(compareUTI, kUTTypeImage)) 
+    {
+        if(canGenerateThumbnail)
+        {
+            //file is image type abstract
+            UIImage *image = [UIImage imageWithContentsOfFile:filePath];
+            //resize
+            thumbnailImage = [image resizeImageTo:imageSize];
+        }
+        else
+        {
+            //default image for image type
+        }
+        
+    }
+    else if(UTTypeConformsTo(compareUTI, kUTTypeAudiovisualContent))
+    {
+        //file is audio or video type abstract
+        
+        
+        if(UTTypeConformsTo(compareUTI, kUTTypeAudio))
+        {
+            //audio only
+            //return audio image
+        }
+        else
+        {
+            if(canGenerateThumbnail)
+            {
+                //movie only
+                thumbnailImage = [self generateMovieThumbnailImageAtPath:fileURLPath];
+                
+                //resize
+                thumbnailImage = [thumbnailImage resizeImageTo:imageSize];
+                
+                //stored in cache
+                [thumbnailImageCache setObject:thumbnailImage forKey:filePath];
+            }
+            else
+            {
+                //default image for move type
+            }
+
+        }
+        
+    }
+    else if(UTTypeConformsTo(compareUTI, kUTTypeArchive))
+    {
+        //file is archive type
+    }
+    else
+    {
+        //file is other type
+        
+    }
+    
+    //free memory
+    //CFRelease(declareInfo);
+    CFRelease(compareUTI);
+        
+    
+    return thumbnailImage;
+}
+
+-(UIImage*)generateMovieThumbnailImageAtPath:(NSURL*)moviePath
+{
+    NSError *error;
+    UIImage *thumbImage = nil;
+    AVAsset *asset = [AVAsset assetWithURL:moviePath];
+    AVAssetImageGenerator *generator = [[AVAssetImageGenerator alloc] initWithAsset:asset];
+    
+    generator.appliesPreferredTrackTransform = YES;
+    
+    CMTime thumbnailTime = CMTimeMake(0, 30);
+    
+    CGImageRef cgThumbnailImage = [generator copyCGImageAtTime:thumbnailTime actualTime:nil error:&error];
+    if(cgThumbnailImage == nil || error != nil)
+    {
+        //fail
+        NSLog(@"fail to generate thumbnail for file %@ error:%@", [moviePath path], error);
+        
+        return nil;
+    }
+    
+    thumbImage = [UIImage imageWithCGImage:cgThumbnailImage];
+    
+    return  thumbImage;
 }
 
 #pragma mark - getter

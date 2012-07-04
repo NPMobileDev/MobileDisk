@@ -134,18 +134,31 @@
 - (void)zipArchiveDidUnzipFileAtIndex:(NSInteger)fileIndex totalFiles:(NSInteger)totalFiles archivePath:(NSString *)archivePath fileInfo:(unz_file_info)fileInfo
 {
     __block float progressValue = (float)fileIndex / (float)totalFiles;
-    //int percent = roundf(((float)fileIndex / (float)totalFiles) * 100);
-    //NSLog(@"unarchive progress: %i", percent);
+    __block BOOL completeUnarchive = NO;
+    
+    if((fileIndex+1) == totalFiles)
+    {
+        completeUnarchive = YES;
+    }
     
     dispatch_async(dispatch_get_main_queue(), ^(void){
     
         [progressView setStatusWithMessage:@"Unarchiving..."];
-        [progressView setProgress:progressValue];
+        
+        if(completeUnarchive)
+        {
+            [progressView setProgress:1.0f];
+        }
+        else
+        {
+            [progressView setProgress:progressValue];
+        }
+        
         
     });
     
     
-    if((fileIndex+1) == totalFiles)
+    if(completeUnarchive)
     {
         NSLog(@"finish unarchive");
         

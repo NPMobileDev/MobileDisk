@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+@class MDFiles;
+
 @interface MDFilesTableViewCell : UITableViewCell
 
 @property (nonatomic, strong) UIImageView *selectionIndicator;
@@ -15,5 +17,7 @@
 @property (nonatomic, readonly, getter = notSelectedIndicatorName) NSString *notSelectedIndicatorName;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier withTableView:(UITableView *)tableView;
+
+-(void)configureCellForFile:(MDFiles *)theFile;
 
 @end

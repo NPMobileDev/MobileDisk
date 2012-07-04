@@ -23,6 +23,8 @@
 
 @implementation MDMoveFilesViewController{
     
+    MDFileSupporter *fileSupporter;
+    
     //contain string directory name
     NSMutableArray *directoryArray;
     
@@ -104,6 +106,8 @@
  
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    
+    fileSupporter = [MDFileSupporter sharedFileSupporter];
     
     [self findContentDirectoriesInWorkingPath:self.workingPath];
     
@@ -271,7 +275,7 @@
         //store content
         for(NSString *theContent in contents)
         {
-            if([MDFileSupporter canShowFileName:theContent])
+            if([fileSupporter canShowFileName:theContent])
             {
                 NSString *filePath = [self.workingPath stringByAppendingPathComponent:theContent];
                 

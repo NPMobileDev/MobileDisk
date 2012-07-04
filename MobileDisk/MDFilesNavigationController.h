@@ -19,5 +19,5 @@
 
 @interface MDFilesNavigationController : UINavigationController 
 
-@property (nonatomic, weak) MDFileSupporter *fileSupporter;
+//@property (nonatomic, weak) MDFileSupporter *fileSupporter;
 @end

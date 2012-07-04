@@ -7,6 +7,8 @@
 //
 
 #import "MDFilesTableViewCell.h"
+#import "MDFiles.h"
+#import "MDFileSupporter.h"
 
 const NSInteger IMAGE_WIDTH = 30;
 const NSInteger IMAGE_HEIGHT = 30;
@@ -116,6 +118,64 @@ const NSString *NotSelectedImageName = @"NotSelected";
     self.imageView.image = nil;
     self.accessoryType = UITableViewCellAccessoryNone;
     self.selectionIndicator.image = [UIImage imageNamed:self.notSelectedIndicatorName];
+}
+
+#pragma mark - Configure cell
+//configure cell by given file
+-(void)configureCellForFile:(MDFiles *)theFile
+{
+    MDFiles *file = theFile;
+    
+    //text label
+    if(file.isFile)
+    {
+        self.textLabel.text = file.fileName;
+    }
+    else
+    {
+        //is a folder
+        self.textLabel.text = [file.fileName stringByAppendingString:@" /"];
+    }
+    
+    //detail text label
+    if(file.isFile)
+    {
+        //is a file 
+        self.detailTextLabel.text = [NSString stringWithFormat:NSLocalizedString(@"File size: %@", @"File size string format"), file.fileSizeString];
+    }
+    
+    //accessory
+    if(!file.isFile)
+    {
+        //is directory
+        self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    }
+    
+    //set image for selected and not selected for edit mode
+    UIImageView *selectIndicator = self.selectionIndicator;
+    if(file.isSelected)
+    {
+        
+        selectIndicator.image = [UIImage imageNamed:self.selectedIndicatorName];
+    }
+    else
+    {
+        selectIndicator.image = [UIImage imageNamed:self.notSelectedIndicatorName];
+    }
+    
+    //thumbnail image
+    if(file.isFile)
+    {
+        MDFileSupporter *fileSupporter = [MDFileSupporter sharedFileSupporter];
+        UIImage *thumbnailImage = [fileSupporter findThumbnailImageForFileAtPath:file.filePath thumbnailSize:CGSizeMake(44, 44)];
+        
+        self.imageView.image = thumbnailImage;
+    }
+    else
+    {
+        //a folder
+    }
+    
 }
 
 #pragma mark - getter
