@@ -13,15 +13,28 @@
 			<string>mp4</string>
 			<string>mp3</string>
 			<string>mov</string>
+			<string>m4a</string>
 		</array>
 		<key>Image</key>
 		<array>
 			<string>png</string>
 			<string>jpeg</string>
+			<string>jp2</string>
+			<string>gif</string>
+			<string>tiff</string>
+			<string>bmp</string>
+			<string>ico</string>
 		</array>
 		<key>Document</key>
 		<array>
 			<string>pdf</string>
+			<string>doc</string>
+			<string>docx</string>
+			<string>rtf</string>
+			<string>xml</string>
+			<string>html</string>
+			<string>txt</string>
+			<string>xls</string>
 		</array>
 	</dict>
 	<key>HiddenFlieName</key>

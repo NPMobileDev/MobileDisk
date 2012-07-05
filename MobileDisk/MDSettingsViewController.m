@@ -22,6 +22,8 @@
 - (void)wifiSwitch:(id)sender;
 -(void)reloadTableViewSection:(NSUInteger)section WithAnimation:(BOOL)yesOrNO;
 -(void)calculateDiskSpace;
+-(void)passcodeStatusChange:(id)sender;
+-(void)generateThumbnail:(id)sender;
 
 @end
 
@@ -44,6 +46,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     NSString *diskSpaceString;
     //free space string
     NSString *freeSpaceString;
+    
     
     //used to prevent ddlog add many times
     BOOL DDLogIsSet;
@@ -367,6 +370,9 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     //add prototype cell identifier for section 2, one row
     [cellModels addObject:[NSArray arrayWithObjects:@"S2-R0-GenerateThumbnail", nil]];
     
+     //add prototype cell identifier for section 3, one row
+    [cellModels addObject:[NSArray arrayWithObjects:@"S3-R0-Passcode", nil]];
+    
     //add header for section 0
     [sectionHeaders addObject:NSLocalizedString(@"Wi-Fi Transfer", @"WiFi Transfer")];
     
@@ -375,6 +381,9 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     
     //add header for section 2
     [sectionHeaders addObject:NSLocalizedString(@"File", @"File")];
+    
+    //add header for section 3
+    [sectionHeaders addObject:NSLocalizedString(@"Passcode", @"Passcode")];
     
 }
 
@@ -457,6 +466,21 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
                 [theSwitch addTarget:self action:@selector(generateThumbnail:) forControlEvents:UIControlEventValueChanged];
             }
             
+            break;
+            /**
+             configure cells at section 3
+             **/
+        case 3:
+            if(indexPath.row == 0)
+            {
+                //get value for passcode status
+                BOOL passcodeStatus = [[NSUserDefaults standardUserDefaults] boolForKey:sysPasscodeStatus];
+                
+                UISwitch *theSwitch = (UISwitch*)[cell viewWithTag:1005];
+                theSwitch.on = passcodeStatus;
+                
+                [theSwitch addTarget:self action:@selector(passcodeStatusChange:) forControlEvents:UIControlEventValueChanged];
+            }
             
         default:
             break;
@@ -573,4 +597,88 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     [userDefaults setObject:[NSNumber numberWithBool:genThumb] forKey:sysGenerateThumbnail];
     [userDefaults synchronize];
 }
+
+#pragma mark - Passcode enable/disable
+-(void)passcodeStatusChange:(id)sender
+{
+    
+    //get passcode 
+    NSString *passcode = [[NSUserDefaults standardUserDefaults] stringForKey:sysPasscodeNumber];
+    
+    if([passcode isEqualToString:@"-1"])
+    {
+        //passcode is never setted we want to set new passcode
+        MDPasscodeViewController *passcodeController = [self.storyboard instantiateViewControllerWithIdentifier:@"MDPasscodeViewController"];
+        
+        passcodeController.theDelegate = self;
+        
+        [self.navigationController presentViewController:passcodeController animated:YES completion:nil];
+        
+    }
+    else
+    {
+        //ask user to input last passcode for futher action
+        MDPasscodeViewController *passcodeController = [self.storyboard instantiateViewControllerWithIdentifier:@"MDPasscodeViewController"];
+        
+        passcodeController.passcodeToCheck =passcode;
+        passcodeController.theDelegate = self;
+        
+        [self.navigationController presentViewController:passcodeController animated:YES completion:nil];
+    }
+    
+}
+
+#pragma mark - MDPasscodeViewController delegate
+-(void)MDPasscodeViewControllerDidCancel:(MDPasscodeViewController *)controller
+{
+    [self.tableView reloadData];
+    
+    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+}
+
+-(void)MDPasscodeViewControllerInputPasscodeIsCorrect:(MDPasscodeViewController *)controller
+{
+    //get old passcode status
+    BOOL statusNow = [[NSUserDefaults standardUserDefaults] boolForKey:sysPasscodeStatus];
+    
+    //set new passcode status
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setObject:[NSNumber numberWithBool:!statusNow] forKey:sysPasscodeStatus];
+    [userDefaults synchronize];
+    
+    [self.tableView reloadData];
+    
+    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+}
+
+-(void)MDPasscodeViewControllerInputPasscodeIsIncorrect:(MDPasscodeViewController *)controller
+{
+    NSString *msg = NSLocalizedString(@"Passcode is incorrect", @"Passcode is incorrect");
+    UIAlertView *incorrectAlert = [[UIAlertView alloc] initWithTitle:nil message:msg delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles: nil];
+    
+    [incorrectAlert show];
+    
+    //reset passcode
+    [controller resetPasscode];
+}
+
+-(void)MDPasscodeViewController:(MDPasscodeViewController *)controller didReceiveNewPasscode:(NSString *)newPasscode
+{
+   //get old passcode status
+    BOOL statusNow = [[NSUserDefaults standardUserDefaults] boolForKey:sysPasscodeStatus];
+    
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    
+    //set new passcode status
+    [userDefaults setObject:[NSNumber numberWithBool:!statusNow] forKey:sysPasscodeStatus];
+    
+    //set new passcode number
+    [userDefaults setObject:newPasscode forKey:sysPasscodeNumber];
+    [userDefaults synchronize];
+    
+    [self.tableView reloadData];
+    
+    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+}
+
 @end

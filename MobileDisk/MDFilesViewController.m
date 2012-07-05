@@ -12,9 +12,6 @@
 #import "MDFileSupporter.h"
 
 
-
-
-
 @interface MDFilesViewController ()
 
 -(void)findContentInWorkingPath:(NSString *)path;

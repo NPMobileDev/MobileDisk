@@ -20,6 +20,7 @@
 		441AB99D159C75B600BAAA19 /* MDAVPlayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 441AB99C159C75B600BAAA19 /* MDAVPlayerController.m */; };
 		441AB99F159C766C00BAAA19 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 441AB99E159C766C00BAAA19 /* MediaPlayer.framework */; };
 		4424E2C115A137A300A430D4 /* MDTimelineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4424E2C015A137A300A430D4 /* MDTimelineView.m */; };
+		44354DFE15A572FB00BFE4E4 /* MDPasscodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44354DFD15A572FB00BFE4E4 /* MDPasscodeViewController.m */; };
 		4437BB70159EA2D100F3C8E7 /* dummy.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4437BB6F159EA2D100F3C8E7 /* dummy.mp3 */; };
 		4438B40215A3E0F400248C72 /* MDProgressGradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4438B40115A3E0F400248C72 /* MDProgressGradientView.m */; };
 		4438B41115A4411D00248C72 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4438B41015A4411D00248C72 /* CoreMedia.framework */; };
@@ -34,7 +35,7 @@
 		444FF9D4159AA0770033BB3B /* MobileDiskInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 444FF9D3159AA0770033BB3B /* MobileDiskInfo.plist */; };
 		444FF9D6159AB6120033BB3B /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 444FF9D5159AB6120033BB3B /* MobileCoreServices.framework */; };
 		444FF9DA159AD45F0033BB3B /* MDFileSupporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 444FF9D9159AD45F0033BB3B /* MDFileSupporter.m */; };
-		444FF9E3159B2BF70033BB3B /* MDPDFViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 444FF9E2159B2BF70033BB3B /* MDPDFViewController.m */; };
+		444FF9E3159B2BF70033BB3B /* MDDocumentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 444FF9E2159B2BF70033BB3B /* MDDocumentViewController.m */; };
 		44538AFE159D4D4200CE7730 /* MDMusicPlayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44538AFD159D4D4200CE7730 /* MDMusicPlayerController.m */; };
 		44538B00159D4D6200CE7730 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44538AFF159D4D6200CE7730 /* AVFoundation.framework */; };
 		445D13ED1599391300B7D777 /* MDMoveFilesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 445D13EC1599391300B7D777 /* MDMoveFilesViewController.m */; };
@@ -107,6 +108,8 @@
 		441AB99E159C766C00BAAA19 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		4424E2BF15A137A300A430D4 /* MDTimelineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDTimelineView.h; sourceTree = "<group>"; };
 		4424E2C015A137A300A430D4 /* MDTimelineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDTimelineView.m; sourceTree = "<group>"; };
+		44354DFC15A572FB00BFE4E4 /* MDPasscodeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDPasscodeViewController.h; sourceTree = "<group>"; };
+		44354DFD15A572FB00BFE4E4 /* MDPasscodeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDPasscodeViewController.m; sourceTree = "<group>"; };
 		4437BB6F159EA2D100F3C8E7 /* dummy.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = dummy.mp3; sourceTree = "<group>"; };
 		4438B40015A3E0F400248C72 /* MDProgressGradientView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDProgressGradientView.h; sourceTree = "<group>"; };
 		4438B40115A3E0F400248C72 /* MDProgressGradientView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDProgressGradientView.m; sourceTree = "<group>"; };
@@ -129,8 +132,8 @@
 		444FF9D5159AB6120033BB3B /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		444FF9D8159AD45F0033BB3B /* MDFileSupporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDFileSupporter.h; sourceTree = "<group>"; };
 		444FF9D9159AD45F0033BB3B /* MDFileSupporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDFileSupporter.m; sourceTree = "<group>"; };
-		444FF9E1159B2BF70033BB3B /* MDPDFViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDPDFViewController.h; sourceTree = "<group>"; };
-		444FF9E2159B2BF70033BB3B /* MDPDFViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDPDFViewController.m; sourceTree = "<group>"; };
+		444FF9E1159B2BF70033BB3B /* MDDocumentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDDocumentViewController.h; sourceTree = "<group>"; };
+		444FF9E2159B2BF70033BB3B /* MDDocumentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDDocumentViewController.m; sourceTree = "<group>"; };
 		44538AFC159D4D4200CE7730 /* MDMusicPlayerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDMusicPlayerController.h; sourceTree = "<group>"; };
 		44538AFD159D4D4200CE7730 /* MDMusicPlayerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDMusicPlayerController.m; sourceTree = "<group>"; };
 		44538AFF159D4D6200CE7730 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -302,6 +305,15 @@
 			name = AVPlayer;
 			sourceTree = "<group>";
 		};
+		44354DF815A5727C00BFE4E4 /* Passcode */ = {
+			isa = PBXGroup;
+			children = (
+				44354DFC15A572FB00BFE4E4 /* MDPasscodeViewController.h */,
+				44354DFD15A572FB00BFE4E4 /* MDPasscodeViewController.m */,
+			);
+			name = Passcode;
+			sourceTree = "<group>";
+		};
 		443ACDFE1592EF76008B4DF2 /* Files */ = {
 			isa = PBXGroup;
 			children = (
@@ -359,8 +371,8 @@
 		444FF9E0159B2BCD0033BB3B /* PDFViewer */ = {
 			isa = PBXGroup;
 			children = (
-				444FF9E1159B2BF70033BB3B /* MDPDFViewController.h */,
-				444FF9E2159B2BF70033BB3B /* MDPDFViewController.m */,
+				444FF9E1159B2BF70033BB3B /* MDDocumentViewController.h */,
+				444FF9E2159B2BF70033BB3B /* MDDocumentViewController.m */,
 			);
 			name = PDFViewer;
 			sourceTree = "<group>";
@@ -441,6 +453,7 @@
 			isa = PBXGroup;
 			children = (
 				4416082815A29F4C00770FF5 /* ThirdLib */,
+				44354DF815A5727C00BFE4E4 /* Passcode */,
 				4416083B15A335B300770FF5 /* ProgressHUD */,
 				4416082415A29EF900770FF5 /* UnzipView */,
 				44538AED159D31CB00CE7730 /* MusicPlayer */,
@@ -690,7 +703,7 @@
 				445D13FE1599B50200B7D777 /* MDNonSelectedActionSheet.m in Sources */,
 				445D14011599BB4800B7D777 /* MDSelectedActionSheet.m in Sources */,
 				444FF9DA159AD45F0033BB3B /* MDFileSupporter.m in Sources */,
-				444FF9E3159B2BF70033BB3B /* MDPDFViewController.m in Sources */,
+				444FF9E3159B2BF70033BB3B /* MDDocumentViewController.m in Sources */,
 				447CD7EC159C04AE00464D28 /* MDImageViewerController.m in Sources */,
 				447CD7EF159C37A700464D28 /* UIImage+Resize.m in Sources */,
 				441AB991159C646B00BAAA19 /* MDScrollView.m in Sources */,
@@ -706,6 +719,7 @@
 				4416082E15A29FDD00770FF5 /* MDUnarchiveNavigationController.m in Sources */,
 				4416083915A32B0600770FF5 /* MDProgressViewController.m in Sources */,
 				4438B40215A3E0F400248C72 /* MDProgressGradientView.m in Sources */,
+				44354DFE15A572FB00BFE4E4 /* MDPasscodeViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

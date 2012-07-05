@@ -122,7 +122,7 @@
                                 </view>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="S2-R0-GenerateThumbnail" id="MQB-yw-IEd">
-                                <rect key="frame" x="0.0" y="278" width="320" height="45"/>
+                                <rect key="frame" x="0.0" y="278" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                     <rect key="frame" x="10" y="0.0" width="300" height="43"/>
@@ -145,6 +145,30 @@
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
                             </tableViewCell>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="S3-R0-Passcode" id="mnA-76-Q5Y">
+                                <rect key="frame" x="0.0" y="322" width="320" height="45"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                    <rect key="frame" x="10" y="0.0" width="300" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Passcode:" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="2Dj-Lb-TAZ">
+                                            <rect key="frame" x="20" y="11" width="83" height="22"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="shadowColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <size key="shadowOffset" width="0.0" height="1"/>
+                                        </label>
+                                        <switch opaque="NO" tag="1005" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="JS8-JF-4x3">
+                                            <rect key="frame" x="201" y="8" width="79" height="27"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        </switch>
+                                    </subviews>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                </view>
+                            </tableViewCell>
                         </prototypes>
                         <sections/>
                         <connections>
@@ -156,6 +180,89 @@
                 </tableViewController>
             </objects>
             <point key="canvasLocation" x="788" y="-532"/>
+        </scene>
+        <!--Passcode View Controller-->
+        <scene sceneID="0sO-FL-dOE">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="sHC-fS-asj" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <viewController storyboardIdentifier="MDPasscodeViewController" id="ixg-mM-XEZ" customClass="MDPasscodeViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Kl9-oc-zMd" customClass="MDPasscode">
+                        <rect key="frame" x="0.0" y="20" width="320" height="460"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <textField hidden="YES" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" id="bMB-Tf-pjo" userLabel="p1Text Field">
+                                <rect key="frame" x="84" y="77" width="32" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" keyboardType="numberPad" enablesReturnKeyAutomatically="YES"/>
+                            </textField>
+                            <textField hidden="YES" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" id="jGV-ZV-uhs" userLabel="p2Text Field">
+                                <rect key="frame" x="124" y="77" width="32" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" keyboardType="numberPad" enablesReturnKeyAutomatically="YES"/>
+                            </textField>
+                            <textField hidden="YES" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" id="uhD-Or-OFX" userLabel="p3Text Field">
+                                <rect key="frame" x="164" y="77" width="32" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" keyboardType="numberPad" enablesReturnKeyAutomatically="YES"/>
+                            </textField>
+                            <textField hidden="YES" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" id="iHh-Cs-0Hj" userLabel="p4Text Field">
+                                <rect key="frame" x="204" y="77" width="32" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" keyboardType="numberPad" enablesReturnKeyAutomatically="YES"/>
+                            </textField>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" id="WwW-HU-unH" userLabel="vP1Text Field">
+                                <rect key="frame" x="84" y="77" width="32" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" keyboardType="numberPad" secureTextEntry="YES"/>
+                            </textField>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" id="qhQ-EL-wIX" userLabel="vp2Text Field">
+                                <rect key="frame" x="124" y="77" width="32" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" keyboardType="numberPad" secureTextEntry="YES"/>
+                            </textField>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" id="igm-yb-MpO" userLabel="vP3Text Field">
+                                <rect key="frame" x="164" y="77" width="32" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" keyboardType="numberPad" secureTextEntry="YES"/>
+                            </textField>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" id="gPp-gK-RH9" userLabel="vP4Text Field">
+                                <rect key="frame" x="204" y="77" width="32" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" keyboardType="numberPad" secureTextEntry="YES"/>
+                            </textField>
+                            <navigationBar contentMode="scaleToFill" id="RZz-2a-tDU">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <items>
+                                    <navigationItem title="Title" id="Vlt-ST-rsq"/>
+                                </items>
+                            </navigationBar>
+                        </subviews>
+                        <color key="backgroundColor" red="0.74599410076530615" green="0.74599410076530615" blue="0.74599410076530615" alpha="1" colorSpace="calibratedRGB"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="O5h-LJ-kik"/>
+                    <connections>
+                        <outlet property="navBar" destination="RZz-2a-tDU" id="l4v-ie-Ept"/>
+                        <outlet property="p1" destination="bMB-Tf-pjo" id="D4F-5k-xQi"/>
+                        <outlet property="p2" destination="jGV-ZV-uhs" id="1RL-cD-6E6"/>
+                        <outlet property="p3" destination="uhD-Or-OFX" id="W8X-va-yHL"/>
+                        <outlet property="p4" destination="iHh-Cs-0Hj" id="QsX-xs-92p"/>
+                        <outlet property="vP1" destination="WwW-HU-unH" id="gbz-xQ-fMu"/>
+                        <outlet property="vP2" destination="qhQ-EL-wIX" id="Hgb-EM-fWW"/>
+                        <outlet property="vP3" destination="igm-yb-MpO" id="m5h-55-vkK"/>
+                        <outlet property="vP4" destination="gPp-gK-RH9" id="wIz-Ut-9nV"/>
+                    </connections>
+                </viewController>
+            </objects>
+            <point key="canvasLocation" x="788" y="-1150"/>
         </scene>
         <!--Files Navigation Controller - Files-->
         <scene sceneID="tqE-rl-2p5">
@@ -207,17 +314,17 @@
             </objects>
             <point key="canvasLocation" x="1218" y="107"/>
         </scene>
-        <!--View Controller-->
+        <!--Document View Controller-->
         <scene sceneID="rjD-2Z-1mU">
             <objects>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mw0-ZK-GlK" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <viewController storyboardIdentifier="" id="YTN-b1-pDy" customClass="MDPDFViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="" id="YTN-b1-pDy" customClass="MDDocumentViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="xVJ-Ew-jqB">
                         <rect key="frame" x="0.0" y="64" width="320" height="416"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <webView contentMode="scaleToFill" scalesPageToFit="YES" id="4t4-IF-jTA">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="460"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="416"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             </webView>
@@ -322,7 +429,7 @@
         <scene sceneID="IwW-pV-QjP">
             <objects>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EcJ-yb-sr7" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <navigationController storyboardIdentifier="MDPDFViewController" id="v5a-oK-tF0" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="MDDocumentViewController" id="v5a-oK-tF0" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="G8Y-UY-hdG">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -650,93 +757,6 @@
             <point key="canvasLocation" x="2051" y="3277"/>
         </scene>
     </scenes>
-    <classes>
-        <class className="MDAVPlayerController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MDAVPlayerController.h"/>
-            <relationships>
-                <relationship kind="action" name="beginChangeSlider:"/>
-                <relationship kind="action" name="endChangeSlider:"/>
-                <relationship kind="action" name="fastForward:"/>
-                <relationship kind="action" name="rewind:"/>
-                <relationship kind="action" name="sliderValueChange:"/>
-                <relationship kind="outlet" name="currentTimeLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="gestureReceiverView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="navBar" candidateClass="UINavigationBar"/>
-                <relationship kind="outlet" name="timeLeftLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="timeLineSlider" candidateClass="UISlider"/>
-                <relationship kind="outlet" name="timelineBackgroundView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="toolbar" candidateClass="UIToolbar"/>
-                <relationship kind="outlet" name="videoLayerView" candidateClass="UIView"/>
-            </relationships>
-        </class>
-        <class className="MDFilesNavigationController" superclassName="UINavigationController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MDFilesNavigationController.h"/>
-        </class>
-        <class className="MDFilesViewController" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MDFilesViewController.h"/>
-        </class>
-        <class className="MDImageViewerController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MDImageViewerController.h"/>
-            <relationships>
-                <relationship kind="outlet" name="imageScrolleView" candidateClass="UIScrollView"/>
-            </relationships>
-        </class>
-        <class className="MDMoveFilesNavigationController" superclassName="UINavigationController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MDMoveFilesNavigationController.h"/>
-        </class>
-        <class className="MDMoveFilesViewController" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MDMoveFilesViewController.h"/>
-        </class>
-        <class className="MDMusicPlayerController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MDMusicPlayerController.h"/>
-            <relationships>
-                <relationship kind="action" name="doneListening:"/>
-                <relationship kind="action" name="fastForward:"/>
-                <relationship kind="action" name="rewind:"/>
-                <relationship kind="action" name="volumeSliderChange:"/>
-                <relationship kind="outlet" name="albumNameLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="artistLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="currentTimeLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="lyricsTextView" candidateClass="UITextView"/>
-                <relationship kind="outlet" name="musicImageView" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="navBar" candidateClass="UINavigationBar"/>
-                <relationship kind="outlet" name="timeLeftLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="timeLineSlider" candidateClass="UISlider"/>
-                <relationship kind="outlet" name="timelineBackgroundView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="titleLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="toolbar" candidateClass="UIToolbar"/>
-            </relationships>
-        </class>
-        <class className="MDPDFViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MDPDFViewController.h"/>
-            <relationships>
-                <relationship kind="outlet" name="webView" candidateClass="UIWebView"/>
-            </relationships>
-        </class>
-        <class className="MDProgressViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MDProgressViewController.h"/>
-            <relationships>
-                <relationship kind="outlet" name="percentLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="progressView" candidateClass="UIProgressView"/>
-                <relationship kind="outlet" name="statusLabel" candidateClass="UILabel"/>
-            </relationships>
-        </class>
-        <class className="MDScrollView" superclassName="UIScrollView">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MDScrollView.h"/>
-        </class>
-        <class className="MDSettingsViewController" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MDSettingsViewController.h"/>
-        </class>
-        <class className="MDTimelineView" superclassName="UIView">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MDTimelineView.h"/>
-        </class>
-        <class className="MDUnarchiveNavigationController" superclassName="UINavigationController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MDUnarchiveNavigationController.h"/>
-        </class>
-        <class className="MDUnarchiveViewController" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MDUnarchiveViewController.h"/>
-        </class>
-    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

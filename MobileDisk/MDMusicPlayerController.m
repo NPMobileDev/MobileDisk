@@ -136,7 +136,7 @@
     }
     else
     {
-        self.artistLabel.text = NSLocalizedString(@"Title: Unknow", @"Title: Unknow");
+        self.titleLabel.text = NSLocalizedString(@"Title: Unknow", @"Title: Unknow");
     }
     
     if(musicAlbumName)
@@ -145,7 +145,7 @@
     }
     else
     {
-        self.artistLabel.text = NSLocalizedString(@"Album: Unknow", @"Album: Unknow");
+        self.albumNameLabel.text = NSLocalizedString(@"Album: Unknow", @"Album: Unknow");
     }
     
     

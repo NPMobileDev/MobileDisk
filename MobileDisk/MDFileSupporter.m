@@ -8,7 +8,7 @@
 
 #import "MDFileSupporter.h"
 #import "MDFilesViewController.h"
-#import "MDPDFViewController.h"
+#import "MDDocumentViewController.h"
 #import "MDImageViewerController.h"
 #import "MDAVPlayerController.h"
 #import "MDMusicPlayerController.h"
@@ -26,6 +26,7 @@
 -(id)findControllerForImageTypeFile:(CFStringRef)compareUTI;
 -(id)findControllerForAudioVideoTypeFile:(CFStringRef)compareUTI;
 -(id)findControllerForArchiveTypeFile:(CFStringRef)compareUTI;
+-(id)findControllerForTextTypeFile:(CFStringRef)compareUTI;
 -(id)findControllerForOtherTypeFile:(CFStringRef)compareUTI;
 -(id)findImageViewerController;
 -(id)findAudioVideoController;
@@ -39,6 +40,9 @@
 /**define our own UTI type**/
 //zip archive
 const CFStringRef kUTTypeZipArchive = (__bridge CFStringRef)@"com.pkware.zip-archive";
+const CFStringRef kUTTypeDoc = (__bridge CFStringRef)@"com.microsoft.word.doc";
+const CFStringRef kUTTypeDocx = (__bridge CFStringRef)@"org.openxmlformats.openxml";
+const CFStringRef kUTTypeExcel = (__bridge CFStringRef)@"com.microsoft.excel.xls";
 
 static MDFileSupporter *fileSupporterInstance;
 static NSArray *hiddenFileName;
@@ -153,17 +157,23 @@ static NSArray *hiddenFileName;
     operateFilePath = filePath;
     NSString *filename = [filePath lastPathComponent];
     NSString *extension = [filename pathExtension];
-    CFStringRef extensionTag = (__bridge CFStringRef)extension;
+    
     
     if([extension isEqualToString:@""])
     {
         return nil;
     }
+    else if([extension isEqualToString:@"m4r"])
+    {
+        extension = @"m4a";
+    }
+    
+    CFStringRef extensionTag = (__bridge CFStringRef)extension;
     
     //create UTI for file extension
     CFStringRef compareUTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, extensionTag, NULL);
     
-    /*
+    
     //get back UTI info
     CFDictionaryRef declareInfo = UTTypeCopyDeclaration(compareUTI);
     CFArrayRef conformType = CFDictionaryGetValue(declareInfo, kUTTypeConformsToKey);
@@ -171,7 +181,7 @@ static NSArray *hiddenFileName;
     
     NSLog(@"declare info:%@", declareInfo);
     NSLog(@"conform types:%@", conformType);
-    */
+
     
     
     if (UTTypeConformsTo(compareUTI, kUTTypeImage)) 
@@ -188,6 +198,11 @@ static NSArray *hiddenFileName;
     {
         theController = [self findControllerForArchiveTypeFile:compareUTI];
     }
+    else if(UTTypeConformsTo(compareUTI, kUTTypeText))
+    {
+        //file is text type
+        theController = [self findControllerForTextTypeFile:compareUTI];
+    }
     else
     {
         //file is other type
@@ -195,7 +210,7 @@ static NSArray *hiddenFileName;
     }
     
     //free memory
-    //CFRelease(declareInfo);
+    CFRelease(declareInfo);
     CFRelease(compareUTI);
     
     return theController;
@@ -205,6 +220,7 @@ static NSArray *hiddenFileName;
 {
     id controller = nil;
     
+    /*
     if(UTTypeConformsTo(compareUTI, kUTTypePNG))
     {
         //is png image
@@ -219,6 +235,8 @@ static NSArray *hiddenFileName;
         
         controller = [self findImageViewerController];
     }
+     */
+    controller = [self findImageViewerController];
 
     
     return controller; 
@@ -243,6 +261,10 @@ static NSArray *hiddenFileName;
         //quick time movie
         controller = [self findAudioVideoController];
     }
+    else if(UTTypeConformsTo(compareUTI, kUTTypeAudio))
+    {
+        controller = [self findAudioController];
+    }
     
     return controller;
 }
@@ -251,7 +273,20 @@ static NSArray *hiddenFileName;
 {
     id controller = nil;
     
-    if(UTTypeConformsTo(compareUTI, kUTTypeZipArchive))
+    if(UTTypeConformsTo(compareUTI, kUTTypeDocx))
+    {
+        //docx document text file (been recognized as archive file)
+        NSURL *docxURL = [NSURL fileURLWithPath:operateFilePath];
+        
+        UINavigationController *navController = [operateStoryboard instantiateViewControllerWithIdentifier:@"MDDocumentViewController"];
+        
+        MDDocumentViewController * docxController = [navController.viewControllers objectAtIndex:0];
+        
+        docxController.theDocumentURL = docxURL;
+        
+        controller = navController;
+    }
+    else if(UTTypeConformsTo(compareUTI, kUTTypeZipArchive))
     {
         //zip archive
         NSLog(@"return zip archive controller");
@@ -268,6 +303,43 @@ static NSArray *hiddenFileName;
     return controller;
 }
 
+-(id)findControllerForTextTypeFile:(CFStringRef)compareUTI
+{
+    id controller = nil;
+    
+    
+    if(UTTypeConformsTo(compareUTI, kUTTypeRTF))
+    {
+        //file is RTF
+        NSURL *textURL = [NSURL fileURLWithPath:operateFilePath];
+        
+        UINavigationController *navController = [operateStoryboard instantiateViewControllerWithIdentifier:@"MDDocumentViewController"];
+        
+        MDDocumentViewController * docController = [navController.viewControllers objectAtIndex:0];
+        
+        docController.theDocumentURL = textURL;
+        
+        controller = navController;
+    }
+    else
+    {
+        NSURL *textURL = [NSURL fileURLWithPath:operateFilePath];
+        NSData *textData = [NSData dataWithContentsOfURL:textURL];
+        
+        UINavigationController *navController = [operateStoryboard instantiateViewControllerWithIdentifier:@"MDDocumentViewController"];
+        
+        MDDocumentViewController * docController = [navController.viewControllers objectAtIndex:0];
+        
+        docController.theDocumentData = textData;
+        
+        controller = navController;
+    }
+    
+    
+    
+    return controller;
+}
+
 -(id)findControllerForOtherTypeFile:(CFStringRef)compareUTI
 {
     id controller = nil;
@@ -279,11 +351,37 @@ static NSArray *hiddenFileName;
         
         NSURL *pdfURL = [NSURL fileURLWithPath:operateFilePath];
         
-        UINavigationController *navController = [operateStoryboard instantiateViewControllerWithIdentifier:@"MDPDFViewController"];
+        UINavigationController *navController = [operateStoryboard instantiateViewControllerWithIdentifier:@"MDDocumentViewController"];
         
-        MDPDFViewController * pdfController = [navController.viewControllers objectAtIndex:0];
+        MDDocumentViewController * pdfController = [navController.viewControllers objectAtIndex:0];
         
-        pdfController.pdfURL = pdfURL;
+        pdfController.theDocumentURL = pdfURL;
+        
+        controller = navController;
+    }
+    else if(UTTypeConformsTo(compareUTI, kUTTypeExcel))
+    {
+        //file is microsoft excel
+        NSURL *excelURL = [NSURL fileURLWithPath:operateFilePath];
+        
+        UINavigationController *navController = [operateStoryboard instantiateViewControllerWithIdentifier:@"MDDocumentViewController"];
+        
+        MDDocumentViewController * excelController = [navController.viewControllers objectAtIndex:0];
+        
+        excelController.theDocumentURL = excelURL;
+        
+        controller = navController;
+    }
+    else if(UTTypeConformsTo(compareUTI, kUTTypeDoc))
+    {
+        //file is microsoft doc
+        NSURL *docURL = [NSURL fileURLWithPath:operateFilePath];
+        
+        UINavigationController *navController = [operateStoryboard instantiateViewControllerWithIdentifier:@"MDDocumentViewController"];
+        
+        MDDocumentViewController * docController = [navController.viewControllers objectAtIndex:0];
+        
+        docController.theDocumentURL = docURL;
         
         controller = navController;
     }
@@ -386,6 +484,11 @@ static NSArray *hiddenFileName;
     if([extension isEqualToString:@""])
     {
         return isSupport;
+    }
+    else if([extension isEqualToString:@"m4r"])
+    {
+        //rington m4r == m4a
+        extension = @"m4a";
     }
     
     //create UTI from extension

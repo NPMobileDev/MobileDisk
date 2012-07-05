@@ -16,10 +16,11 @@
 
 
 
+
 @implementation MobileDiskAppDelegate{
     
     HTTPServer *httpServer;
-    
+   
 }
 
 
@@ -80,15 +81,13 @@
 
 -(void)registerUserDefaults
 {
-    NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], sysGenerateThumbnail, nil];
+    NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], sysGenerateThumbnail, [NSNumber numberWithBool:NO], sysPasscodeStatus, @"-1", sysPasscodeNumber, nil];
     
     [[NSUserDefaults standardUserDefaults] registerDefaults:dic];
 }
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+-(void)initilizeAppliaction
 {
-    // Override point for customization after application launch.
-    
     [self registerUserDefaults];
     
     /**
@@ -108,7 +107,13 @@
     MDSettingsViewController *settingsController = [navController.viewControllers objectAtIndex:0];  
     
     settingsController.httpServer = httpServer;
+}
+
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
+    // Override point for customization after application launch.
     
+    [self initilizeAppliaction];
     
     return YES;
 }
@@ -128,16 +133,62 @@
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+    
+    
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    
+    BOOL passcodeStatus = [[NSUserDefaults standardUserDefaults] boolForKey:sysPasscodeStatus]; 
+    NSString *passcode = [[NSUserDefaults standardUserDefaults] stringForKey:sysPasscodeNumber];
+    
+    if(passcodeStatus)
+    {
+        UITabBarController *tabbarController = (UITabBarController*)self.window.rootViewController;
+        
+        MDPasscodeViewController *passcodeController = [tabbarController.storyboard instantiateViewControllerWithIdentifier:@"MDPasscodeViewController"];
+        
+        passcodeController.canShowCancelButton = NO;
+        passcodeController.passcodeToCheck = passcode;
+        passcodeController.theDelegate = self;
+        
+        [tabbarController presentViewController:passcodeController animated:YES completion:nil];
+    }
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+#pragma mark - MDPasscodeViewController delegate
+-(void)MDPasscodeViewControllerInputPasscodeIsCorrect:(MDPasscodeViewController *)controller
+{
+        UITabBarController *tabbarController = (UITabBarController*)self.window.rootViewController;
+    
+        [tabbarController dismissModalViewControllerAnimated:YES];
+}
+
+-(void)MDPasscodeViewControllerInputPasscodeIsIncorrect:(MDPasscodeViewController *)controller
+{
+    NSString *msg = NSLocalizedString(@"Passcode is incorrect", @"Passcode is incorrect");
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:msg delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles: nil];
+    
+    [alert show];
+    
+    [controller resetPasscode];
+}
+
+-(void)MDPasscodeViewControllerDidCancel:(MDPasscodeViewController *)controller
+{
+    
+}
+
+-(void)MDPasscodeViewController:(MDPasscodeViewController *)controller didReceiveNewPasscode:(NSString *)newPasscode
+{
+    
 }
 
 @end

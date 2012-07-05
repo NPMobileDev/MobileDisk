@@ -7,10 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MDPasscodeViewController.h"
 
 #define sysGenerateThumbnail @"GenerateThumbnail"
+#define sysPasscodeStatus @"PasscodeStatus"
+#define sysPasscodeNumber @"PasscodeNumber"
 
-@interface MobileDiskAppDelegate : UIResponder <UIApplicationDelegate>
+@interface MobileDiskAppDelegate : UIResponder <UIApplicationDelegate, MDPasscodeViewControllerDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 
