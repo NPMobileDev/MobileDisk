@@ -20,6 +20,7 @@
 #import "MDNonSelectedActionSheet.h"
 #import "MDSelectedActionSheet.h"
 #import "MDFileSupporter.h"
+#import "MDConfirmDeleteAlertView.h"
 
 
 @interface MDFilesViewController : UITableViewController <UIAlertViewDelegate,  UIActionSheetDelegate, 
@@ -28,6 +29,7 @@
     MDAddFolderAlertViewDelegate,
     MDNonSelectedActionSheetDelegate,
     MDSelectedActionSheetDelegate,
+    MDConfirmDeleteAlertViewDelegate,
     UIGestureRecognizerDelegate>
 
 //current path

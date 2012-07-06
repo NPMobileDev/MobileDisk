@@ -845,8 +845,11 @@ const float ToolBarAnimationDuration = 0.1f;
 #pragma mark - MDSelectedActionSheet delegate
 -(void)MDSDidClickedDeleteButton:(MDSelectedActionSheet *)object
 {
-    /**delete selected**/
-    [self doDeleteSelect];
+    MDConfirmDeleteAlertView *action = [[MDConfirmDeleteAlertView alloc] initAlertViewWithDelegate:self];
+    
+    [action showAlertView];
+    
+    currentAction = action;
 }
 
 -(void)MDSDidClickedDeselectAllButton:(MDSelectedActionSheet *)object
@@ -868,6 +871,19 @@ const float ToolBarAnimationDuration = 0.1f;
     isMovingFiles = YES;
     [self doMoveFiles];
 }
+
+#pragma mark - MDConfirmDeleteAlertView delegate
+-(void)MDConfirmDeleteAlertViewDidCancel:(MDConfirmDeleteAlertView *)object
+{
+    //do nothing
+}
+
+-(void)MDConfirmDeleteAlertViewDidConfirmDelete:(MDConfirmDeleteAlertView *)object
+{
+    /**delete selected**/
+    [self doDeleteSelect];
+}
+
 
 #pragma mark - MDNonSelectedActionSheet delegate
 -(void)MDNSDidClickedSelectAllButton:(MDNonSelectedActionSheet *)object

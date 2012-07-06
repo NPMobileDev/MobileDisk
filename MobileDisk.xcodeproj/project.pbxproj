@@ -33,6 +33,7 @@
 		4440BB621591A9740073BBAA /* MDSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4440BB611591A9740073BBAA /* MDSettingsViewController.m */; };
 		4440BB721591B8360073BBAA /* IPResolver.m in Sources */ = {isa = PBXBuildFile; fileRef = 4440BB711591B8360073BBAA /* IPResolver.m */; };
 		44421C2815A67980002B0F60 /* MDChangePasscodeController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44421C2715A67980002B0F60 /* MDChangePasscodeController.m */; };
+		44421C4115A6C6DE002B0F60 /* MDConfirmDeleteAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 44421C4015A6C6DE002B0F60 /* MDConfirmDeleteAlertView.m */; };
 		444FF9D4159AA0770033BB3B /* MobileDiskInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 444FF9D3159AA0770033BB3B /* MobileDiskInfo.plist */; };
 		444FF9D6159AB6120033BB3B /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 444FF9D5159AB6120033BB3B /* MobileCoreServices.framework */; };
 		444FF9DA159AD45F0033BB3B /* MDFileSupporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 444FF9D9159AD45F0033BB3B /* MDFileSupporter.m */; };
@@ -131,6 +132,8 @@
 		4440BB711591B8360073BBAA /* IPResolver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IPResolver.m; sourceTree = "<group>"; };
 		44421C2615A67980002B0F60 /* MDChangePasscodeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDChangePasscodeController.h; sourceTree = "<group>"; };
 		44421C2715A67980002B0F60 /* MDChangePasscodeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDChangePasscodeController.m; sourceTree = "<group>"; };
+		44421C3F15A6C6DE002B0F60 /* MDConfirmDeleteAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDConfirmDeleteAlertView.h; sourceTree = "<group>"; };
+		44421C4015A6C6DE002B0F60 /* MDConfirmDeleteAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDConfirmDeleteAlertView.m; sourceTree = "<group>"; };
 		444FF9D3159AA0770033BB3B /* MobileDiskInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = MobileDiskInfo.plist; sourceTree = "<group>"; };
 		444FF9D5159AB6120033BB3B /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		444FF9D8159AD45F0033BB3B /* MDFileSupporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDFileSupporter.h; sourceTree = "<group>"; };
@@ -404,6 +407,8 @@
 				445D13FD1599B50200B7D777 /* MDNonSelectedActionSheet.m */,
 				445D13FF1599BB4800B7D777 /* MDSelectedActionSheet.h */,
 				445D14001599BB4800B7D777 /* MDSelectedActionSheet.m */,
+				44421C3F15A6C6DE002B0F60 /* MDConfirmDeleteAlertView.h */,
+				44421C4015A6C6DE002B0F60 /* MDConfirmDeleteAlertView.m */,
 			);
 			name = Actions;
 			sourceTree = "<group>";
@@ -726,6 +731,7 @@
 				4438B40215A3E0F400248C72 /* MDProgressGradientView.m in Sources */,
 				44354DFE15A572FB00BFE4E4 /* MDPasscodeViewController.m in Sources */,
 				44421C2815A67980002B0F60 /* MDChangePasscodeController.m in Sources */,
+				44421C4115A6C6DE002B0F60 /* MDConfirmDeleteAlertView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
