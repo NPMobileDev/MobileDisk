@@ -13,6 +13,7 @@
 #import "IPResolver.h"
 #import "MobileDiskAppDelegate.h"
 
+
 @interface MDSettingsViewController ()
 
 
@@ -23,6 +24,7 @@
 -(void)reloadTableViewSection:(NSUInteger)section WithAnimation:(BOOL)yesOrNO;
 -(void)calculateDiskSpace;
 -(void)passcodeStatusChange:(id)sender;
+-(void)changePasscode;
 -(void)generateThumbnail:(id)sender;
 
 @end
@@ -46,6 +48,8 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     NSString *diskSpaceString;
     //free space string
     NSString *freeSpaceString;
+    
+    MDChangePasscodeController *changePasscodeController;
     
     
     //used to prevent ddlog add many times
@@ -155,22 +159,33 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
      
         setion 0 has two rows, take look settings view in storyboard
      **/
+    NSInteger rowsCount = [rows count];
+    
     if(section == 0)
     {
-        //only to show the second row when http server is activate 
-        if(httpServerON)
-        {
-            //http server is activate we show both rows at section 0
-            return [rows count];
-        }
-        else
+        //only to show the second row when http server is activate
+        //otherwise hidden
+        if(httpServerON == NO)
         {
             //http server is no activate, we hidden last row, there for total row is 1
-            return [rows count] - 1;
+            rowsCount -=1;
+        }
+
+    }
+    
+    if(section == 3)
+    {
+        NSString *passcodeNumber = [[NSUserDefaults standardUserDefaults] stringForKey:sysPasscodeNumber];
+        
+        //if passcode never setted
+        if([passcodeNumber isEqualToString:@"-1"])
+        {
+            //hide change passcode row
+            rowsCount -= 1;
         }
     }
     
-    return [rows count];
+    return rowsCount;
 
 }
 
@@ -252,18 +267,39 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
      [self.navigationController pushViewController:detailViewController animated:YES];
      */
     
+    
+    if(indexPath.section == 3)
+    {
+        //did select change passcode row
+        if(indexPath.row == 1)
+        {
+            [self changePasscode];
+            [tableView deselectRowAtIndexPath:indexPath animated:YES];
+        }
+    }
 }
 
 - (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    /*
     //section > 0 we don't want any rows to be selected
     if(indexPath.section > 1)
     {
         [tableView deselectRowAtIndexPath:indexPath animated:NO];
         return nil;
     }
+     */
     
-    return indexPath;
+    if(indexPath.section == 3)
+    {
+        //change passcode row can be selected
+        if(indexPath.row == 1)
+        {
+            return indexPath;
+        }
+    }
+    
+    return nil;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -280,7 +316,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     return 44;
 }
 
-#pragma mark - Update labels
+#pragma mark - Reload table's specific section
 -(void)reloadTableViewSection:(NSUInteger)section WithAnimation:(BOOL)yesOrNO
 {
     if(yesOrNO)
@@ -370,8 +406,8 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     //add prototype cell identifier for section 2, one row
     [cellModels addObject:[NSArray arrayWithObjects:@"S2-R0-GenerateThumbnail", nil]];
     
-     //add prototype cell identifier for section 3, one row
-    [cellModels addObject:[NSArray arrayWithObjects:@"S3-R0-Passcode", nil]];
+     //add prototype cell identifier for section 3, two row
+    [cellModels addObject:[NSArray arrayWithObjects:@"S3-R0-Passcode", @"S3-R1-ChangePasscode", nil]];
     
     //add header for section 0
     [sectionHeaders addObject:NSLocalizedString(@"Wi-Fi Transfer", @"WiFi Transfer")];
@@ -628,10 +664,23 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     
 }
 
+#pragma mark - Change Passcode
+-(void)changePasscode
+{
+    NSString *oldPasscode = [[NSUserDefaults standardUserDefaults] stringForKey:sysPasscodeNumber];
+    
+    changePasscodeController = [[MDChangePasscodeController alloc] initWithOldPasscode:oldPasscode];
+    
+    changePasscodeController.theDelegate = self;
+    
+    [changePasscodeController presentInViewController:self.navigationController];
+}
+
 #pragma mark - MDPasscodeViewController delegate
 -(void)MDPasscodeViewControllerDidCancel:(MDPasscodeViewController *)controller
 {
-    [self.tableView reloadData];
+    //[self.tableView reloadData];
+    [self reloadTableViewSection:3 WithAnimation:YES];
     
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
@@ -646,14 +695,15 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     [userDefaults setObject:[NSNumber numberWithBool:!statusNow] forKey:sysPasscodeStatus];
     [userDefaults synchronize];
     
-    [self.tableView reloadData];
+    //[self.tableView reloadData];
+    [self reloadTableViewSection:3 WithAnimation:YES];
     
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
 
 -(void)MDPasscodeViewControllerInputPasscodeIsIncorrect:(MDPasscodeViewController *)controller
 {
-    NSString *msg = NSLocalizedString(@"Passcode is incorrect", @"Passcode is incorrect");
+    NSString *msg = NSLocalizedString(@"Invalid passcode", @"Invalid passcode");
     UIAlertView *incorrectAlert = [[UIAlertView alloc] initWithTitle:nil message:msg delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles: nil];
     
     [incorrectAlert show];
@@ -676,9 +726,28 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     [userDefaults setObject:newPasscode forKey:sysPasscodeNumber];
     [userDefaults synchronize];
     
-    [self.tableView reloadData];
+    //[self.tableView reloadData];
+    [self reloadTableViewSection:3 WithAnimation:YES];
     
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+}
+
+#pragma mark - MDChangePasscodeController delegate
+-(void)MDChangePasscodeControllerDidCancel:(MDChangePasscodeController *)controller
+{
+    [self.navigationController dismissModalViewControllerAnimated:YES];
+    changePasscodeController = nil;
+}
+
+-(void)MDChangePasscodeController:(MDChangePasscodeController *)controller shouldChangePasscodeTo:(NSString *)newPasscode
+{
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    
+    [userDefaults setObject:newPasscode forKey:sysPasscodeNumber];
+    
+    [self.navigationController dismissModalViewControllerAnimated:YES];
+    
+    changePasscodeController = nil;
 }
 
 @end

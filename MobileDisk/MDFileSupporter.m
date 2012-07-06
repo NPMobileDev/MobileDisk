@@ -466,6 +466,8 @@ static NSArray *hiddenFileName;
         
         //convert to nsvalue to store it
         [utis addObject:[NSValue valueWithPointer:uti]];
+        
+        CFRelease(uti);
     }
     
     supportedExtensions = [supporedFilesCategories copy];
@@ -639,7 +641,9 @@ static NSArray *hiddenFileName;
     
     thumbImage = [UIImage imageWithCGImage:cgThumbnailImage];
     
-    return  thumbImage;
+    CGImageRelease(cgThumbnailImage);
+    
+    return  [thumbImage copy];
 }
 
 #pragma mark - getter

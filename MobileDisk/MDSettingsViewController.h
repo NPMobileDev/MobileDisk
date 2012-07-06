@@ -8,10 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import "MDPasscodeViewController.h"
+#import "MDChangePasscodeController.h"
 
 @class HTTPServer;
 
-@interface MDSettingsViewController : UITableViewController<MDPasscodeViewControllerDelegate>
+@interface MDSettingsViewController : UITableViewController<MDPasscodeViewControllerDelegate, MDChangePasscodeControllerDelegate>
 
 @property (nonatomic, strong) HTTPServer *httpServer;
 

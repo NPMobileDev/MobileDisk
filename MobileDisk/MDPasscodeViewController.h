@@ -25,7 +25,8 @@
 
 @interface MDPasscodeViewController : UIViewController<UITextFieldDelegate>
 
-//false if do not want to show cancel button at right side of navigation bar
+//set to NO if do not want to show cancel button at right side of navigation bar
+//default is YES
 @property (nonatomic, assign) BOOL canShowCancelButton;
 
 @property (nonatomic, weak) id<MDPasscodeViewControllerDelegate> theDelegate;

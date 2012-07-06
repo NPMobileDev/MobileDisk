@@ -109,6 +109,21 @@
     settingsController.httpServer = httpServer;
 }
 
+-(void)presentPasscodeCheck
+{
+    NSString *passcode = [[NSUserDefaults standardUserDefaults] stringForKey:sysPasscodeNumber];
+    
+    UITabBarController *tabbarController = (UITabBarController*)self.window.rootViewController;
+    
+    MDPasscodeViewController *passcodeController = [tabbarController.storyboard instantiateViewControllerWithIdentifier:@"MDPasscodeViewController"];
+    
+    passcodeController.canShowCancelButton = NO;
+    passcodeController.passcodeToCheck = passcode;
+    passcodeController.theDelegate = self;
+    
+    [tabbarController presentViewController:passcodeController animated:YES completion:nil];
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
@@ -142,19 +157,11 @@
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     
     BOOL passcodeStatus = [[NSUserDefaults standardUserDefaults] boolForKey:sysPasscodeStatus]; 
-    NSString *passcode = [[NSUserDefaults standardUserDefaults] stringForKey:sysPasscodeNumber];
+
     
     if(passcodeStatus)
     {
-        UITabBarController *tabbarController = (UITabBarController*)self.window.rootViewController;
-        
-        MDPasscodeViewController *passcodeController = [tabbarController.storyboard instantiateViewControllerWithIdentifier:@"MDPasscodeViewController"];
-        
-        passcodeController.canShowCancelButton = NO;
-        passcodeController.passcodeToCheck = passcode;
-        passcodeController.theDelegate = self;
-        
-        [tabbarController presentViewController:passcodeController animated:YES completion:nil];
+        [self performSelector:@selector(presentPasscodeCheck) withObject:nil afterDelay:0];
     }
 }
 
@@ -173,7 +180,7 @@
 
 -(void)MDPasscodeViewControllerInputPasscodeIsIncorrect:(MDPasscodeViewController *)controller
 {
-    NSString *msg = NSLocalizedString(@"Passcode is incorrect", @"Passcode is incorrect");
+    NSString *msg = NSLocalizedString(@"Invalid passcode", @"Invalid passcode");
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:msg delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles: nil];
     
     [alert show];

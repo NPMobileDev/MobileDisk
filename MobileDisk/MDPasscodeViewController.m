@@ -63,7 +63,17 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     
-    NSString *title = NSLocalizedString(@"Enter passcode", @"Enter passcode");
+    NSString *title;
+    
+    if(self.passcodeToCheck != nil)
+    {
+        title = NSLocalizedString(@"Enter passcode", @"Enter passcode");
+    }
+    else
+    {
+        title = NSLocalizedString(@"New passcode", @"New passcode");
+    }
+    
     
     if(self.canShowCancelButton)
     {
@@ -83,6 +93,10 @@
         self.navBar.items = [NSArray arrayWithObject:navItem];
     }
 
+    /**
+     doing @" " instead of given nil to make sure UITextFiled delegate
+     get invocked when user tap backspace. 
+    **/
     
     self.p1.text = @" ";
     self.p2.text = @" ";
@@ -146,7 +160,7 @@
             
             if(self.passcodeToCheck != nil)
             {
-                [self performSelector:@selector(checkPasscode)];
+                [self performSelector:@selector(checkPasscode) withObject:nil afterDelay:0.1];
             }
             else
             {
@@ -154,11 +168,14 @@
                 if(firstPasscode == nil)
                 {
                     //user was inputed first passcode
-                    [self completeFirstPasscode];
+                    [self performSelector:@selector(completeFirstPasscode) withObject:nil afterDelay:0.1];
+                    //[self completeFirstPasscode];
                 }
                 else
                 {
-                    [self completeSecondPasscode];
+                    [self performSelector:@selector(completeSecondPasscode) withObject:nil afterDelay:0.1];
+                    
+                    //[self completeSecondPasscode];
                 }
             }
         }
@@ -198,6 +215,7 @@
 
 -(void)checkPasscode
 {
+    //combine passcode as string
     NSMutableString *inputPasscode = [[NSMutableString alloc] init];
     [inputPasscode appendString:self.p1.text];
     [inputPasscode appendString:self.p2.text];
@@ -234,10 +252,10 @@
     UINavigationItem *item = [self.navBar.items lastObject];
     item.title = NSLocalizedString(@"Re-Enter passcode", @"Re-Enter passcode");
     
-    self.p1.text = nil;
-    self.p2.text = nil;
-    self.p3.text = nil;
-    self.p4.text = nil;
+    self.p1.text = @" ";
+    self.p2.text = @" ";
+    self.p3.text = @" ";
+    self.p4.text = @" ";
     self.vP1.text = nil;
     self.vP2.text = nil;
     self.vP3.text = nil;
@@ -261,9 +279,10 @@
     }
     else
     {
-        NSString *msg = NSLocalizedString(@"The passcode is not match", @"The passcode is not match");
+        NSString *title = NSLocalizedString(@"Invalid passcode", @"Invalid passcode");
+        NSString *msg = NSLocalizedString(@"The passcode is not vaild", @"The passcode is not vaild");
         //alert
-        UIAlertView *reEnterAlert = [[UIAlertView alloc] initWithTitle:nil message:msg delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles: nil];
+        UIAlertView *reEnterAlert = [[UIAlertView alloc] initWithTitle:title message:msg delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles: nil];
         
         [reEnterAlert show];
         
@@ -277,7 +296,16 @@
     firstPasscode = nil;
     
     UINavigationItem *item = [self.navBar.items lastObject];
-    item.title = NSLocalizedString(@"Enter passcode", @"Enter passcode");
+    
+    if(self.passcodeToCheck != nil)
+    {
+        item.title = NSLocalizedString(@"Enter passcode", @"Enter passcode");
+    }
+    else
+    {
+        item.title = NSLocalizedString(@"New passcode", @"New passcode");
+    }
+    
     
     self.p1.text = @" ";
     self.p2.text = @" ";
