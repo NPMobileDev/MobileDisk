@@ -48,6 +48,8 @@
 	// However, for easy testing you may want force a certain port so you can just hit the refresh button.
     [httpServer setPort:kHttpServerPort];
     
+    [httpServer setName:@"mobile disk app"];
+    
     //Get document path
     NSArray *directories = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     

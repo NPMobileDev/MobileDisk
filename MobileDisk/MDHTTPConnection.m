@@ -24,11 +24,19 @@
     //This flag tell that if we need to keep reading header from post
     BOOL postHaderFinished;
     int bytePointer;
+    BOOL isDiskFull;
 }
 
 -(void)dealloc
 {
     multipartData = nil;
+}
+
+- (id)initWithAsyncSocket:(GCDAsyncSocket *)newSocket configuration:(HTTPConfig *)aConfig
+{
+    isDiskFull = NO;
+    
+    return [super initWithAsyncSocket:newSocket configuration:aConfig];
 }
 
 
@@ -65,6 +73,29 @@
     
     postHaderFinished = NO;
     bytePointer = 0;
+    
+    //check available disk space
+    NSError *error;
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    
+    NSDictionary *dic = [[NSFileManager defaultManager] attributesOfFileSystemForPath:[paths lastObject] error:&error];
+    
+    if(error == nil)
+    {
+        //NSNumber *totalSpaceInByte = [dic objectForKey:@"NSFileSystemSize"];
+        NSNumber *availableSpaceInByte = [dic objectForKey:@"NSFileSystemFreeSize"];
+        
+        unsigned long long availableSpace = [availableSpaceInByte unsignedLongLongValue];
+        
+        if(contentLength >= availableSpace)
+        {
+            isDiskFull = YES;
+        }
+    }
+    else
+    {
+        NSLog(@"Calculate disk space error:%@", error);
+    }
 }
 
 /**
@@ -73,6 +104,9 @@
  **/
 - (void)processBodyData:(NSData *)postDataChunk
 {
+    if(isDiskFull)
+        return;
+    
     NSLog(@"PostDataChunk:%@", [[NSString alloc] initWithData:postDataChunk encoding:NSUTF8StringEncoding]);
     
     /**Check if we need to keep reading header of not**/
@@ -188,6 +222,16 @@
  **/
 - (void)finishBody
 {
+    if(isDiskFull)
+    {
+        NSString *title = NSLocalizedString(@"Disk full", @"Disk full");
+        NSString *msg = NSLocalizedString(@"Please clean some data on disk", @"Please clean some data on disk");
+        
+        UIAlertView *diskFull = [[UIAlertView alloc] initWithTitle:title message:msg delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles: nil];
+        
+        [diskFull show];
+    }
+    
     NSLog(@"finish body");
 }
 
@@ -207,49 +251,58 @@
     //NSLog(@"Method: %@", method);
     //NSLog(@"Relatvie path: %@", path);
     
-    //If there is a post with uploading file, requestContentLength will be greater thatn 0
-    if(requestContentLength > 0)
+    if(isDiskFull == YES)
     {
+        isDiskFull = NO;
         
-        if ([multipartData count] < 2) return nil;
-        
-        NSString* postInfo = [[NSString alloc] initWithBytes:[[multipartData objectAtIndex:1] bytes]
-                                                      length:[[multipartData objectAtIndex:1] length]
-                                                    encoding:NSUTF8StringEncoding];
-        
-        NSArray* postInfoComponents = [postInfo componentsSeparatedByString:@"filename="];
-        postInfoComponents = [[postInfoComponents lastObject] componentsSeparatedByString:@"\""];
-        postInfoComponents = [[postInfoComponents objectAtIndex:1] componentsSeparatedByString:@"\\"];
-        NSString* fileName = [postInfoComponents lastObject];
-        
-        if (![fileName isEqualToString:@""])
+    }
+    else
+    {
+        //If there is a post with uploading file, requestContentLength will be greater thatn 0
+        if(requestContentLength > 0)
         {
-            /**We need to trim the file at end**/
-            UInt16 separatorBytes = 0x0A0D;
-            NSMutableData* separatorData = [NSMutableData dataWithBytes:&separatorBytes length:2];
-            [separatorData appendData:[multipartData objectAtIndex:0]];
-            int l = [separatorData length];
-            int count = 2;	//number of times the separator shows up at the end of file data
             
-            NSFileHandle* dataToTrim = [multipartData lastObject];
-            //NSLog(@"data: %@", dataToTrim);
+            if ([multipartData count] < 2) return nil;
             
-            for (unsigned long long i = [dataToTrim offsetInFile] - l; i > 0; i--)
+            NSString* postInfo = [[NSString alloc] initWithBytes:[[multipartData objectAtIndex:1] bytes]
+                                                          length:[[multipartData objectAtIndex:1] length]
+                                                        encoding:NSUTF8StringEncoding];
+            
+            NSArray* postInfoComponents = [postInfo componentsSeparatedByString:@"filename="];
+            postInfoComponents = [[postInfoComponents lastObject] componentsSeparatedByString:@"\""];
+            postInfoComponents = [[postInfoComponents objectAtIndex:1] componentsSeparatedByString:@"\\"];
+            NSString* fileName = [postInfoComponents lastObject];
+            
+            if (![fileName isEqualToString:@""])
             {
-                [dataToTrim seekToFileOffset:i];
-                if ([[dataToTrim readDataOfLength:l] isEqualToData:separatorData])
+                /**We need to trim the file at end**/
+                UInt16 separatorBytes = 0x0A0D;
+                NSMutableData* separatorData = [NSMutableData dataWithBytes:&separatorBytes length:2];
+                [separatorData appendData:[multipartData objectAtIndex:0]];
+                int l = [separatorData length];
+                int count = 2;	//number of times the separator shows up at the end of file data
+                
+                NSFileHandle* dataToTrim = [multipartData lastObject];
+                //NSLog(@"data: %@", dataToTrim);
+                
+                for (unsigned long long i = [dataToTrim offsetInFile] - l; i > 0; i--)
                 {
-                    [dataToTrim truncateFileAtOffset:i];
-                    i -= l;
-                    if (--count == 0) break;
+                    [dataToTrim seekToFileOffset:i];
+                    if ([[dataToTrim readDataOfLength:l] isEqualToData:separatorData])
+                    {
+                        [dataToTrim truncateFileAtOffset:i];
+                        i -= l;
+                        if (--count == 0) break;
+                    }
                 }
             }
+            
+            //clear buffer
+            multipartData = nil;
+            requestContentLength = 0; 
         }
-        
-        //clear buffer
-        multipartData = nil;
-        requestContentLength = 0; 
     }
+
     
     /**We need to determind what kind of relative path is to do a proper respond**/
     //We get back full path

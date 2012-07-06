@@ -449,7 +449,9 @@ static NSArray *hiddenFileName;
         
         for(NSString *supportedStr in categroySupport)
         {
-            [supportedFiles addObject:supportedStr];
+            NSString *newStr = [supportedStr copy];
+            
+            [supportedFiles addObject:newStr];
         }
     }
     
@@ -464,10 +466,14 @@ static NSArray *hiddenFileName;
         
         NSLog(@"add support file :%@", uti);
         
+        NSString *utiStr = (__bridge NSString *)uti;
+        
         //convert to nsvalue to store it
-        [utis addObject:[NSValue valueWithPointer:uti]];
+        //[utis addObject:[NSValue valueWithPointer:uti]];
+        [utis addObject:[utiStr copy]];
         
         CFRelease(uti);
+        
     }
     
     supportedExtensions = [supporedFilesCategories copy];
@@ -498,11 +504,12 @@ static NSArray *hiddenFileName;
     CFStringRef comparedUTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, extensionTag, NULL);
     
     //go through each support file extension and compare them
-    for(NSValue *value in supportedExtensionsUTI)
+    for(NSString *utiStr in supportedExtensionsUTI)
     {
-        CFStringRef suppoertedUTI = [value pointerValue];
+        //CFStringRef suppoertedUTI = [value pointerValue];
+        CFStringRef supportedUTI = (__bridge CFStringRef)utiStr;
         
-        if(UTTypeEqual(comparedUTI, suppoertedUTI))
+        if(UTTypeEqual(comparedUTI, supportedUTI))
         {
             isSupport = YES;
             break;
@@ -591,7 +598,8 @@ static NSArray *hiddenFileName;
                 thumbnailImage = [thumbnailImage resizeImageTo:imageSize];
                 
                 //stored in cache
-                [thumbnailImageCache setObject:thumbnailImage forKey:filePath];
+                if(thumbnailImage != nil)
+                    [thumbnailImageCache setObject:thumbnailImage forKey:filePath];
             }
             else
             {

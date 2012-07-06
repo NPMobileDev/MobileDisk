@@ -408,6 +408,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     
      //add prototype cell identifier for section 3, two row
     [cellModels addObject:[NSArray arrayWithObjects:@"S3-R0-Passcode", @"S3-R1-ChangePasscode", nil]];
+
     
     //add header for section 0
     [sectionHeaders addObject:NSLocalizedString(@"Wi-Fi Transfer", @"WiFi Transfer")];
@@ -517,6 +518,8 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
                 
                 [theSwitch addTarget:self action:@selector(passcodeStatusChange:) forControlEvents:UIControlEventValueChanged];
             }
+            
+            break;
             
         default:
             break;

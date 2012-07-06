@@ -149,7 +149,16 @@
     }
     
     
-    self.lyricsTextView.text = musiclyrics;
+    if(musiclyrics == nil)
+    {
+        self.lyricsTextView.hidden = YES;
+    }
+    else
+    {
+        self.lyricsTextView.hidden = NO;
+        self.lyricsTextView.text = musiclyrics;
+    }
+
     
     //self.timelineBackgroundView.layer.borderColor = [UIColor whiteColor].CGColor;
     //self.timelineBackgroundView.layer.borderWidth = 1.0f;
