@@ -15,6 +15,9 @@
 			<string>mov</string>
 			<string>m4a</string>
 			<string>aiff</string>
+			<string>wav</string>
+			<string>au</string>
+			<string>aac</string>
 		</array>
 		<key>Image</key>
 		<array>

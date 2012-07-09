@@ -167,6 +167,10 @@ static NSArray *hiddenFileName;
     {
         extension = @"m4a";
     }
+    else if([extension isEqualToString:@"aac"])
+    {
+        extension = @"m4a";
+    }
     
     CFStringRef extensionTag = (__bridge CFStringRef)extension;
     
@@ -496,6 +500,10 @@ static NSArray *hiddenFileName;
     else if([extension isEqualToString:@"m4r"])
     {
         //rington m4r == m4a
+        extension = @"m4a";
+    }
+    else if([extension isEqualToString:@"aac"])
+    {
         extension = @"m4a";
     }
     
