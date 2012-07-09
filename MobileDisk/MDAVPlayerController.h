@@ -12,7 +12,7 @@
 #define kFastForwardAmount 10.0f
 #define kFadeOutUIDuration 1.0f
 #define kFadeInUIDuration 0.2f
-#define kVideoScale 2.0f;
+#define kVideoScale 1.5f;
 
 @interface MDAVPlayerController : UIViewController
 

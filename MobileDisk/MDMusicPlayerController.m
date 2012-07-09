@@ -20,10 +20,14 @@
 @property (nonatomic, weak) IBOutlet UILabel *timeLeftLabel;
 @property (nonatomic, weak) IBOutlet UIToolbar *toolbar;
 @property (nonatomic, weak) IBOutlet UIImageView *musicImageView;
+@property (nonatomic, weak) IBOutlet UIImageView *musicReflectionImageView;
+@property (nonatomic, weak) IBOutlet UIView *gestureView;
 @property (nonatomic, weak) IBOutlet UILabel *albumNameLabel;
 @property (nonatomic, weak) IBOutlet UILabel *titleLabel;
 @property (nonatomic, weak) IBOutlet UILabel *artistLabel;
 @property (nonatomic, weak) IBOutlet UITextView *lyricsTextView;
+@property (nonatomic, weak) IBOutlet UIView *lyricsBackgroundView;
+@property (nonatomic, weak) IBOutlet UIView *timelineView;
 @property (nonatomic, weak) IBOutlet UIView *timelineBackgroundView;
 @property (nonatomic, weak) IBOutlet UINavigationBar *navBar;
 
@@ -42,6 +46,10 @@
 -(void)findMusicInfoWithMusicPath:(NSURL *)musicPath;
 -(IBAction)volumeSliderChange:(id)sender;
 -(void)customizedNavigationBar;
+-(void)hideTimelineAndLyrics;
+-(void)showTimelineAndLyrics;
+-(void)createGesture;
+-(UIImage *)reflectionImage:(UIImage *)image WithSize:(CGSize)theSize;
 
 @end
 
@@ -75,10 +83,14 @@
 @synthesize timeLeftLabel = _timeLeftLabel;
 @synthesize toolbar = _toolbar;
 @synthesize musicImageView = _musicImageView;
+@synthesize musicReflectionImageView = _musicReflectionImageView;
+@synthesize gestureView = _gestureView;
 @synthesize albumNameLabel =_albumNameLabel;
 @synthesize titleLabel = _titleLabel;
 @synthesize artistLabel = _artistLabel;
 @synthesize lyricsTextView = _lyricsTextView;
+@synthesize lyricsBackgroundView = _lyricsBackgroundView;
+@synthesize timelineView = _timelineView;
 @synthesize timelineBackgroundView = _timelineBackgroundView;
 @synthesize navBar = _navBar;
 
@@ -116,10 +128,14 @@
     [self findMusicInfoWithMusicPath:self.musicFileURL];
     
     //half alpha for music image
-    self.musicImageView.alpha = 0.65f;
+    //self.musicImageView.alpha = 0.65f;
     self.musicImageView.image = musicArtwork;
+    CGSize reflectionSize = CGSizeMake(self.musicImageView.bounds.size.width, self.musicImageView.bounds.size.height*0.65f);
+    self.musicReflectionImageView.image = [self reflectionImage:self.musicImageView.image WithSize:reflectionSize];
+    self.musicReflectionImageView.alpha = 0.90f;
     
-    //self.lyricsTextView.backgroundColor = [UIColor clearColor];
+    //self.lyricsTextView.alpha = 0.65f;
+    self.lyricsTextView.backgroundColor = [UIColor clearColor];
     
     if(musicArtist)
     {
@@ -151,11 +167,10 @@
     
     if(musiclyrics == nil)
     {
-        self.lyricsTextView.hidden = YES;
+        self.lyricsBackgroundView.backgroundColor = [UIColor clearColor];
     }
     else
     {
-        self.lyricsTextView.hidden = NO;
         self.lyricsTextView.text = musiclyrics;
     }
 
@@ -169,7 +184,7 @@
     playButton.action = @selector(play);
     
     
-    
+    [self createGesture];
     
     [self createVolumeSlider];
     
@@ -194,6 +209,98 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
+#pragma mark - reflection image
+-(UIImage *)reflectionImage:(UIImage *)image WithSize:(CGSize)theSize
+{
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+	
+	// create the bitmap context
+	CGContextRef bitmapContext = CGBitmapContextCreate (NULL, theSize.width, theSize.height, 8,
+														0, colorSpace,
+														// this will give us an optimal BGRA format for the device:
+														(kCGBitmapByteOrder32Little | kCGImageAlphaPremultipliedFirst));
+	CGColorSpaceRelease(colorSpace);
+    
+    
+    CGImageRef gradientMaskImage = createGradientImage(theSize.height);
+    
+    CGContextClipToMask(bitmapContext, CGRectMake(0.0, 0.0, theSize.width, theSize.height), gradientMaskImage);
+    
+    CGImageRelease(gradientMaskImage);
+    
+    CGContextTranslateCTM(bitmapContext, 0.0, theSize.height);
+    CGContextScaleCTM(bitmapContext, 1.0, -1.0);
+    
+    CGContextDrawImage(bitmapContext, CGRectMake(0, 0, theSize.width, theSize.height), image.CGImage);
+    
+    CGImageRef reflectionImage = CGBitmapContextCreateImage(bitmapContext);
+	CGContextRelease(bitmapContext);
+    
+    UIImage *theImage = [UIImage imageWithCGImage:reflectionImage];
+    CGImageRelease(reflectionImage);
+    
+    return theImage;
+    
+}
+
+CGImageRef createGradientImage(CGFloat theHeight)
+{
+    CGImageRef theCGImage = NULL;
+    
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceGray();
+    
+    CGContextRef gradientBitmapContext = CGBitmapContextCreate(NULL, 1, theHeight, 8, 0, colorSpace, kCGImageAlphaNone);
+    
+    CGFloat colors[] = {0.0, 1.0, 1.0, 1.0};
+    
+    CGGradientRef grayScaleGradient = CGGradientCreateWithColorComponents(colorSpace, colors, NULL, 2);
+    
+    CGColorSpaceRelease(colorSpace);
+    
+    CGPoint gradientStartPoint = CGPointZero;
+	CGPoint gradientEndPoint = CGPointMake(0, theHeight);
+    
+    CGContextDrawLinearGradient(gradientBitmapContext, grayScaleGradient, gradientStartPoint, gradientEndPoint, kCGGradientDrawsAfterEndLocation);
+    
+    CGGradientRelease(grayScaleGradient);
+    
+    theCGImage = CGBitmapContextCreateImage(gradientBitmapContext);
+    
+    CGContextRelease(gradientBitmapContext);
+    
+    return theCGImage;
+}
+
+
+#pragma mark - Show/Hide Timeline and lyrics
+-(void)hideTimelineAndLyrics
+{
+    self.timelineView.hidden = YES;
+    self.timelineBackgroundView.hidden= YES;
+    self.lyricsTextView.hidden = YES;
+    self.lyricsBackgroundView.hidden = YES;
+}
+
+-(void)showTimelineAndLyrics
+{
+    self.timelineView.hidden = NO;
+    self.timelineBackgroundView.hidden= NO;
+    self.lyricsTextView.hidden = NO;
+    self.lyricsBackgroundView.hidden = NO;
+}
+
+#pragma mark - Create control
+-(void)createGesture
+{
+    UITapGestureRecognizer *tapToHideTimelineAndLyrics = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideTimelineAndLyrics)];
+    
+    [self.lyricsTextView addGestureRecognizer:tapToHideTimelineAndLyrics];
+    
+    UITapGestureRecognizer *tapToShowTimelineAndLyrics = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showTimelineAndLyrics)];
+    
+    [self.gestureView addGestureRecognizer:tapToShowTimelineAndLyrics];
 }
 
 -(void)customizedNavigationBar
@@ -263,6 +370,7 @@
     [self.toolbar setItems:newItems animated:NO];
 }
 
+#pragma mark - Find music info
 -(void)findMusicInfoWithMusicPath:(NSURL *)musicPath
 {
     //get asset for music
@@ -317,6 +425,7 @@
     }
 }
 
+#pragma mark - Control
 -(void)play
 {
     //change tool bar play button to pause
@@ -359,6 +468,28 @@
     
 }
 
+-(void)stopMusic
+{
+    //change tool bar pause button to play
+    [self changePauseButtonToPlay];
+    
+    //stop music
+    [musicPlayer stop];
+    
+    //reset music current time to 0
+    [musicPlayer setCurrentTime:0.0f];
+    
+    //change slider value to 0
+    self.timeLineSlider.value = 0.0f;
+    
+    //stop timer
+    [updateTimer invalidate];
+    updateTimer = nil;
+    
+    
+}
+
+#pragma mark - Change tool bar control button
 -(void)changePauseButtonToPlay
 {
     //change pause button to play
@@ -397,27 +528,7 @@
     [self.toolbar setItems:newItems animated:NO];
 }
 
--(void)stopMusic
-{
-    //change tool bar pause button to play
-    [self changePauseButtonToPlay];
-    
-    //stop music
-    [musicPlayer stop];
-    
-    //reset music current time to 0
-    [musicPlayer setCurrentTime:0.0f];
-    
-    //change slider value to 0
-    self.timeLineSlider.value = 0.0f;
-    
-    //stop timer
-    [updateTimer invalidate];
-    updateTimer = nil;
-    
-    
-}
-
+#pragma mark - Update UI
 -(void)updateTimeline
 {
     if(canUpdateTimeline)
@@ -442,6 +553,7 @@
     self.timeLeftLabel.text = [@"-" stringByAppendingString:[self secondsToString:timeleft]];
 }
 
+#pragma mark - Converter
 //input seconds return hh:mm:ss string
 //most is hours
 -(NSString *)secondsToString:(float)totalSeconds
@@ -476,6 +588,7 @@
     return currentTimeStr;
 }
 
+#pragma mark IBAction
 -(IBAction)doneListening:(id)sender
 {
     [self stopMusic];

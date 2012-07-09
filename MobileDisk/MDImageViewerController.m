@@ -54,28 +54,19 @@
     //load image
     UIImage *theImage = [UIImage imageWithContentsOfFile:[self.imageURL path]];
     
-    //check if image width or height bigger than scroll view
-    //if bigger then resize image
-    if(theImage.size.width > self.imageScrolleView.frame.size.width)
-    {
-        theImage = [theImage resizeImageTo:self.imageScrolleView.frame.size];
-    }
-    else if(theImage.size.height > self.imageScrolleView.frame.size.height)
-    {
-        theImage = [theImage resizeImageTo:self.imageScrolleView.frame.size];
-    }
-    
     //create image view
     imageView = [[UIImageView alloc] initWithImage:theImage];
     
 
     //make scroll view's contentOffset and contentSize equal to image view
     self.imageScrolleView.contentSize = imageView.frame.size;
-
     
     //set zoom scale
-    self.imageScrolleView.minimumZoomScale = 1.0f;
-    self.imageScrolleView.maximumZoomScale = 10.0f;
+    //self.imageScrolleView.minimumZoomScale = 1.0f;
+    self.imageScrolleView.minimumZoomScale =MIN(self.imageScrolleView.frame.size.width / imageView.frame.size.width, 416 / imageView.frame.size.height);
+    self.imageScrolleView.maximumZoomScale = kMaxZoomScale;
+    
+    self.imageScrolleView.zoomScale = self.imageScrolleView.minimumZoomScale;
 
     //add image view to scroll view
     [self.imageScrolleView addSubview:imageView];

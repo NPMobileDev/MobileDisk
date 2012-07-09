@@ -525,6 +525,7 @@ static NSArray *hiddenFileName;
 #pragma mark - Find thumbnail for file
 -(UIImage*)findThumbnailImageForFileAtPath:(NSString *)filePath thumbnailSize:(CGSize)imageSize
 {
+    
     BOOL canGenerateThumbnail;
     UIImage *thumbnailImage = nil;
     NSURL *fileURLPath = [NSURL fileURLWithPath:filePath];
@@ -569,7 +570,7 @@ static NSArray *hiddenFileName;
             //file is image type abstract
             UIImage *image = [UIImage imageWithContentsOfFile:filePath];
             //resize
-            thumbnailImage = [image resizeImageTo:imageSize];
+            thumbnailImage = [image retinaResizeImageTo:imageSize];
         }
         else
         {
@@ -595,7 +596,7 @@ static NSArray *hiddenFileName;
                 thumbnailImage = [self generateMovieThumbnailImageAtPath:fileURLPath];
                 
                 //resize
-                thumbnailImage = [thumbnailImage resizeImageTo:imageSize];
+                thumbnailImage = [thumbnailImage retinaResizeImageTo:imageSize];
                 
                 //stored in cache
                 if(thumbnailImage != nil)

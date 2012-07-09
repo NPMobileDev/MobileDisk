@@ -352,7 +352,17 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     //take look IPResolver.m
     NSDictionary *IPs = notification.object;
     NSString *ipStr = [IPs objectForKey:@"en1"];
-    NSString *httpAddress = [NSString stringWithFormat:@"http://%@:%i", ipStr, self.httpServer.port];
+    NSString *httpAddress;
+    
+    if(ipStr != nil)
+    {
+        httpAddress = [NSString stringWithFormat:@"http://%@:%i", ipStr, self.httpServer.port]; 
+    }
+    else
+    {
+        httpAddress = [NSString stringWithString:NSLocalizedString(@"No Wi-Fi connection", @"No Wi-Fi connection")];
+    }
+
     
     //store string 
     serverAddress = httpAddress;

@@ -184,18 +184,28 @@
         {
             CGRect newRect;
                 
-            newRect.origin.x = 480/2 - self.videoLayerView.frame.size.width/2;
+            //newRect.origin.x = 480/2 - self.videoLayerView.frame.size.width/2;
+            newRect.origin.x = 0;
             newRect.origin.y = 0;
-            newRect.size.width = self.videoLayerView.frame.size.width;
+            //newRect.size.width = self.videoLayerView.frame.size.width;
+            newRect.size.width = 480;
+            //newRect.size.height = 300;
             newRect.size.height = 300;
+
             
             //if video is been scaled
             if(isScaled)
             {
-                newRect.origin.x = 480/2 - self.videoLayerView.frame.size.width/2;
-                newRect.origin.y = 300/2 - self.videoLayerView.frame.size.height/2;
-                newRect.size = self.videoLayerView.frame.size;
-                
+                //newRect.origin.x = 480/2 - self.videoLayerView.frame.size.width/2;
+                float scaledHeight = 480 * kVideoScale;
+                newRect.origin.x = -((scaledHeight - 480) / 2);
+                //newRect.origin.y = 300/2 - self.videoLayerView.frame.size.height/2;
+                float scaledWidth = 320 * kVideoScale;
+                newRect.origin.y = -((scaledWidth - 320) / 2);
+                //newRect.size = self.videoLayerView.frame.size;
+                float sizeWidth = 480 * kVideoScale;
+                float sizeHeight = 320 * kVideoScale;
+                newRect.size = CGSizeMake(sizeWidth, sizeHeight);
                 
             }
             
@@ -212,14 +222,20 @@
             //if video is been scaled
             if(isScaled)
             {
-                newRect.origin.x = 320/2 - self.videoLayerView.frame.size.width/2;
-                newRect.origin.y = 460/2 - self.videoLayerView.frame.size.height/2;
-                newRect.size = self.videoLayerView.frame.size;
+                //newRect.origin.x = 320/2 - self.videoLayerView.frame.size.width/2;
+                float scaledWidth = 320 * kVideoScale;
+                newRect.origin.x = -((scaledWidth - 320) / 2);
+                //newRect.origin.y = 460/2 - self.videoLayerView.frame.size.height/2;
+                float scaledHeight = 480 * kVideoScale;
+                newRect.origin.y = -((scaledHeight - 480) / 2);
+                //newRect.size = self.videoLayerView.frame.size;
+                float sizeWidth = 320 * kVideoScale;
+                float sizeHeight = 480 * kVideoScale;
+                newRect.size = CGSizeMake(sizeWidth, sizeHeight);
             }
             
             self.videoLayerView.frame = newRect;
             avPlayer.view.frame = CGRectMake(0, 0, newRect.size.width, newRect.size.height);
-            
         }
         
     }
@@ -516,10 +532,14 @@
         {
             
             
-            newRect.origin.x = 480/2 - videoLayerRect.size.width/2;
+            //newRect.origin.x = 480/2 - videoLayerRect.size.width/2;
+            newRect.origin.x = 0;
+            //newRect.origin.y = 0;
             newRect.origin.y = 0;
-            newRect.size.width = videoLayerRect.size.width;
-            newRect.size.height = 300;
+            //newRect.size.width = videoLayerRect.size.width;
+            newRect.size.width = self.view.bounds.size.width;
+            //newRect.size.height = 300;
+            newRect.size.height = self.view.bounds.size.height -20;
             
         }
         
@@ -539,20 +559,34 @@
     else
     {
         //scale video layer to double size
-        CGRect videoFrame = self.videoLayerView.frame;
+        //CGRect videoFrame = self.videoLayerView.frame;
         
-        CGPoint center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height/2);
+        //CGPoint center = CGPointMake(self.view.bounds.size.width/2, (self.view.bounds.size.height+20)/2);
+        
+        //CGFloat newWidth = videoFrame.size.width * kVideoScale;
+        CGFloat newWidth = self.view.bounds.size.width * kVideoScale;
+        //CGFloat newHeight = videoFrame.size.height * kVideoScale;
+        CGFloat newHeight = (self.view.bounds.size.height+20) * kVideoScale;
+        
+        //CGFloat newX = center.x - newWidth / 2;
+        CGFloat newX = -((newWidth - self.view.bounds.size.width) / 2);
+        //CGFloat newY = center.y - newHeight / 2;
+        CGFloat newY = -((newHeight - self.view.bounds.size.height) / 2);
         
         //if device in landscape
         if([UIDevice currentDevice].orientation == UIDeviceOrientationLandscapeLeft || [UIDevice currentDevice].orientation == UIDeviceOrientationLandscapeRight)
         {
-            center = CGPointMake(480/2, 300/2);
+            //center = CGPointMake(480/2, 320/2);
+            
+            newWidth = 480 * kVideoScale;
+            newHeight = 320 * kVideoScale;
+            
+            newX = -((newWidth - 480) / 2);
+            newY = -((newHeight - 320) / 2);
         }
         
-        CGFloat newWidth = videoFrame.size.width * kVideoScale;
-        CGFloat newHeight = videoFrame.size.height * kVideoScale;
-        CGFloat newX = center.x - newWidth / 2;
-        CGFloat newY = center.y - newHeight / 2;
+
+
         
         self.videoLayerView.frame = CGRectMake(newX, newY, newWidth, newHeight); 
         

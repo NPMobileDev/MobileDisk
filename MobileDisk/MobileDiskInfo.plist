@@ -14,6 +14,7 @@
 			<string>mp3</string>
 			<string>mov</string>
 			<string>m4a</string>
+			<string>aiff</string>
 		</array>
 		<key>Image</key>
 		<array>

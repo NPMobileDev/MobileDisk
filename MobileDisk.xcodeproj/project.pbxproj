@@ -34,6 +34,7 @@
 		4440BB721591B8360073BBAA /* IPResolver.m in Sources */ = {isa = PBXBuildFile; fileRef = 4440BB711591B8360073BBAA /* IPResolver.m */; };
 		44421C2815A67980002B0F60 /* MDChangePasscodeController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44421C2715A67980002B0F60 /* MDChangePasscodeController.m */; };
 		44421C4115A6C6DE002B0F60 /* MDConfirmDeleteAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 44421C4015A6C6DE002B0F60 /* MDConfirmDeleteAlertView.m */; };
+		44489AB315AA653000FA055D /* TableCellGradient.png in Resources */ = {isa = PBXBuildFile; fileRef = 44489AB215AA653000FA055D /* TableCellGradient.png */; };
 		444FF9D4159AA0770033BB3B /* MobileDiskInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 444FF9D3159AA0770033BB3B /* MobileDiskInfo.plist */; };
 		444FF9D6159AB6120033BB3B /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 444FF9D5159AB6120033BB3B /* MobileCoreServices.framework */; };
 		444FF9DA159AD45F0033BB3B /* MDFileSupporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 444FF9D9159AD45F0033BB3B /* MDFileSupporter.m */; };
@@ -134,6 +135,7 @@
 		44421C2715A67980002B0F60 /* MDChangePasscodeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDChangePasscodeController.m; sourceTree = "<group>"; };
 		44421C3F15A6C6DE002B0F60 /* MDConfirmDeleteAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDConfirmDeleteAlertView.h; sourceTree = "<group>"; };
 		44421C4015A6C6DE002B0F60 /* MDConfirmDeleteAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDConfirmDeleteAlertView.m; sourceTree = "<group>"; };
+		44489AB215AA653000FA055D /* TableCellGradient.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TableCellGradient.png; sourceTree = "<group>"; };
 		444FF9D3159AA0770033BB3B /* MobileDiskInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = MobileDiskInfo.plist; sourceTree = "<group>"; };
 		444FF9D5159AB6120033BB3B /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		444FF9D8159AD45F0033BB3B /* MDFileSupporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDFileSupporter.h; sourceTree = "<group>"; };
@@ -359,6 +361,16 @@
 			name = "IP-Resolver";
 			sourceTree = "<group>";
 		};
+		44489AB015AA650900FA055D /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				44489AB215AA653000FA055D /* TableCellGradient.png */,
+				443D004E1594219C008CCCBE /* IsSelected.png */,
+				443D004F1594219C008CCCBE /* NotSelected.png */,
+			);
+			name = Images;
+			sourceTree = "<group>";
+		};
 		444FF9CF159A9FC60033BB3B /* SupportedFilePlist */ = {
 			isa = PBXGroup;
 			children = (
@@ -462,6 +474,7 @@
 		449430A1158EB4C000ADAE89 /* MobileDisk */ = {
 			isa = PBXGroup;
 			children = (
+				44489AB015AA650900FA055D /* Images */,
 				4416082815A29F4C00770FF5 /* ThirdLib */,
 				44354DF815A5727C00BFE4E4 /* Passcode */,
 				4416083B15A335B300770FF5 /* ProgressHUD */,
@@ -491,8 +504,6 @@
 				4416082215A29E9000770FF5 /* libz.dylib */,
 				4437BB6F159EA2D100F3C8E7 /* dummy.mp3 */,
 				444FF9CF159A9FC60033BB3B /* SupportedFilePlist */,
-				443D004E1594219C008CCCBE /* IsSelected.png */,
-				443D004F1594219C008CCCBE /* NotSelected.png */,
 				44943132158F245A00ADAE89 /* index.html */,
 				449430A3158EB4C000ADAE89 /* MobileDisk-Info.plist */,
 				449430A4158EB4C000ADAE89 /* InfoPlist.strings */,
@@ -664,6 +675,7 @@
 				443D00511594219C008CCCBE /* NotSelected.png in Resources */,
 				444FF9D4159AA0770033BB3B /* MobileDiskInfo.plist in Resources */,
 				4437BB70159EA2D100F3C8E7 /* dummy.mp3 in Resources */,
+				44489AB315AA653000FA055D /* TableCellGradient.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

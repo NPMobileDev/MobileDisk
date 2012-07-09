@@ -11,5 +11,6 @@
 @interface UIImage (Resize)
 
 -(UIImage *)resizeImageTo:(CGSize)size;
+-(UIImage *)retinaResizeImageTo:(CGSize)size;
 
 @end

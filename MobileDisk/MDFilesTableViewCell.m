@@ -59,6 +59,14 @@ const NSString *NotSelectedImageName = @"NotSelected";
         //add image view to cell's content view
         [self.contentView addSubview:self.selectionIndicator];
         
+        //set background image view for cell
+        UIImage *backgroundImage = [UIImage imageNamed:@"TableCellGradient"];
+        UIImageView *imageView = [[UIImageView alloc] initWithImage:backgroundImage];
+        self.backgroundView = imageView;
+        
+        self.textLabel.backgroundColor = [UIColor clearColor];
+        self.detailTextLabel.backgroundColor = [UIColor clearColor];
+        
         theTableView = tableView;
     }
     
