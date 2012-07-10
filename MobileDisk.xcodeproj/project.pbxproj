@@ -388,13 +388,13 @@
 			name = FileSupporter;
 			sourceTree = "<group>";
 		};
-		444FF9E0159B2BCD0033BB3B /* PDFViewer */ = {
+		444FF9E0159B2BCD0033BB3B /* DocumentViewer */ = {
 			isa = PBXGroup;
 			children = (
 				444FF9E1159B2BF70033BB3B /* MDDocumentViewController.h */,
 				444FF9E2159B2BF70033BB3B /* MDDocumentViewController.m */,
 			);
-			name = PDFViewer;
+			name = DocumentViewer;
 			sourceTree = "<group>";
 		};
 		44538AED159D31CB00CE7730 /* MusicPlayer */ = {
@@ -482,7 +482,7 @@
 				44538AED159D31CB00CE7730 /* MusicPlayer */,
 				441AB997159C747000BAAA19 /* AVPlayer */,
 				447CD7E8159C047600464D28 /* ImageViewer */,
-				444FF9E0159B2BCD0033BB3B /* PDFViewer */,
+				444FF9E0159B2BCD0033BB3B /* DocumentViewer */,
 				444FF9D7159AD4200033BB3B /* FileSupporter */,
 				445D13F21599A75A00B7D777 /* Actions */,
 				443ACDFE1592EF76008B4DF2 /* Files */,
@@ -817,11 +817,13 @@
 		449430B6158EB4C100ADAE89 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Hung Ming-Chun (MKN8B3GSZ7)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MobileDisk/MobileDisk-Prefix.pch";
 				INFOPLIST_FILE = "MobileDisk/MobileDisk-Info.plist";
 				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "E176F02B-857F-4EC7-803B-A67F71BB3275";
 				RUN_CLANG_STATIC_ANALYZER = YES;
 				WRAPPER_EXTENSION = app;
 			};

@@ -1168,9 +1168,9 @@ const float ToolBarAnimationDuration = 0.1f;
     NSMutableArray *filesToMove = [[NSMutableArray alloc] init];
     NSMutableArray *duplicateFiles = [[NSMutableArray alloc] init];
     
-    /**if value not nil mean user move a folder to a same folder***/
-    //used to determind if folder move by it self
-    MDFiles *selfFiles = nil;
+    /**if folder move into self or subfolder will no wronging***/
+
+    //MDFiles *selfFiles = nil;
     NSArray *splitePath = [folderDest componentsSeparatedByString:@"/"];
     NSString *destFolderName = [splitePath lastObject];
     
@@ -1182,7 +1182,7 @@ const float ToolBarAnimationDuration = 0.1f;
     {
         MDFiles *file = [filesArray objectAtIndex:indexPath.row];
         NSString *checkedPath = [folderDest stringByAppendingPathComponent:file.fileName];
-        
+        /*
         //check if folder move by it self
         if(file.isFile == NO)
         {
@@ -1197,6 +1197,7 @@ const float ToolBarAnimationDuration = 0.1f;
             }
 
         }
+         */
         
         if([[NSFileManager defaultManager] fileExistsAtPath:checkedPath])
         {
@@ -1207,7 +1208,8 @@ const float ToolBarAnimationDuration = 0.1f;
             [filesToMove addObject:file];
         }
     }
-
+    
+    /*
     if(selfFiles != nil)
     {
         //folder move into self folder or sub folder
@@ -1217,7 +1219,9 @@ const float ToolBarAnimationDuration = 0.1f;
         
         [theAlert show];
     }
-    else if([duplicateFiles count] != 0)
+     */
+    
+    if([duplicateFiles count] != 0)
     {
         //there are some duplicate file at destination
         NSString *msg = [NSString stringWithFormat:NSLocalizedString(@"Please make sure there is no same file or folder at destination folder \"%@\"", @"Please make sure there is no same file or folder at destination folder \"%@\""), destFolderName];

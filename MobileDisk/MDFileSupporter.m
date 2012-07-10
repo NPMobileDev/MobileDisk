@@ -321,6 +321,7 @@ static NSArray *hiddenFileName;
         
         MDDocumentViewController * docController = [navController.viewControllers objectAtIndex:0];
         
+        docController.controllerTitle = [textURL lastPathComponent];
         docController.theDocumentURL = textURL;
         
         controller = navController;
@@ -334,6 +335,7 @@ static NSArray *hiddenFileName;
         
         MDDocumentViewController * docController = [navController.viewControllers objectAtIndex:0];
         
+        docController.controllerTitle = [textURL lastPathComponent];
         docController.theDocumentData = textData;
         
         controller = navController;

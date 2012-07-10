@@ -10,6 +10,7 @@
 
 @interface MDDocumentViewController : UIViewController
 
+@property (nonatomic, copy) NSString *controllerTitle;
 @property (nonatomic, copy) NSURL *theDocumentURL;
 @property (nonatomic, strong) NSData *theDocumentData;
 

@@ -377,23 +377,24 @@
     volumeSlider.minimumValue = 0.0f;
     volumeSlider.maximumValue = 1.0f;
     
-    /* this only can be used on real device it get back ipod volume
+    //this only can be used on real device it get back ipod volume
      MPMusicPlayerController *ipod = [MPMusicPlayerController iPodMusicPlayer];
      if(ipod != nil)
      {
-     volumeSlider.value = ipod.volume;
-     [musicPlayer setVolume:ipod.volume];
+         volumeSlider.value = ipod.volume;
+         //[musicPlayer setVolume:ipod.volume];
+         [[MPMusicPlayerController applicationMusicPlayer] setVolume:ipod.volume];
      }
      else
      {
-     volumeSlider.value = 0.5f;
-     [musicPlayer setVolume:ipod.volume];
+         volumeSlider.value = 0.5f;
+         [[MPMusicPlayerController applicationMusicPlayer] setVolume:0.5];
      }
-     */
+     
     
     //test 
-    volumeSlider.value = 0.5f;
-    [[MPMusicPlayerController applicationMusicPlayer] setVolume:0.5];
+    //volumeSlider.value = 0.5f;
+    //[[MPMusicPlayerController applicationMusicPlayer] setVolume:0.5];
     
     [volumeSlider addTarget:self action:@selector(volumeSliderChange:) forControlEvents:UIControlEventValueChanged];
     

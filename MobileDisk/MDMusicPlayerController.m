@@ -331,7 +331,7 @@ CGImageRef createGradientImage(CGFloat theHeight)
     volumeSlider.minimumValue = 0.0f;
     volumeSlider.maximumValue = 1.0f;
     
-    /* this only can be used on real device it get back ipod volume
+    // this only can be used on real device it get back ipod volume
     MPMusicPlayerController *ipod = [MPMusicPlayerController iPodMusicPlayer];
     if(ipod != nil)
     {
@@ -341,13 +341,13 @@ CGImageRef createGradientImage(CGFloat theHeight)
     else
     {
         volumeSlider.value = 0.5f;
-        [musicPlayer setVolume:ipod.volume];
+        [musicPlayer setVolume:0.5f];
     }
-     */
+     
     
     //test 
-    volumeSlider.value = 0.5f;
-    musicPlayer.volume = 0.5f;
+    //volumeSlider.value = 0.5f;
+    //musicPlayer.volume = 0.5f;
     
     
     [volumeSlider addTarget:self action:@selector(volumeSliderChange:) forControlEvents:UIControlEventValueChanged];
@@ -652,6 +652,9 @@ CGImageRef createGradientImage(CGFloat theHeight)
 {
     UISlider *slider = sender;
     musicPlayer.volume = slider.value;
+    
+    MPMusicPlayerController *theMusicPlayer = [MPMusicPlayerController iPodMusicPlayer];
+    theMusicPlayer.volume = slider.value; 
 }
 
 #pragma mark - AVAudioPlayer delegate

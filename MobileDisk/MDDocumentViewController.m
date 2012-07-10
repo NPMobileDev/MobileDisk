@@ -20,6 +20,7 @@
 @synthesize webView = _webView;
 @synthesize theDocumentURL = _theDocumentURL;
 @synthesize theDocumentData = _theDocumentData;
+@synthesize controllerTitle = _controllerTitle;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -38,21 +39,23 @@
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    
+    
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-
-    self.title = [self.theDocumentURL lastPathComponent];
+    
+    self.title = self.controllerTitle;
 
     //give right button on navigation bar
     UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Done", @"Done") style:UIBarButtonItemStyleDone target:self action:@selector(doneReadingPDF)];
     
     self.navigationItem.rightBarButtonItem = rightButton;
     
-    //load pdf on web view
+    //load document on web view
     if(self.theDocumentURL)
         [self.webView loadRequest:[NSURLRequest requestWithURL:self.theDocumentURL]];
     else if(self.theDocumentData)

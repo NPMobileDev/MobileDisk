@@ -351,8 +351,18 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     //extract notification object, the object is actually a dictionary
     //take look IPResolver.m
     NSDictionary *IPs = notification.object;
-    NSString *ipStr = [IPs objectForKey:@"en1"];
+    NSString *ipStr = nil;
     NSString *httpAddress;
+    
+    for(int i=0; i<4 ; i++)
+    {
+        ipStr = [IPs objectForKey:[NSString stringWithFormat:@"en%i", i]];
+        
+        if(ipStr != nil)
+        {
+            break;
+        }
+    }
     
     if(ipStr != nil)
     {

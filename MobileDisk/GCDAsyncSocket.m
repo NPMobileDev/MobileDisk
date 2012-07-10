@@ -6887,12 +6887,14 @@ static void CFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType ty
 		return NO;
 	}
 	
+    
 	if (![self isConnected])
 	{
 		// Cannot create streams until file descriptor is connected
 		return NO;
 	}
 	
+    
 	LogVerbose(@"Creating read and write stream...");
 	
 	CFStreamCreatePairWithSocket(NULL, (CFSocketNativeHandle)socketFD, &readStream, &writeStream);

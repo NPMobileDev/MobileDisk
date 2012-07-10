@@ -568,6 +568,7 @@ static NSMutableArray *recentNonces;
 **/
 - (void)start
 {
+
 	dispatch_async(connectionQueue, ^{ @autoreleasepool {
 		
 		if (!started)

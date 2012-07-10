@@ -11,6 +11,7 @@
 #import "HTTPDataResponse.h"
 #import "HTTPFileResponse.h"
 #import "HTTPServer.h"
+#import "GCDAsyncSocket.h"
 
 @interface MDHTTPConnection ()
 
@@ -39,6 +40,16 @@
     return [super initWithAsyncSocket:newSocket configuration:aConfig];
 }
 
+- (void)start
+{
+    //connected socket is allow to do action when server enter background
+    [asyncSocket performBlock:^{
+    
+        [asyncSocket enableBackgroundingOnSocket];
+    }];
+    
+    [super start];
+}
 
 #pragma mark - Support method
 /**
@@ -67,6 +78,10 @@
 - (void)prepareForBodyWithSize:(UInt64)contentLength
 {
 	// Override me to allocate buffers, file handles, etc.
+    
+    //dont go to sleep
+    [UIApplication sharedApplication].idleTimerDisabled = YES;
+    
     NSLog(@"body size:%llu", contentLength);
     
     multipartData = [[NSMutableArray alloc] init];
@@ -233,6 +248,9 @@
     }
     
     NSLog(@"finish body");
+    
+    //can go to sleep
+    [UIApplication sharedApplication].idleTimerDisabled = NO;
 }
 
 
@@ -247,6 +265,7 @@
 - (NSObject<HTTPResponse> *)httpResponseForMethod:(NSString *)method URI:(NSString *)path
 {
     /**the path is a relative path not a full path**/
+    
     
     //NSLog(@"Method: %@", method);
     //NSLog(@"Relatvie path: %@", path);
@@ -343,6 +362,12 @@
 
 -(NSData *)createWebDataWithRelativePath:(NSString *)relPath
 {
+    /**decode url**/
+    //relPath is url
+    NSURL *url = [NSURL URLWithString:relPath];
+    //decode for url
+    relPath = [url path];
+    
     NSString *fullPath = [[config documentRoot] stringByAppendingPathComponent:relPath];
     
     //Search directories, files or symbolic links under given path

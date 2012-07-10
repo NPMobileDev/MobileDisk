@@ -417,12 +417,13 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_INFO; // | HTTP_LOG_FLAG_TRACE;
 	
 	if (errPtr)
 		*errPtr = err;
-	
+    
 	return success;
 }
 
 - (void)stop
 {
+
 	[self stop:NO];
 }
 

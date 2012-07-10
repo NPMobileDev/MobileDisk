@@ -64,7 +64,7 @@
         theValue = 1.0f;
     */
     
-    //NSLog(@"progress:%f", theValue);
+    NSLog(@"progress:%f", theValue);
     [self.progressView setProgress:theValue animated:YES];
     
     int percent = roundf(theValue * 100);
