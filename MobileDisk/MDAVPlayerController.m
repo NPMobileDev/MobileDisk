@@ -8,7 +8,7 @@
 
 #import "MDAVPlayerController.h"
 #import <MediaPlayer/MPMoviePlayerController.h>
-#import <MediaPlayer/MPMusicPlayerController.h>
+#import <MediaPlayer/MPVolumeView.h>
 
 
 @interface MDAVPlayerController ()
@@ -63,6 +63,8 @@
     BOOL isScaled;
     
     CGRect videoLayerRect;
+    
+    UIDeviceOrientation lastDeviceOrientation;
 }
 
 @synthesize avFileURL =_avFileURL;
@@ -89,6 +91,8 @@
     [super viewDidAppear:animated];
     
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackTranslucent animated:YES];
+    
+    lastDeviceOrientation = [UIDevice currentDevice].orientation;
 
 }
 
@@ -177,6 +181,8 @@
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
 {
+    
+    lastDeviceOrientation = toInterfaceOrientation;
     
     if(toInterfaceOrientation != UIInterfaceOrientationPortraitUpsideDown)
     {
@@ -372,6 +378,7 @@
 
 -(void)createVolumeSlider
 {
+    /*
     //the rect need to design tool to measure
     UISlider *volumeSlider = [[UISlider alloc] initWithFrame:CGRectMake(0, 0, 158, 23)];
     volumeSlider.minimumValue = 0.0f;
@@ -397,9 +404,12 @@
     //[[MPMusicPlayerController applicationMusicPlayer] setVolume:0.5];
     
     [volumeSlider addTarget:self action:@selector(volumeSliderChange:) forControlEvents:UIControlEventValueChanged];
+     */
+    
+    MPVolumeView *volumeView = [[MPVolumeView alloc] initWithFrame:CGRectMake(0, 0, 158, 23)];
     
     //create bar button with silder inside
-    UIBarButtonItem *volumeButton = [[UIBarButtonItem alloc] initWithCustomView:volumeSlider];
+    UIBarButtonItem *volumeButton = [[UIBarButtonItem alloc] initWithCustomView:volumeView];
     volumeButton.style = UIBarButtonItemStylePlain;
     
     /**reassign items**/
@@ -428,7 +438,8 @@
     titleLabel.shadowColor = [UIColor whiteColor];
     titleLabel.shadowOffset = CGSizeMake(0, 1);
     titleLabel.textAlignment = UITextAlignmentCenter;
-    titleLabel.adjustsFontSizeToFitWidth = YES;
+    titleLabel.adjustsFontSizeToFitWidth = NO;
+    titleLabel.lineBreakMode = UILineBreakModeMiddleTruncation;
     titleLabel.backgroundColor = [UIColor clearColor];
     
     title.titleView = titleLabel;
@@ -514,14 +525,22 @@
     [self dismissModalViewControllerAnimated:YES];
 }
 
--(IBAction)volumeSliderChange:(id)sender
-{
-    UISlider *slider = sender;
-    [[MPMusicPlayerController applicationMusicPlayer] setVolume:slider.value];
-}
 
 -(void)scaleVideo
 {
+    if([UIDevice currentDevice].orientation == UIDeviceOrientationLandscapeLeft || [UIDevice currentDevice].orientation == UIDeviceOrientationLandscapeRight)
+    {
+         NSLog(@"device orientation: UIDeviceOrientationLandscape");
+    }
+    else if([UIDevice currentDevice].orientation == UIDeviceOrientationPortrait)
+    {
+        NSLog(@"device orientation: UIDeviceOrientationPortrait");
+    }
+    else if([UIDevice currentDevice].orientation == UIDeviceOrientationPortraitUpsideDown)
+    {
+        NSLog(@"device orientation: UIDeviceOrientationPortraitUpsideDown");
+    }
+   
     
     if(isScaled)
     {
@@ -529,7 +548,7 @@
         CGRect newRect = videoLayerRect;
         
         //if device in landscape
-        if([UIDevice currentDevice].orientation == UIDeviceOrientationLandscapeLeft || [UIDevice currentDevice].orientation == UIDeviceOrientationLandscapeRight)
+        if([UIDevice currentDevice].orientation == UIDeviceOrientationLandscapeLeft || [UIDevice currentDevice].orientation == UIDeviceOrientationLandscapeRight || lastDeviceOrientation == UIDeviceOrientationLandscapeLeft || lastDeviceOrientation == UIDeviceOrientationLandscapeRight)
         {
             
             
@@ -575,7 +594,7 @@
         CGFloat newY = -((newHeight - self.view.bounds.size.height) / 2);
         
         //if device in landscape
-        if([UIDevice currentDevice].orientation == UIDeviceOrientationLandscapeLeft || [UIDevice currentDevice].orientation == UIDeviceOrientationLandscapeRight)
+        if([UIDevice currentDevice].orientation == UIDeviceOrientationLandscapeLeft || [UIDevice currentDevice].orientation == UIDeviceOrientationLandscapeRight || lastDeviceOrientation == UIDeviceOrientationLandscapeLeft || lastDeviceOrientation == UIDeviceOrientationLandscapeRight)
         {
             //center = CGPointMake(480/2, 320/2);
             

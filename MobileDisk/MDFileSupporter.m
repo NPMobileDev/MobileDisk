@@ -62,8 +62,17 @@ static NSArray *hiddenFileName;
     NSString *operateFilePath;
     __weak UIStoryboard *operateStoryboard;
     
+    /**
+     thumbnail cache hold image of thumbnail in memory
+     we don't actually save thumbnail in disk, so we use cache to hold it
+     when memory is not enough and required extra memory by anyone
+     the cache will automatic clear
+     **/
     __block NSCache *thumbnailImageCache;
     
+    /**
+     the queue used to run generate thumbnail task
+     **/
     dispatch_queue_t thumbnailGenQueue;
     
 }
@@ -368,6 +377,7 @@ static NSArray *hiddenFileName;
         
         MDDocumentViewController * pdfController = [navController.viewControllers objectAtIndex:0];
         
+        pdfController.controllerTitle = [pdfURL lastPathComponent];
         pdfController.theDocumentURL = pdfURL;
         
         controller = navController;
@@ -381,6 +391,7 @@ static NSArray *hiddenFileName;
         
         MDDocumentViewController * excelController = [navController.viewControllers objectAtIndex:0];
         
+        excelController.controllerTitle = [excelURL lastPathComponent];
         excelController.theDocumentURL = excelURL;
         
         controller = navController;
@@ -394,6 +405,7 @@ static NSArray *hiddenFileName;
         
         MDDocumentViewController * docController = [navController.viewControllers objectAtIndex:0];
         
+        docController.controllerTitle = [docURL lastPathComponent];
         docController.theDocumentURL = docURL;
         
         controller = navController;
@@ -542,10 +554,20 @@ static NSArray *hiddenFileName;
 #pragma mark - Find thumbnail for file
 -(void)findThumbnailImageForFileAtPath:(NSString *)filePath thumbnailSize:(CGSize)imageSize WithObject:(id)object
 {
+    /**
+     we generate thumbnail on the fly not perserved thumbnail on disk
+     and thumbnails are held in cache.
+     we don't want to cost disk free space.
+     It's a bit slow to generate thumbnail depend on the size of source image.
+     
+     some thumbnails will be dumped from cache for new thumbnail if cache
+     is full, therefore, when dumped thumbnail is required it will be regenerated
+     and stored in cache
+     **/
     
     __block BOOL canGenerateThumbnail;
     //the object who invok this method
-    id theObject = object;
+    __block id theObject = object;
     UIImage *thumbnailImage = nil;
     __block NSURL *fileURLPath = [NSURL fileURLWithPath:filePath];
     NSString *filename = [filePath lastPathComponent];
@@ -561,7 +583,7 @@ static NSArray *hiddenFileName;
     
     if(canGenerateThumbnail)
     {
-        //check if thumbnail is existed
+        //check if thumbnail is existed in cache
         UIImage *thumb = [thumbnailImageCache objectForKey:filePath];
         
         if(thumb != nil)
@@ -569,14 +591,21 @@ static NSArray *hiddenFileName;
             NSLog(@"thumbnail is in cache");
             thumbnailImage = thumb;
             
-            NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:thumbnailImage, kThumbnailImage, theObject, kThumbnailCaller, nil];
             
+            NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:thumbnailImage, kThumbnailImage, theObject, kThumbnailCaller, filePath, kThumbnailGeneratedFrom, nil];
+            
+            //post notification
             [[NSNotificationCenter defaultCenter] postNotificationName:kThumbnailGenerateNotification object:dic];
             
             return;
         }
     }
 
+    /**
+     thumbnail is not in cache we need to generate a thumbnail
+     because generate thumbnail take heavy task we run it on differet
+     thread
+     **/
     dispatch_async(thumbnailGenQueue, ^{
         
         id GCDTheObject = theObject;
@@ -667,8 +696,9 @@ static NSArray *hiddenFileName;
         
         dispatch_async(dispatch_get_main_queue(), ^{
         
-            NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:GCDThumbnailImage, kThumbnailImage, GCDTheObject, kThumbnailCaller, nil];
+            NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:GCDThumbnailImage, kThumbnailImage, GCDTheObject, kThumbnailCaller, GCDFilePath, kThumbnailGeneratedFrom, nil];
             
+            //post notification
             [[NSNotificationCenter defaultCenter] postNotificationName:kThumbnailGenerateNotification object:dic];
         });
 

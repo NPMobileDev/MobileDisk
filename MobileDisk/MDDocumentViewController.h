@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MDDocumentViewController : UIViewController
+@interface MDDocumentViewController : UIViewController<UIWebViewDelegate>
 
 @property (nonatomic, copy) NSString *controllerTitle;
 @property (nonatomic, copy) NSURL *theDocumentURL;

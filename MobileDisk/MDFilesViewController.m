@@ -1224,7 +1224,16 @@ const float ToolBarAnimationDuration = 0.1f;
     if([duplicateFiles count] != 0)
     {
         //there are some duplicate file at destination
-        NSString *msg = [NSString stringWithFormat:NSLocalizedString(@"Please make sure there is no same file or folder at destination folder \"%@\"", @"Please make sure there is no same file or folder at destination folder \"%@\""), destFolderName];
+        NSString *msg;
+        
+        if([duplicateFiles count] > 1)
+        {
+            msg = [NSString stringWithFormat:NSLocalizedString(@"There are some duplicate files or folders at destination folder \"%@\"", @"There are some duplicate files or folders at destination folder \"%@\""), destFolderName];
+        }
+        else
+        {
+            msg = [NSString stringWithFormat:NSLocalizedString(@"There is a duplicate file or folder at destination folder \"%@\"", @"There is a duplicate file or folder at destination folder \"%@\""), destFolderName];
+        }
         
         UIAlertView *duplicateAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", @"Error") message:msg delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles: nil];
         

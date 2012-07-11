@@ -18,6 +18,7 @@ const NSString *NotSelectedImageName = @"NotSelected";
 @implementation MDFilesTableViewCell{
     
     __weak UITableView *theTableView;
+    NSString *theFilePath;
 }
 
 @synthesize selectionIndicator = _selectionIndicator;
@@ -177,12 +178,25 @@ const NSString *NotSelectedImageName = @"NotSelected";
     //thumbnail image
     if(file.isFile)
     {
+        /**
+         we preserved file path every time we are going to generate thumbnail
+         we will use file path to identify which thumbnail is belong to this cell
+         **/
+        theFilePath = file.filePath;
+        
+        //remove previous one registered notification
         [[NSNotificationCenter defaultCenter] removeObserver:self name:kThumbnailGenerateNotification object:nil];
         
+        //register a new notification
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(thumbnailNotification:) name:kThumbnailGenerateNotification object:nil];
 
         MDFileSupporter *fileSupporter = [MDFileSupporter sharedFileSupporter];
-       
+        
+        /**
+         give cell self as object, later this method is finished generating thumbnail
+         will post a notification, the object will be included in notification package
+         which we can used to compared if thumbnail is belong to this cell later.
+         **/
         [fileSupporter findThumbnailImageForFileAtPath:file.filePath thumbnailSize:CGSizeMake(44, 44) WithObject:self];
         
        
@@ -200,14 +214,48 @@ const NSString *NotSelectedImageName = @"NotSelected";
 {
     NSDictionary *dic = notification.object;
     
+    //get back the cell who call to generate thumbnail
     MDFilesTableViewCell *theCell = [dic objectForKey:kThumbnailCaller];
     
+    //check if the cell is ourself 
     if(theCell == self)
     {
-        UIImage *theImage = [dic objectForKey:kThumbnailImage];
+        //the file path which used to generate thumbnail
+        NSString *filePath = [dic objectForKey:kThumbnailGeneratedFrom];
         
-        self.imageView.image = theImage;
-        [self setNeedsLayout];
+        /**
+         check if file path is equal to the last one this cell used to generate thumbnail.
+         
+         if file paths are equal, that mean the thumbnail is actually belong to this cell
+         and thumbnail is the one currently visible on table.
+         
+         sometime when scrolling table very fast cell will call to generate thumbnail method
+         multiple times, the notification might be posted before cell to generate thumbnail
+         method for new thumbnail, beside this cell already been reused which mean cell was
+         out of table visible area.
+         Therefore, notification call to this method might be out of date(row is out of table visible area).
+         To solve this kind of problem we use filePath as identifier, since filePath is
+         preserved every time cell call to generate thumbnail method and pass to method as
+         parameter, thus we can compare them to see if thumbnail is currently visible on table
+         
+         this can prevent imageView been assigned image many times when fast scrolling
+         **/
+        if(theFilePath != nil && [theFilePath isEqualToString:filePath])
+        {
+            UIImage *theImage = [dic objectForKey:kThumbnailImage];
+            
+            self.imageView.image = theImage;
+            
+            /**
+            since we assign the image to imageView
+            we need to tell cell to layout itself
+            during next update cycle to properly 
+            display image, otherwise image will
+            not display
+             **/
+            [self setNeedsLayout];
+        }
+
     }
     
 }

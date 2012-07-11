@@ -7,10 +7,10 @@
 //
 
 #import "MDMusicPlayerController.h"
-#import <MediaPlayer/MPMusicPlayerController.h>
 #import <AVFoundation/AVAsset.h>
 #import <AVFoundation/AVMetadataItem.h>
 #import <QuartzCore/QuartzCore.h>
+#import <MediaPlayer/MPVolumeView.h>
 
 
 @interface MDMusicPlayerController ()
@@ -44,7 +44,6 @@
 -(void)changePauseButtonToPlay;
 -(void)changePlayButtonToPause;
 -(void)findMusicInfoWithMusicPath:(NSURL *)musicPath;
--(IBAction)volumeSliderChange:(id)sender;
 -(void)customizedNavigationBar;
 -(void)hideTimelineAndLyrics;
 -(void)showTimelineAndLyrics;
@@ -315,7 +314,8 @@ CGImageRef createGradientImage(CGFloat theHeight)
     titleLabel.shadowColor = [UIColor whiteColor];
     titleLabel.shadowOffset = CGSizeMake(0, 1);
     titleLabel.textAlignment = UITextAlignmentCenter;
-    titleLabel.adjustsFontSizeToFitWidth = YES;
+    titleLabel.adjustsFontSizeToFitWidth = NO;
+    titleLabel.lineBreakMode = UILineBreakModeMiddleTruncation;
     titleLabel.backgroundColor = [UIColor clearColor];
     
     title.titleView = titleLabel;
@@ -326,34 +326,11 @@ CGImageRef createGradientImage(CGFloat theHeight)
 
 -(void)createVolumeSlider
 {
-    //the rect need to design tool to measure
-    UISlider *volumeSlider = [[UISlider alloc] initWithFrame:CGRectMake(0, 0, 158, 23)];
-    volumeSlider.minimumValue = 0.0f;
-    volumeSlider.maximumValue = 1.0f;
-    
-    // this only can be used on real device it get back ipod volume
-    MPMusicPlayerController *ipod = [MPMusicPlayerController iPodMusicPlayer];
-    if(ipod != nil)
-    {
-         volumeSlider.value = ipod.volume;
-         [musicPlayer setVolume:ipod.volume];
-    }
-    else
-    {
-        volumeSlider.value = 0.5f;
-        [musicPlayer setVolume:0.5f];
-    }
-     
-    
-    //test 
-    //volumeSlider.value = 0.5f;
-    //musicPlayer.volume = 0.5f;
-    
-    
-    [volumeSlider addTarget:self action:@selector(volumeSliderChange:) forControlEvents:UIControlEventValueChanged];
+
+    MPVolumeView *volumeView = [[MPVolumeView alloc] initWithFrame:CGRectMake(0, 0, 158, 23)];
     
     //create bar button with silder inside
-    UIBarButtonItem *volumeButton = [[UIBarButtonItem alloc] initWithCustomView:volumeSlider];
+    UIBarButtonItem *volumeButton = [[UIBarButtonItem alloc] initWithCustomView:volumeView];
     volumeButton.style = UIBarButtonItemStylePlain;
     
     /**reassign items**/
@@ -646,15 +623,6 @@ CGImageRef createGradientImage(CGFloat theHeight)
     self.timeLineSlider.value = musicPlayer.currentTime;
     
     [self updateTimeLabels];
-}
-
--(IBAction)volumeSliderChange:(id)sender
-{
-    UISlider *slider = sender;
-    musicPlayer.volume = slider.value;
-    
-    MPMusicPlayerController *theMusicPlayer = [MPMusicPlayerController iPodMusicPlayer];
-    theMusicPlayer.volume = slider.value; 
 }
 
 #pragma mark - AVAudioPlayer delegate

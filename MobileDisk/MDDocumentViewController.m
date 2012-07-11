@@ -48,10 +48,10 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     
-    self.title = self.controllerTitle;
+    //self.title = self.controllerTitle;
 
     //give right button on navigation bar
-    UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Done", @"Done") style:UIBarButtonItemStyleDone target:self action:@selector(doneReadingPDF)];
+    UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Done", @"Done") style:UIBarButtonItemStyleDone target:self action:@selector(doneReadingDocument)];
     
     self.navigationItem.rightBarButtonItem = rightButton;
     
@@ -75,9 +75,60 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
--(void)doneReadingPDF
+-(void)doneReadingDocument
 {
     [self dismissModalViewControllerAnimated:YES];
+}
+
+#pragma mark - UIWebView delegate
+- (void)webViewDidStartLoad:(UIWebView *)webView
+{
+    
+    UINavigationItem *navItem = [self.navigationController.navigationBar.items lastObject];
+    
+    UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(200, 0, 44, 44)];
+    
+    indicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyleWhite;
+    
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
+    titleLabel.text = self.controllerTitle;
+    titleLabel.textColor = [UIColor whiteColor];
+    titleLabel.shadowColor = [UIColor whiteColor];
+    titleLabel.shadowOffset = CGSizeMake(0, 1);
+    titleLabel.textAlignment = UITextAlignmentCenter;
+    titleLabel.adjustsFontSizeToFitWidth = NO;
+    titleLabel.lineBreakMode = UILineBreakModeMiddleTruncation;
+    titleLabel.backgroundColor = [UIColor clearColor];
+    
+    UIView *theTitleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 294, 44)];
+    [theTitleView addSubview:titleLabel];
+    [theTitleView addSubview:indicator];
+    
+    
+    navItem.titleView = theTitleView;
+    
+    
+    [indicator startAnimating];
+
+}
+
+- (void)webViewDidFinishLoad:(UIWebView *)webView
+{
+    UINavigationItem *navItem = [self.navigationController.navigationBar.items lastObject];
+    
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 250, 21)];
+    titleLabel.text = self.controllerTitle;
+    titleLabel.textColor = [UIColor whiteColor];
+    titleLabel.shadowColor = [UIColor whiteColor];
+    titleLabel.shadowOffset = CGSizeMake(0, 1);
+    titleLabel.textAlignment = UITextAlignmentCenter;
+    titleLabel.adjustsFontSizeToFitWidth = NO;
+    titleLabel.lineBreakMode = UILineBreakModeMiddleTruncation;
+    titleLabel.backgroundColor = [UIColor clearColor];
+    
+    
+    navItem.titleView = titleLabel;
+    
 }
 
 @end

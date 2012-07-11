@@ -14,7 +14,8 @@
 #define kThumbnailCacheCountLimit 0 //0 == no limit
 #define kThumbnailGenerateNotification @"ThumbnailGenNotification"
 #define kThumbnailImage @"ThumbnailImage"
-#define kThumbnailCaller @"Caller"
+#define kThumbnailCaller @"ThumbnailGeneratorCaller"
+#define kThumbnailGeneratedFrom @"ThumbnailGeneratedFrom"
 
 @interface MDFileSupporter : NSObject
 
