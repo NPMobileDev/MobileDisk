@@ -12,6 +12,9 @@
 
 #define kThumbnailCacheName @"ThumbnailCache"
 #define kThumbnailCacheCountLimit 0 //0 == no limit
+#define kThumbnailGenerateNotification @"ThumbnailGenNotification"
+#define kThumbnailImage @"ThumbnailImage"
+#define kThumbnailCaller @"Caller"
 
 @interface MDFileSupporter : NSObject
 
@@ -23,5 +26,5 @@
 -(BOOL)isFileSupported:(NSString *)filePath;
 -(id)findControllerToOpenFile:(NSString *)filePath WithStoryboard:(UIStoryboard *)storyboard;
 -(BOOL)canShowFileName:(NSString *)fileName;
--(UIImage*)findThumbnailImageForFileAtPath:(NSString *)filePath thumbnailSize:(CGSize)imageSize;
+-(void)findThumbnailImageForFileAtPath:(NSString *)filePath thumbnailSize:(CGSize)imageSize WithObject:(id)object;
 @end

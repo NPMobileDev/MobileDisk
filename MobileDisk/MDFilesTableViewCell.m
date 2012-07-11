@@ -121,11 +121,14 @@ const NSString *NotSelectedImageName = @"NotSelected";
 {
     [super prepareForReuse];
     
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kThumbnailGenerateNotification object:nil];
+    
     self.textLabel.text = nil;
     self.detailTextLabel.text = nil;
     self.imageView.image = nil;
     self.accessoryType = UITableViewCellAccessoryNone;
     self.selectionIndicator.image = [UIImage imageNamed:self.notSelectedIndicatorName];
+    
 }
 
 #pragma mark - Configure cell
@@ -174,14 +177,37 @@ const NSString *NotSelectedImageName = @"NotSelected";
     //thumbnail image
     if(file.isFile)
     {
-        MDFileSupporter *fileSupporter = [MDFileSupporter sharedFileSupporter];
-        UIImage *thumbnailImage = [fileSupporter findThumbnailImageForFileAtPath:file.filePath thumbnailSize:CGSizeMake(44, 44)];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:kThumbnailGenerateNotification object:nil];
         
-        self.imageView.image = thumbnailImage;
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(thumbnailNotification:) name:kThumbnailGenerateNotification object:nil];
+
+        MDFileSupporter *fileSupporter = [MDFileSupporter sharedFileSupporter];
+       
+        [fileSupporter findThumbnailImageForFileAtPath:file.filePath thumbnailSize:CGSizeMake(44, 44) WithObject:self];
+        
+       
+        //self.imageView.image = thumbnailImage;
+        
     }
     else
     {
         //a folder
+    }
+    
+}
+
+-(void)thumbnailNotification:(NSNotification *)notification
+{
+    NSDictionary *dic = notification.object;
+    
+    MDFilesTableViewCell *theCell = [dic objectForKey:kThumbnailCaller];
+    
+    if(theCell == self)
+    {
+        UIImage *theImage = [dic objectForKey:kThumbnailImage];
+        
+        self.imageView.image = theImage;
+        [self setNeedsLayout];
     }
     
 }

@@ -62,12 +62,15 @@ static NSArray *hiddenFileName;
     NSString *operateFilePath;
     __weak UIStoryboard *operateStoryboard;
     
-    NSCache *thumbnailImageCache;
+    __block NSCache *thumbnailImageCache;
+    
+    dispatch_queue_t thumbnailGenQueue;
     
 }
 
 @synthesize supportLists = _supportLists;
 @synthesize supportListInUTI = _supportListInUTI;
+
 
 +(MDFileSupporter *)sharedFileSupporter
 {
@@ -94,6 +97,8 @@ static NSArray *hiddenFileName;
 
 -(void)initFileSupporter
 {
+    thumbnailGenQueue = dispatch_queue_create("Thumbnail", NULL);
+    
     [self loadHiddenFileName];
     [self loadSupportedFileExtensions];
     [self createThumbnailImageCache];
@@ -101,6 +106,8 @@ static NSArray *hiddenFileName;
 
 -(void)dealloc
 {
+    dispatch_release(thumbnailGenQueue);
+    
     if(supportedExtensionsUTI != nil)
     {
         for(NSValue *value in supportedExtensionsUTI)
@@ -533,18 +540,21 @@ static NSArray *hiddenFileName;
 }
 
 #pragma mark - Find thumbnail for file
--(UIImage*)findThumbnailImageForFileAtPath:(NSString *)filePath thumbnailSize:(CGSize)imageSize
+-(void)findThumbnailImageForFileAtPath:(NSString *)filePath thumbnailSize:(CGSize)imageSize WithObject:(id)object
 {
     
-    BOOL canGenerateThumbnail;
+    __block BOOL canGenerateThumbnail;
+    //the object who invok this method
+    id theObject = object;
     UIImage *thumbnailImage = nil;
-    NSURL *fileURLPath = [NSURL fileURLWithPath:filePath];
+    __block NSURL *fileURLPath = [NSURL fileURLWithPath:filePath];
     NSString *filename = [filePath lastPathComponent];
     NSString *extension = [filename pathExtension];
-    CFStringRef extensionTag = (__bridge CFStringRef)extension;
+    
+    
     
     if([extension isEqualToString:@""])
-        return nil;
+        return;
     
     //is system allow to generate thumbnail
     canGenerateThumbnail = [[NSUserDefaults standardUserDefaults] boolForKey:sysGenerateThumbnail];
@@ -555,87 +565,117 @@ static NSArray *hiddenFileName;
         UIImage *thumb = [thumbnailImageCache objectForKey:filePath];
         
         if(thumb != nil)
-            return thumb;
+        {
+            NSLog(@"thumbnail is in cache");
+            thumbnailImage = thumb;
+            
+            NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:thumbnailImage, kThumbnailImage, theObject, kThumbnailCaller, nil];
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:kThumbnailGenerateNotification object:dic];
+            
+            return;
+        }
     }
 
-    
-    //create UTI for file extension
-    CFStringRef compareUTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, extensionTag, NULL);
-    
-    /*
-     //get back UTI info
-     CFDictionaryRef declareInfo = UTTypeCopyDeclaration(compareUTI);
-     CFArrayRef conformType = CFDictionaryGetValue(declareInfo, kUTTypeConformsToKey);
-     
-     
-     NSLog(@"declare info:%@", declareInfo);
-     NSLog(@"conform types:%@", conformType);
-     */
-    
-    
-    if (UTTypeConformsTo(compareUTI, kUTTypeImage)) 
-    {
-        if(canGenerateThumbnail)
-        {
-            //file is image type abstract
-            UIImage *image = [UIImage imageWithContentsOfFile:filePath];
-            //resize
-            thumbnailImage = [image retinaResizeImageTo:imageSize];
-        }
-        else
-        {
-            //default image for image type
-        }
+    dispatch_async(thumbnailGenQueue, ^{
         
-    }
-    else if(UTTypeConformsTo(compareUTI, kUTTypeAudiovisualContent))
-    {
-        //file is audio or video type abstract
+        id GCDTheObject = theObject;
+        UIImage *GCDThumbnailImage = nil;
+        NSString *GCDFilePath = filePath;
+        NSURL *GCDFileURLPath = fileURLPath;
+    
+        CFStringRef extensionTag = (__bridge CFStringRef)extension;
+        //create UTI for file extension
+        CFStringRef compareUTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, extensionTag, NULL);
+        
+        /*
+         //get back UTI info
+         CFDictionaryRef declareInfo = UTTypeCopyDeclaration(compareUTI);
+         CFArrayRef conformType = CFDictionaryGetValue(declareInfo, kUTTypeConformsToKey);
+         
+         
+         NSLog(@"declare info:%@", declareInfo);
+         NSLog(@"conform types:%@", conformType);
+         */
         
         
-        if(UTTypeConformsTo(compareUTI, kUTTypeAudio))
-        {
-            //audio only
-            //return audio image
-        }
-        else
+        if (UTTypeConformsTo(compareUTI, kUTTypeImage)) 
         {
             if(canGenerateThumbnail)
             {
-                //movie only
-                thumbnailImage = [self generateMovieThumbnailImageAtPath:fileURLPath];
+                //file is image type abstract
+                UIImage *image = [UIImage imageWithContentsOfFile:GCDFilePath];
                 
                 //resize
-                thumbnailImage = [thumbnailImage retinaResizeImageTo:imageSize];
+                GCDThumbnailImage = [image retinaResizeImageTo:imageSize];
                 
                 //stored in cache
-                if(thumbnailImage != nil)
-                    [thumbnailImageCache setObject:thumbnailImage forKey:filePath];
+                if(GCDThumbnailImage != nil)
+                    [thumbnailImageCache setObject:GCDThumbnailImage forKey:GCDFilePath];
             }
             else
             {
-                //default image for move type
+                //default image for image type
             }
-
+            
+        }
+        else if(UTTypeConformsTo(compareUTI, kUTTypeAudiovisualContent))
+        {
+            //file is audio or video type abstract
+            
+            
+            if(UTTypeConformsTo(compareUTI, kUTTypeAudio))
+            {
+                //audio only
+                //return audio image
+            }
+            else
+            {
+                if(canGenerateThumbnail)
+                {
+                    //movie only
+                    UIImage *image = [self generateMovieThumbnailImageAtPath:GCDFileURLPath];
+                    
+                    //resize
+                    GCDThumbnailImage = [image retinaResizeImageTo:imageSize];
+                    
+                    //stored in cache
+                    if(GCDThumbnailImage != nil)
+                        [thumbnailImageCache setObject:GCDThumbnailImage forKey:GCDFilePath];
+                }
+                else
+                {
+                    //default image for move type
+                }
+                
+            }
+            
+        }
+        else if(UTTypeConformsTo(compareUTI, kUTTypeArchive))
+        {
+            //file is archive type
+        }
+        else
+        {
+            //file is other type
+            
         }
         
-    }
-    else if(UTTypeConformsTo(compareUTI, kUTTypeArchive))
-    {
-        //file is archive type
-    }
-    else
-    {
-        //file is other type
+        //free memory
+        //CFRelease(declareInfo);
+        CFRelease(compareUTI);
         
-    }
-    
-    //free memory
-    //CFRelease(declareInfo);
-    CFRelease(compareUTI);
+        dispatch_async(dispatch_get_main_queue(), ^{
         
+            NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:GCDThumbnailImage, kThumbnailImage, GCDTheObject, kThumbnailCaller, nil];
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:kThumbnailGenerateNotification object:dic];
+        });
+
+    });
     
-    return thumbnailImage;
+
+        
 }
 
 -(UIImage*)generateMovieThumbnailImageAtPath:(NSURL*)moviePath
