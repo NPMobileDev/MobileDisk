@@ -152,7 +152,18 @@
 {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
     
+    NSError *error;
     
+    if(httpServer.isRunning)
+    {
+        [httpServer stop:YES];
+        [httpServer start:&error];
+    }
+    
+    if(error != nil)
+    {
+        NSLog(@"An error occur when app enter foreground and restart http server error:%@", error);
+    }
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
