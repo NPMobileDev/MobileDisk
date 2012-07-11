@@ -302,6 +302,7 @@ static NSArray *hiddenFileName;
         
         MDDocumentViewController * docxController = [navController.viewControllers objectAtIndex:0];
         
+        docxController.controllerTitle = [docxURL lastPathComponent];
         docxController.theDocumentURL = docxURL;
         
         controller = navController;
