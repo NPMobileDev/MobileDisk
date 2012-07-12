@@ -23,6 +23,7 @@
 @property (nonatomic, weak) IBOutlet UIView *gestureReceiverView;
 //this is only used to contain video view
 @property (nonatomic, weak) IBOutlet UIView *videoLayerView;
+@property (nonatomic, weak) IBOutlet UIActivityIndicatorView *loadingIndicator;
 
 -(void)play;
 -(void)pause;
@@ -76,6 +77,7 @@
 @synthesize timelineBackgroundView = _timelineBackgroundView;
 @synthesize gestureReceiverView = _gestureReceiverView;
 @synthesize videoLayerView = _videoLayerView;
+@synthesize loadingIndicator = _loadingIndicator;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -104,6 +106,13 @@
     [avPlayer.view removeFromSuperview];
     
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:NO];
+}
+
+-(void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
 }
 
 - (void)viewDidLoad
@@ -158,12 +167,30 @@
     //register a notification for playback finish
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(avPlayerFinish) name:MPMoviePlayerPlaybackDidFinishNotification object:nil];
     
+    //register a notification for playback content loaded
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(videoPlayerDidLoadContent:) name:MPMoviePlayerLoadStateDidChangeNotification object:nil];
+    
+    //register a notification for playback video duration is available
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(videoPlayerDurationAvailable:) name:MPMovieDurationAvailableNotification object:nil];
+    
+    //register a notification for playback when enter background
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(videoPlayerEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
+    
+    //register a notification for playback when  enter foreground
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(videoPlayerEnterForeground:) name:UIApplicationDidBecomeActiveNotification object:nil];
+    
+    self.currentTimeLabel.text = @"0";
+    self.timeLeftLabel.text = @"-0";
+    self.timeLineSlider.value = 0.0f;
     
     canUpdateTimeline = YES;
     isUIVisible = YES;
     isFadingUI = NO;
     isScaled = NO;
+    
+    self.loadingIndicator.hidden = NO;
+    [self.videoLayerView bringSubviewToFront:self.loadingIndicator];
+    [self.loadingIndicator startAnimating];
     
 }
 
@@ -246,7 +273,25 @@
         
     }
 }
-     
+
+-(void)videoPlayerEnterBackground:(NSNotification*)notification
+{
+    [self pause];
+}
+
+-(void)videoPlayerEnterForeground:(NSNotification*)notification
+{
+    [self play];
+}
+
+-(void)videoPlayerDurationAvailable:(NSNotification*)notification
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:MPMovieDurationAvailableNotification object:nil];
+    
+    self.timeLineSlider.maximumValue = round(avPlayer.duration);
+    self.timeLeftLabel.text = [@"-" stringByAppendingString:[self secondsToString:self.timeLineSlider.maximumValue]];
+}
+
 -(void)videoPlayerDidLoadContent:(NSNotification*)notification
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerLoadStateDidChangeNotification object:nil];
@@ -257,6 +302,9 @@
     
     self.timeLeftLabel.text = [@"-" stringByAppendingString:[self secondsToString:self.timeLineSlider.maximumValue]];
     self.currentTimeLabel.text = [self secondsToString:0.0f];
+    
+    [self.loadingIndicator stopAnimating];
+    self.loadingIndicator.hidden = YES;
     
     //play video when content loaded
     [self play];

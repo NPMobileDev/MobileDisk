@@ -501,6 +501,12 @@
                             <view contentMode="scaleToFill" id="deh-sv-Bao">
                                 <rect key="frame" x="0.0" y="111" width="320" height="305"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" style="white" id="KPn-Vm-FBk">
+                                        <rect key="frame" x="151" y="142" width="20" height="20"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                    </activityIndicatorView>
+                                </subviews>
                                 <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
                             </view>
                             <navigationBar contentMode="scaleToFill" id="e2m-yC-6Nt">
@@ -565,6 +571,7 @@
                     <connections>
                         <outlet property="currentTimeLabel" destination="Pf7-Xo-n1x" id="zYp-FU-FUZ"/>
                         <outlet property="gestureReceiverView" destination="8Yk-1W-nOH" id="rCB-r7-Qph"/>
+                        <outlet property="loadingIndicator" destination="KPn-Vm-FBk" id="Nmo-uV-SUt"/>
                         <outlet property="navBar" destination="e2m-yC-6Nt" id="ZdN-me-kFf"/>
                         <outlet property="timeLeftLabel" destination="F1E-Qc-5Ef" id="Hdf-iy-6sq"/>
                         <outlet property="timeLineSlider" destination="qXm-dY-Jdw" id="grG-vv-w1C"/>
@@ -805,6 +812,108 @@
             <point key="canvasLocation" x="2051" y="3277"/>
         </scene>
     </scenes>
+    <classes>
+        <class className="MDAVPlayerController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/MDAVPlayerController.h"/>
+            <relationships>
+                <relationship kind="action" name="beginChangeSlider:"/>
+                <relationship kind="action" name="endChangeSlider:"/>
+                <relationship kind="action" name="fastForward:"/>
+                <relationship kind="action" name="rewind:"/>
+                <relationship kind="action" name="sliderValueChange:"/>
+                <relationship kind="outlet" name="currentTimeLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="gestureReceiverView" candidateClass="UIView"/>
+                <relationship kind="outlet" name="loadingIndicator" candidateClass="UIActivityIndicatorView"/>
+                <relationship kind="outlet" name="navBar" candidateClass="UINavigationBar"/>
+                <relationship kind="outlet" name="timeLeftLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="timeLineSlider" candidateClass="UISlider"/>
+                <relationship kind="outlet" name="timelineBackgroundView" candidateClass="UIView"/>
+                <relationship kind="outlet" name="toolbar" candidateClass="UIToolbar"/>
+                <relationship kind="outlet" name="videoLayerView" candidateClass="UIView"/>
+            </relationships>
+        </class>
+        <class className="MDDocumentViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/MDDocumentViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="webView" candidateClass="UIWebView"/>
+            </relationships>
+        </class>
+        <class className="MDFilesNavigationController" superclassName="UINavigationController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/MDFilesNavigationController.h"/>
+        </class>
+        <class className="MDFilesViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/MDFilesViewController.h"/>
+        </class>
+        <class className="MDImageViewerController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/MDImageViewerController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="imageScrolleView" candidateClass="UIScrollView"/>
+            </relationships>
+        </class>
+        <class className="MDMoveFilesNavigationController" superclassName="UINavigationController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/MDMoveFilesNavigationController.h"/>
+        </class>
+        <class className="MDMoveFilesViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/MDMoveFilesViewController.h"/>
+        </class>
+        <class className="MDMusicPlayerController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/MDMusicPlayerController.h"/>
+            <relationships>
+                <relationship kind="action" name="doneListening:"/>
+                <relationship kind="action" name="fastForward:"/>
+                <relationship kind="action" name="rewind:"/>
+                <relationship kind="outlet" name="albumNameLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="artistLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="currentTimeLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="gestureView" candidateClass="UIView"/>
+                <relationship kind="outlet" name="lyricsBackgroundView" candidateClass="UIView"/>
+                <relationship kind="outlet" name="lyricsTextView" candidateClass="UITextView"/>
+                <relationship kind="outlet" name="musicImageView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="musicReflectionImageView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="navBar" candidateClass="UINavigationBar"/>
+                <relationship kind="outlet" name="timeLeftLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="timeLineSlider" candidateClass="UISlider"/>
+                <relationship kind="outlet" name="timelineBackgroundView" candidateClass="UIView"/>
+                <relationship kind="outlet" name="timelineView" candidateClass="UIView"/>
+                <relationship kind="outlet" name="titleLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="toolbar" candidateClass="UIToolbar"/>
+            </relationships>
+        </class>
+        <class className="MDPasscodeViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/MDPasscodeViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="navBar" candidateClass="UINavigationBar"/>
+                <relationship kind="outlet" name="p1" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="p2" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="p3" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="p4" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="vP1" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="vP2" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="vP3" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="vP4" candidateClass="UITextField"/>
+            </relationships>
+        </class>
+        <class className="MDProgressViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/MDProgressViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="percentLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="progressView" candidateClass="UIProgressView"/>
+                <relationship kind="outlet" name="statusLabel" candidateClass="UILabel"/>
+            </relationships>
+        </class>
+        <class className="MDScrollView" superclassName="UIScrollView">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/MDScrollView.h"/>
+        </class>
+        <class className="MDSettingsViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/MDSettingsViewController.h"/>
+        </class>
+        <class className="MDUnarchiveNavigationController" superclassName="UINavigationController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/MDUnarchiveNavigationController.h"/>
+        </class>
+        <class className="MDUnarchiveViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/MDUnarchiveViewController.h"/>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

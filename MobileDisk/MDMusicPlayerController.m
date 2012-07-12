@@ -110,6 +110,13 @@
     [self play];
 }
 
+-(void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -195,6 +202,12 @@
     self.timeLeftLabel.text = [@"-" stringByAppendingString:[self secondsToString:self.timeLineSlider.maximumValue]];
     self.currentTimeLabel.text = [self secondsToString:0.0f];
     
+    //register a notification for avaudioplayer when enter background
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(musicPlayerEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
+    
+    //register a notification for avaudioplayer when  enter foreground
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(musicPlayerEnterForeground:) name:UIApplicationDidBecomeActiveNotification object:nil];
+    
     canUpdateTimeline = YES;
 
 }
@@ -208,6 +221,37 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
+#pragma mark - music player enter background/foreground notification
+-(void)musicPlayerEnterBackground:(NSNotification*)notification
+{
+    [self pause];
+}
+
+-(void)musicPlayerEnterForeground:(NSNotification*)notification
+{
+    [self play];
+}
+
+#pragma mark - AVAudioPlayer delegate
+- (void)audioPlayerBeginInterruption:(AVAudioPlayer *)player
+{
+    [self pause];
+}
+
+- (void)audioPlayerEndInterruption:(AVAudioPlayer *)player
+{
+    [self play];
+}
+
+- (void)audioPlayerDecodeErrorDidOccur:(AVAudioPlayer *)player error:(NSError *)error
+{
+    NSString *msg = NSLocalizedString(@"There is an error while decoding the audio", @"There is an error while decoding the audio");
+    
+    UIAlertView *decodeErrorAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", @"Error") message:msg delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+    
+    [decodeErrorAlert show];
 }
 
 #pragma mark - reflection image
