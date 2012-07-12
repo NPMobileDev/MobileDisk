@@ -21,12 +21,14 @@
 @implementation MDImageViewerController{
     
     UIImageView *imageView;
+    
 
 
 }
 
 @synthesize imageURL = _imageURL;
 @synthesize imageScrolleView = _imageScrolleView;
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -41,18 +43,25 @@
 {
     self.imageURL = nil;
     NSLog(@"image viewer deallocate");
+    
+
 }
+
+
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     
+    
     //set title
     self.title = [self.imageURL lastPathComponent];
     
+
     //load image
-    UIImage *theImage = [UIImage imageWithContentsOfFile:[self.imageURL path]];
+    NSData *imageData = [NSData dataWithContentsOfFile:[self.imageURL path]];
+    UIImage *theImage = [UIImage imageWithData:imageData];
     
     //create image view
     imageView = [[UIImageView alloc] initWithImage:theImage];
@@ -70,7 +79,7 @@
 
     //add image view to scroll view
     [self.imageScrolleView addSubview:imageView];
-    
+
     
     //give right button on navigation bar
     UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Done", @"Done") style:UIBarButtonItemStyleDone target:self action:@selector(doneViewingImage)];

@@ -70,6 +70,8 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 - (void)dealloc
 {
     self.httpServer = nil;
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
 }
 
 -(id)initWithCoder:(NSCoder *)aDecoder
@@ -119,7 +121,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     //we calculate disk space
     //[self calculateDiskSpace];
     
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(enterForeground:) name:UIApplicationDidBecomeActiveNotification object:nil];
 }
 
 - (void)viewDidUnload
@@ -132,6 +134,11 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
+-(void)enterForeground:(NSNotification*)notification
+{
+    [self resolveIPAddress];
 }
 
 #pragma mark - Table view data source

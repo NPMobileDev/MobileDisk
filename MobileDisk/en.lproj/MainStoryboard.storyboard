@@ -848,6 +848,7 @@
             <source key="sourceIdentifier" type="project" relativePath="./Classes/MDImageViewerController.h"/>
             <relationships>
                 <relationship kind="outlet" name="imageScrolleView" candidateClass="UIScrollView"/>
+                <relationship kind="outlet" name="loadingIndicator" candidateClass="UIActivityIndicatorView"/>
             </relationships>
         </class>
         <class className="MDMoveFilesNavigationController" superclassName="UINavigationController">

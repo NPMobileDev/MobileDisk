@@ -12,6 +12,7 @@
 #import "HTTPFileResponse.h"
 #import "HTTPServer.h"
 #import "GCDAsyncSocket.h"
+#import "MDFileSupporter.h"
 
 @interface MDHTTPConnection ()
 
@@ -408,11 +409,18 @@
         [htmlStrCode appendFormat:@"<a href=\"%@\">Back</a><br />\n", [relPath stringByDeletingLastPathComponent]];
     }
 
+    MDFileSupporter *fileSupporter = [MDFileSupporter sharedFileSupporter];
     
     //Construct each content
     NSError *attError;
     for(NSString *aContent in contents)
     {
+        //get rid of this line of code if want to show all contents
+        if(![fileSupporter canShowFileName:aContent])
+        {
+            continue;
+        }
+        
         /**contents contain the name of directory or file not path we need to append them**/
         NSString *newContentPath = [fullPath stringByAppendingPathComponent:aContent];
         
