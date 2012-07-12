@@ -67,11 +67,11 @@
     
     if(self.passcodeToCheck != nil)
     {
-        title = NSLocalizedString(@"Enter passcode", @"Enter passcode");
+        title = NSLocalizedString(@"Enter Passcode", @"Enter Passcode");
     }
     else
     {
-        title = NSLocalizedString(@"New passcode", @"New passcode");
+        title = NSLocalizedString(@"New Passcode", @"New Passcode");
     }
     
     
@@ -250,7 +250,7 @@
     firstPasscode = firstInputPasscode;
     
     UINavigationItem *item = [self.navBar.items lastObject];
-    item.title = NSLocalizedString(@"Re-Enter passcode", @"Re-Enter passcode");
+    item.title = NSLocalizedString(@"Re-Enter Passcode", @"Re-Enter Passcode");
     
     self.p1.text = @" ";
     self.p2.text = @" ";
@@ -299,11 +299,11 @@
     
     if(self.passcodeToCheck != nil)
     {
-        item.title = NSLocalizedString(@"Enter passcode", @"Enter passcode");
+        item.title = NSLocalizedString(@"Enter Passcode", @"Enter Passcode");
     }
     else
     {
-        item.title = NSLocalizedString(@"New passcode", @"New passcode");
+        item.title = NSLocalizedString(@"New Passcode", @"New Passcode");
     }
     
     
