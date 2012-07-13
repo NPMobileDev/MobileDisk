@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4409B00C15AFBDFE009F9DCE /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 4409B00A15AFBDFE009F9DCE /* Default.png */; };
+		4409B00D15AFBDFE009F9DCE /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4409B00B15AFBDFE009F9DCE /* Default@2x.png */; };
+		4409B01015AFBF76009F9DCE /* MDForegroundViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4409B00F15AFBF76009F9DCE /* MDForegroundViewController.m */; };
 		4416081D15A29E6900770FF5 /* ioapi.c in Sources */ = {isa = PBXBuildFile; fileRef = 4416081315A29E6900770FF5 /* ioapi.c */; };
 		4416081E15A29E6900770FF5 /* mztools.c in Sources */ = {isa = PBXBuildFile; fileRef = 4416081515A29E6900770FF5 /* mztools.c */; };
 		4416081F15A29E6900770FF5 /* unzip.c in Sources */ = {isa = PBXBuildFile; fileRef = 4416081715A29E6900770FF5 /* unzip.c */; };
@@ -86,6 +89,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4409B00A15AFBDFE009F9DCE /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
+		4409B00B15AFBDFE009F9DCE /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		4409B00E15AFBF76009F9DCE /* MDForegroundViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDForegroundViewController.h; sourceTree = "<group>"; };
+		4409B00F15AFBF76009F9DCE /* MDForegroundViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDForegroundViewController.m; sourceTree = "<group>"; };
 		4416081215A29E6900770FF5 /* crypt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crypt.h; sourceTree = "<group>"; };
 		4416081315A29E6900770FF5 /* ioapi.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ioapi.c; sourceTree = "<group>"; };
 		4416081415A29E6900770FF5 /* ioapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ioapi.h; sourceTree = "<group>"; };
@@ -248,6 +255,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4409B00915AFBDFE009F9DCE /* LaunchImage */ = {
+			isa = PBXGroup;
+			children = (
+				4409B00A15AFBDFE009F9DCE /* Default.png */,
+				4409B00B15AFBDFE009F9DCE /* Default@2x.png */,
+			);
+			path = LaunchImage;
+			sourceTree = "<group>";
+		};
 		4416080F15A29E4A00770FF5 /* ZipLib */ = {
 			isa = PBXGroup;
 			children = (
@@ -364,6 +380,7 @@
 		44489AB015AA650900FA055D /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				4409B00915AFBDFE009F9DCE /* LaunchImage */,
 				44489AB215AA653000FA055D /* TableCellGradient.png */,
 				443D004E1594219C008CCCBE /* IsSelected.png */,
 				443D004F1594219C008CCCBE /* NotSelected.png */,
@@ -492,6 +509,8 @@
 				449430AD158EB4C100ADAE89 /* MainStoryboard.storyboard */,
 				449430B0158EB4C100ADAE89 /* MobileDiskViewController.h */,
 				449430B1158EB4C100ADAE89 /* MobileDiskViewController.m */,
+				4409B00E15AFBF76009F9DCE /* MDForegroundViewController.h */,
+				4409B00F15AFBF76009F9DCE /* MDForegroundViewController.m */,
 				449430B8158EB4E500ADAE89 /* HttpServer */,
 				449430A2158EB4C000ADAE89 /* Supporting Files */,
 			);
@@ -676,6 +695,8 @@
 				444FF9D4159AA0770033BB3B /* MobileDiskInfo.plist in Resources */,
 				4437BB70159EA2D100F3C8E7 /* dummy.mp3 in Resources */,
 				44489AB315AA653000FA055D /* TableCellGradient.png in Resources */,
+				4409B00C15AFBDFE009F9DCE /* Default.png in Resources */,
+				4409B00D15AFBDFE009F9DCE /* Default@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -744,6 +765,7 @@
 				44354DFE15A572FB00BFE4E4 /* MDPasscodeViewController.m in Sources */,
 				44421C2815A67980002B0F60 /* MDChangePasscodeController.m in Sources */,
 				44421C4115A6C6DE002B0F60 /* MDConfirmDeleteAlertView.m in Sources */,
+				4409B01015AFBF76009F9DCE /* MDForegroundViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -11,6 +11,7 @@
 #import <AVFoundation/AVMetadataItem.h>
 #import <QuartzCore/QuartzCore.h>
 #import <MediaPlayer/MPVolumeView.h>
+#import "MobileDiskAppDelegate.h"
 
 
 @interface MDMusicPlayerController ()
@@ -74,6 +75,8 @@
     //should we preserved image data?
     UIImage *musicArtwork;
     
+    BOOL wasEnterBackground;
+    
 }
 
 @synthesize musicFileURL = _musicFileURL;
@@ -107,14 +110,17 @@
 {
     [super viewDidAppear:animated];
     
-    [self play];
+    if(!wasEnterBackground)
+    {
+        [self play];
+    }
 }
 
 -(void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
     
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:sysApplicationEnterForeground object:nil];
 }
 
 - (void)viewDidLoad
@@ -206,9 +212,12 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(musicPlayerEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
     
     //register a notification for avaudioplayer when  enter foreground
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(musicPlayerEnterForeground:) name:UIApplicationDidBecomeActiveNotification object:nil];
+    //this notification will be posted from ApplicationDelegate
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(musicPlayerEnterForeground:) name:sysApplicationEnterForeground object:nil];
     
     canUpdateTimeline = YES;
+    
+    wasEnterBackground= NO;
 
 }
 
@@ -226,11 +235,15 @@
 #pragma mark - music player enter background/foreground notification
 -(void)musicPlayerEnterBackground:(NSNotification*)notification
 {
+    wasEnterBackground = YES;
+    
     [self pause];
 }
 
 -(void)musicPlayerEnterForeground:(NSNotification*)notification
 {
+    wasEnterBackground = NO;
+    
     [self play];
 }
 
@@ -459,6 +472,7 @@ CGImageRef createGradientImage(CGFloat theHeight)
     }
     
     //play music
+    [musicPlayer prepareToPlay];
     [musicPlayer play];
     
     //create a update timer if needed

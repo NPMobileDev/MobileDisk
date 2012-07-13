@@ -9,6 +9,7 @@
 #import "MDAVPlayerController.h"
 #import <MediaPlayer/MPMoviePlayerController.h>
 #import <MediaPlayer/MPVolumeView.h>
+#import "MobileDiskAppDelegate.h"
 
 
 @interface MDAVPlayerController ()
@@ -66,6 +67,7 @@
     CGRect videoLayerRect;
     
     UIDeviceOrientation lastDeviceOrientation;
+    
 }
 
 @synthesize avFileURL =_avFileURL;
@@ -112,7 +114,7 @@
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
     
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:sysApplicationEnterForeground object:nil];
 }
 
 - (void)viewDidLoad
@@ -177,7 +179,8 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(videoPlayerEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
     
     //register a notification for playback when  enter foreground
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(videoPlayerEnterForeground:) name:UIApplicationDidBecomeActiveNotification object:nil];
+    //this notification will be posted from ApplicationDelegate
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(videoPlayerEnterForeground:) name:sysApplicationEnterForeground object:nil];
     
     self.currentTimeLabel.text = @"0";
     self.timeLeftLabel.text = @"-0";
@@ -187,6 +190,7 @@
     isUIVisible = YES;
     isFadingUI = NO;
     isScaled = NO;
+    
     
     self.loadingIndicator.hidden = NO;
     [self.videoLayerView bringSubviewToFront:self.loadingIndicator];
@@ -274,6 +278,7 @@
     }
 }
 
+#pragma mark - video player enter background/foreground notification
 -(void)videoPlayerEnterBackground:(NSNotification*)notification
 {
     [self pause];
@@ -281,9 +286,12 @@
 
 -(void)videoPlayerEnterForeground:(NSNotification*)notification
 {
+    avPlayer.view.frame = self.videoLayerView.bounds;
+    [self.videoLayerView addSubview:avPlayer.view];
     [self play];
 }
 
+#pragma mark - notification video duration
 -(void)videoPlayerDurationAvailable:(NSNotification*)notification
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:MPMovieDurationAvailableNotification object:nil];
@@ -292,6 +300,7 @@
     self.timeLeftLabel.text = [@"-" stringByAppendingString:[self secondsToString:self.timeLineSlider.maximumValue]];
 }
 
+#pragma mark - notification video load content
 -(void)videoPlayerDidLoadContent:(NSNotification*)notification
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerLoadStateDidChangeNotification object:nil];
@@ -310,10 +319,12 @@
     [self play];
 }
 
+#pragma mark - video control
 -(void)play
 {
     [self changePlayButtonToPause];
     
+    [avPlayer prepareToPlay];
     [avPlayer play];
     
     //create a update timer if needed
@@ -350,6 +361,7 @@
     avPlayer.currentPlaybackTime += kFastForwardAmount;
 }
 
+#pragma mark - Time line labels update
 -(void)updateTimeline
 {
     if(canUpdateTimeline)
@@ -373,6 +385,7 @@
     self.timeLeftLabel.text = [@"-" stringByAppendingString:[self secondsToString:timeleft]];
 }
 
+#pragma mark - Timeline slider event
 -(IBAction)beginChangeSlider:(id)sender
 {
     //when slider touch down we stop update slider and labels
@@ -407,6 +420,7 @@
     canUpdateTimeline = YES;
 }
 
+#pragma mark - create gesture receiver view
 -(void)createGestureForView:(UIView *)view
 {
 
@@ -424,6 +438,7 @@
     [view addGestureRecognizer:scaleVideoDoubleTaps];
 }
 
+#pragma mark - create volume slider
 -(void)createVolumeSlider
 {
     /*
@@ -474,6 +489,7 @@
     [self.toolbar setItems:newItems animated:NO];
 }
 
+#pragma mark - customized UI
 -(void)customizedNavigationBar
 {
     UINavigationItem *title = [[UINavigationItem alloc] initWithTitle:[self.avFileURL lastPathComponent]];
@@ -503,6 +519,7 @@
     self.toolbar.barStyle = UIBarStyleBlackTranslucent;
 }
 
+#pragma mark - change toolbar play/pause button
 -(void)changePauseButtonToPlay
 {
     //change pause button to play
@@ -541,6 +558,7 @@
     [self.toolbar setItems:newItems animated:NO];
 }
 
+#pragma mark - video methods
 -(void)stopVideo
 {
     //change tool bar pause button to play
@@ -674,6 +692,7 @@
 
 }
 
+#pragma mark - UI animation
 -(void)performUIAction
 {
     if(isFadingUI)

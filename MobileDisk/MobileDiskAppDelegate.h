@@ -12,6 +12,7 @@
 #define sysGenerateThumbnail @"GenerateThumbnail"
 #define sysPasscodeStatus @"PasscodeStatus"
 #define sysPasscodeNumber @"PasscodeNumber"
+#define sysApplicationEnterForeground @"ApplicationEnterForeground"
 
 @interface MobileDiskAppDelegate : UIResponder <UIApplicationDelegate, MDPasscodeViewControllerDelegate>
 
