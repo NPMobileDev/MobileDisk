@@ -126,7 +126,7 @@ const NSString *NotSelectedImageName = @"NotSelected";
     
     self.textLabel.text = nil;
     self.detailTextLabel.text = nil;
-    self.imageView.image = nil;
+    self.imageView.image = [UIImage imageNamed:@"ImagePlaceholder"];
     self.accessoryType = UITableViewCellAccessoryNone;
     self.selectionIndicator.image = [UIImage imageNamed:self.notSelectedIndicatorName];
     
@@ -137,6 +137,8 @@ const NSString *NotSelectedImageName = @"NotSelected";
 -(void)configureCellForFile:(MDFiles *)theFile
 {
     MDFiles *file = theFile;
+    
+    self.imageView.image = [UIImage imageNamed:@"ImagePlaceholder"];
     
     //text label
     if(file.isFile)

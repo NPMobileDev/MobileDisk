@@ -286,6 +286,18 @@
 
 -(void)videoPlayerEnterForeground:(NSNotification*)notification
 {
+    /*
+    if([UIDevice currentDevice].orientation == UIDeviceOrientationPortrait || lastDeviceOrientation == UIDeviceOrientationPortrait)
+    {
+        self.videoLayerView.frame = videoLayerRect;
+    }
+    else if([UIDevice currentDevice].orientation == UIDeviceOrientationLandscapeLeft || [UIDevice currentDevice].orientation == UIDeviceOrientationLandscapeRight || lastDeviceOrientation == UIDeviceOrientationLandscapeLeft || lastDeviceOrientation == UIDeviceOrientationLandscapeRight)
+    {
+        
+    }*/
+    
+    [self willRotateToInterfaceOrientation:[UIDevice currentDevice].orientation duration:0];
+    
     avPlayer.view.frame = self.videoLayerView.bounds;
     [self.videoLayerView addSubview:avPlayer.view];
     [self play];

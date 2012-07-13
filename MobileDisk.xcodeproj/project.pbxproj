@@ -10,6 +10,12 @@
 		4409B00C15AFBDFE009F9DCE /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 4409B00A15AFBDFE009F9DCE /* Default.png */; };
 		4409B00D15AFBDFE009F9DCE /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4409B00B15AFBDFE009F9DCE /* Default@2x.png */; };
 		4409B01015AFBF76009F9DCE /* MDForegroundViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4409B00F15AFBF76009F9DCE /* MDForegroundViewController.m */; };
+		4409B02E15B018EB009F9DCE /* TabbarSetting.png in Resources */ = {isa = PBXBuildFile; fileRef = 4409B02C15B018EB009F9DCE /* TabbarSetting.png */; };
+		4409B02F15B018EB009F9DCE /* TabbarSetting@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4409B02D15B018EB009F9DCE /* TabbarSetting@2x.png */; };
+		4409B03615B01B80009F9DCE /* TabbarFile.png in Resources */ = {isa = PBXBuildFile; fileRef = 4409B03415B01B80009F9DCE /* TabbarFile.png */; };
+		4409B03715B01B80009F9DCE /* TabbarFile@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4409B03515B01B80009F9DCE /* TabbarFile@2x.png */; };
+		4409B03B15B01F9F009F9DCE /* ImagePlaceholder.png in Resources */ = {isa = PBXBuildFile; fileRef = 4409B03915B01F9F009F9DCE /* ImagePlaceholder.png */; };
+		4409B03C15B01F9F009F9DCE /* ImagePlaceholder@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4409B03A15B01F9F009F9DCE /* ImagePlaceholder@2x.png */; };
 		4416081D15A29E6900770FF5 /* ioapi.c in Sources */ = {isa = PBXBuildFile; fileRef = 4416081315A29E6900770FF5 /* ioapi.c */; };
 		4416081E15A29E6900770FF5 /* mztools.c in Sources */ = {isa = PBXBuildFile; fileRef = 4416081515A29E6900770FF5 /* mztools.c */; };
 		4416081F15A29E6900770FF5 /* unzip.c in Sources */ = {isa = PBXBuildFile; fileRef = 4416081715A29E6900770FF5 /* unzip.c */; };
@@ -93,6 +99,12 @@
 		4409B00B15AFBDFE009F9DCE /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		4409B00E15AFBF76009F9DCE /* MDForegroundViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDForegroundViewController.h; sourceTree = "<group>"; };
 		4409B00F15AFBF76009F9DCE /* MDForegroundViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDForegroundViewController.m; sourceTree = "<group>"; };
+		4409B02C15B018EB009F9DCE /* TabbarSetting.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TabbarSetting.png; sourceTree = "<group>"; };
+		4409B02D15B018EB009F9DCE /* TabbarSetting@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabbarSetting@2x.png"; sourceTree = "<group>"; };
+		4409B03415B01B80009F9DCE /* TabbarFile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TabbarFile.png; sourceTree = "<group>"; };
+		4409B03515B01B80009F9DCE /* TabbarFile@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabbarFile@2x.png"; sourceTree = "<group>"; };
+		4409B03915B01F9F009F9DCE /* ImagePlaceholder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ImagePlaceholder.png; sourceTree = "<group>"; };
+		4409B03A15B01F9F009F9DCE /* ImagePlaceholder@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ImagePlaceholder@2x.png"; sourceTree = "<group>"; };
 		4416081215A29E6900770FF5 /* crypt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crypt.h; sourceTree = "<group>"; };
 		4416081315A29E6900770FF5 /* ioapi.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ioapi.c; sourceTree = "<group>"; };
 		4416081415A29E6900770FF5 /* ioapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ioapi.h; sourceTree = "<group>"; };
@@ -264,6 +276,26 @@
 			path = LaunchImage;
 			sourceTree = "<group>";
 		};
+		4409B01B15B00758009F9DCE /* Tabbar */ = {
+			isa = PBXGroup;
+			children = (
+				4409B03415B01B80009F9DCE /* TabbarFile.png */,
+				4409B03515B01B80009F9DCE /* TabbarFile@2x.png */,
+				4409B02C15B018EB009F9DCE /* TabbarSetting.png */,
+				4409B02D15B018EB009F9DCE /* TabbarSetting@2x.png */,
+			);
+			path = Tabbar;
+			sourceTree = "<group>";
+		};
+		4409B03815B01F9F009F9DCE /* TableViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				4409B03915B01F9F009F9DCE /* ImagePlaceholder.png */,
+				4409B03A15B01F9F009F9DCE /* ImagePlaceholder@2x.png */,
+			);
+			path = TableViewCell;
+			sourceTree = "<group>";
+		};
 		4416080F15A29E4A00770FF5 /* ZipLib */ = {
 			isa = PBXGroup;
 			children = (
@@ -380,6 +412,8 @@
 		44489AB015AA650900FA055D /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				4409B03815B01F9F009F9DCE /* TableViewCell */,
+				4409B01B15B00758009F9DCE /* Tabbar */,
 				4409B00915AFBDFE009F9DCE /* LaunchImage */,
 				44489AB215AA653000FA055D /* TableCellGradient.png */,
 				443D004E1594219C008CCCBE /* IsSelected.png */,
@@ -697,6 +731,12 @@
 				44489AB315AA653000FA055D /* TableCellGradient.png in Resources */,
 				4409B00C15AFBDFE009F9DCE /* Default.png in Resources */,
 				4409B00D15AFBDFE009F9DCE /* Default@2x.png in Resources */,
+				4409B02E15B018EB009F9DCE /* TabbarSetting.png in Resources */,
+				4409B02F15B018EB009F9DCE /* TabbarSetting@2x.png in Resources */,
+				4409B03615B01B80009F9DCE /* TabbarFile.png in Resources */,
+				4409B03715B01B80009F9DCE /* TabbarFile@2x.png in Resources */,
+				4409B03B15B01F9F009F9DCE /* ImagePlaceholder.png in Resources */,
+				4409B03C15B01F9F009F9DCE /* ImagePlaceholder@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

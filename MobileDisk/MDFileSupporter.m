@@ -718,7 +718,7 @@ static NSArray *hiddenFileName;
     
     generator.appliesPreferredTrackTransform = YES;
     
-    CMTime thumbnailTime = CMTimeMake(0, 30);
+    CMTime thumbnailTime = CMTimeMake(5, 30);
     
     CGImageRef cgThumbnailImage = [generator copyCGImageAtTime:thumbnailTime actualTime:nil error:&error];
     if(cgThumbnailImage == nil || error != nil)
