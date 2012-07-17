@@ -218,6 +218,9 @@
     canUpdateTimeline = YES;
     
     wasEnterBackground= NO;
+    
+    //dont sleep
+    [UIApplication sharedApplication].idleTimerDisabled = YES;
 
 }
 
@@ -635,6 +638,9 @@ CGImageRef createGradientImage(CGFloat theHeight)
     [self stopMusic];
     
     musicPlayer = nil;
+    
+    //can go to sleep
+    [UIApplication sharedApplication].idleTimerDisabled = NO;
     
     [self dismissModalViewControllerAnimated:YES];
 }

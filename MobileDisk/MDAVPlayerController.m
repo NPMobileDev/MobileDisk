@@ -196,6 +196,8 @@
     [self.videoLayerView bringSubviewToFront:self.loadingIndicator];
     [self.loadingIndicator startAnimating];
     
+    //dont sleep
+    [UIApplication sharedApplication].idleTimerDisabled = YES;
 }
 
 - (void)viewDidUnload
@@ -599,6 +601,9 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerPlaybackDidFinishNotification object:nil];
     
     [[UIApplication sharedApplication] setStatusBarHidden:NO];
+    
+    //can sleep
+    [UIApplication sharedApplication].idleTimerDisabled = NO;
     
     [self dismissModalViewControllerAnimated:YES];
 }

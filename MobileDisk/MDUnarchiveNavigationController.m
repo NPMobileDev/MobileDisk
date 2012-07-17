@@ -90,6 +90,9 @@
 
 -(void)doUnarchiveToPath:(NSString *)unarchivePath
 {
+    //dont sleep
+    [UIApplication sharedApplication].idleTimerDisabled = YES;
+    
     //archive file location to string
     NSString *pathOfArchive = [self.archiveFilePath path];
     
@@ -121,6 +124,9 @@
 
 -(void)unarchiveFinished
 {
+    //can sleep
+    [UIApplication sharedApplication].idleTimerDisabled = NO;
+    
     [progressView dismiss];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
