@@ -870,11 +870,12 @@ static NSArray *hiddenFileName;
     NSError *error;
     UIImage *thumbImage = nil;
     AVAsset *asset = [AVAsset assetWithURL:moviePath];
+    CMTime duration = asset.duration;
     AVAssetImageGenerator *generator = [[AVAssetImageGenerator alloc] initWithAsset:asset];
     
     generator.appliesPreferredTrackTransform = YES;
     
-    CMTime thumbnailTime = CMTimeMake(5, 30);
+    CMTime thumbnailTime = CMTimeMake(duration.value / 4.0f, duration.timescale);
     
     CGImageRef cgThumbnailImage = [generator copyCGImageAtTime:thumbnailTime actualTime:nil error:&error];
     if(cgThumbnailImage == nil || error != nil)
