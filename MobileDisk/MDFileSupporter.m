@@ -583,6 +583,10 @@ static NSArray *hiddenFileName;
     //is system allow to generate thumbnail
     canGenerateThumbnail = [[NSUserDefaults standardUserDefaults] boolForKey:sysGenerateThumbnail];
     
+    /**
+     From this point we try to get thumbnail from cache if thumbnail generator is
+     active
+     **/
     if(canGenerateThumbnail)
     {
         //check if thumbnail is existed in cache
@@ -602,8 +606,107 @@ static NSArray *hiddenFileName;
             return;
         }
     }
+    
+    /**
+     From this point we try to get default thumbnail icon for file if generatot is 
+     deactive
+     **/
+    
+    CFStringRef preExtensionTag = (__bridge CFStringRef)extension;
+    //create UTI for file extension
+    CFStringRef preCompareUTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, preExtensionTag, NULL);
+    
+    if(UTTypeConformsTo(preCompareUTI, kUTTypeImage))
+    {
+        //if generate thumb not active give default icon
+        if(!canGenerateThumbnail)
+        {
+            thumbnailImage = [UIImage imageNamed:@"ImageIcon"];
+        }
+    }
+    else if(UTTypeConformsTo(preCompareUTI, kUTTypeAudiovisualContent))
+    {
+        if(UTTypeConformsTo(preCompareUTI, kUTTypeAudio))
+        {
+            //audio can not generate thumbnail only default icon
+            thumbnailImage = [UIImage imageNamed:@"AudioIcon"];
+        }
+        else
+        {
+            //if generate thumb not active give default icon
+            if(!canGenerateThumbnail)
+            {
+                thumbnailImage = [UIImage imageNamed:@"FilmIcon"];
+            }
+        }
+    }
+    else if(UTTypeConformsTo(preCompareUTI, kUTTypeText))
+    {
+        //text thumb
+        thumbnailImage = [UIImage imageNamed:@"TextDocumentIcon"];
+    }
+    else if(UTTypeConformsTo(preCompareUTI, kUTTypePDF))
+    {
+        //document thumb
+        thumbnailImage = [UIImage imageNamed:@"DocumentIcon"];
+    }
+    else if(UTTypeConformsTo(preCompareUTI, kUTTypeArchive))
+    {
+        //file is archive type
+        
+        //docx is archive type return document thumb
+        if(UTTypeConformsTo(preCompareUTI, kUTTypeDocx))
+        {
+            thumbnailImage = [UIImage imageNamed:@"DocumentIcon"];
+        }
+    }
+    else
+    {
+        //file is other type
+        if(UTTypeConformsTo(preCompareUTI, kUTTypeDoc))
+        {
+            //doc return document icon
+            thumbnailImage = [UIImage imageNamed:@"DocumentIcon"];
+        }
+        else if(UTTypeConformsTo(preCompareUTI, kUTTypeExcel))
+        {
+            //excel return document icon
+            thumbnailImage = [UIImage imageNamed:@"DocumentIcon"];
+        }
+        else if([extension isEqualToString:@"m4r"])
+        {
+            thumbnailImage = [UIImage imageNamed:@"AudioIcon"];
+        }
+        else if([extension isEqualToString:@"aac"])
+        {
+            thumbnailImage = [UIImage imageNamed:@"AudioIcon"];
+        }
+        else
+        {
+            //unknow icon
+            thumbnailImage = [UIImage imageNamed:@"UnknowIcon"];
+        }
+    }
+    
+    //free UTI
+    CFRelease(preCompareUTI);
+    
+    if(thumbnailImage != nil)
+    {
+        NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:thumbnailImage, kThumbnailImage, theObject, kThumbnailCaller, filePath, kThumbnailGeneratedFrom, nil];
+        
+        //post notification
+        [[NSNotificationCenter defaultCenter] postNotificationName:kThumbnailGenerateNotification object:dic];
+        
+        return;
+    }
+    
+    
+    
+
 
     /**
+     From this point we have to generate thumbnail for file that is able to generate thumbnail
      thumbnail is not in cache we need to generate a thumbnail
      because generate thumbnail take heavy task we run it on differet
      thread
@@ -614,7 +717,7 @@ static NSArray *hiddenFileName;
         UIImage *GCDThumbnailImage = nil;
         NSString *GCDFilePath = filePath;
         NSURL *GCDFileURLPath = fileURLPath;
-        NSString *GCDFileExtension = extension;
+        //NSString *GCDFileExtension = extension;
     
         CFStringRef extensionTag = (__bridge CFStringRef)extension;
         //create UTI for file extension
@@ -645,25 +748,32 @@ static NSArray *hiddenFileName;
                 if(GCDThumbnailImage != nil)
                     [thumbnailImageCache setObject:GCDThumbnailImage forKey:GCDFilePath];
             }
+            /*
             else
             {
                 //default thumb for image type
                 GCDThumbnailImage = [UIImage imageNamed:@"ImageIcon"];
             }
+             */
             
         }
         else if(UTTypeConformsTo(compareUTI, kUTTypeAudiovisualContent))
         {
             //file is audio or video type abstract
             
-            
+            /*
             if(UTTypeConformsTo(compareUTI, kUTTypeAudio))
             {
                 //audio only
                 //return default thumb image
                 GCDThumbnailImage = [UIImage imageNamed:@"AudioIcon"];
             }
+             
             else
+             */
+            
+            //if not audio then it is video
+            if(!UTTypeConformsTo(compareUTI, kUTTypeAudio))
             {
                 if(canGenerateThumbnail)
                 {
@@ -677,15 +787,17 @@ static NSArray *hiddenFileName;
                     if(GCDThumbnailImage != nil)
                         [thumbnailImageCache setObject:GCDThumbnailImage forKey:GCDFilePath];
                 }
+                /*
                 else
                 {
                     //default thumb for move type
                     GCDThumbnailImage = [UIImage imageNamed:@"FilmIcon"];
                 }
-                
+                */
             }
             
         }
+        /*
         else if(UTTypeConformsTo(compareUTI, kUTTypeText))
         {
             //text thumb
@@ -733,6 +845,7 @@ static NSArray *hiddenFileName;
                 GCDThumbnailImage = [UIImage imageNamed:@"UnknowIcon"];
             }
         }
+         */
         
         //free memory
         //CFRelease(declareInfo);
