@@ -33,8 +33,6 @@
 		4424E2C115A137A300A430D4 /* MDTimelineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4424E2C015A137A300A430D4 /* MDTimelineView.m */; };
 		4430AA0D15B3B836008E6D2F /* MusicCover.png in Resources */ = {isa = PBXBuildFile; fileRef = 4430AA0B15B3B836008E6D2F /* MusicCover.png */; };
 		4430AA0E15B3B836008E6D2F /* MusicCover@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4430AA0C15B3B836008E6D2F /* MusicCover@2x.png */; };
-		4430AA1515B3B9F3008E6D2F /* DigitalBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 4430AA1215B3B9F3008E6D2F /* DigitalBackground.png */; };
-		4430AA1615B3B9F3008E6D2F /* PasscodePattern.png in Resources */ = {isa = PBXBuildFile; fileRef = 4430AA1415B3B9F3008E6D2F /* PasscodePattern.png */; };
 		44354DFE15A572FB00BFE4E4 /* MDPasscodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44354DFD15A572FB00BFE4E4 /* MDPasscodeViewController.m */; };
 		4437BB70159EA2D100F3C8E7 /* dummy.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4437BB6F159EA2D100F3C8E7 /* dummy.mp3 */; };
 		4438B40215A3E0F400248C72 /* MDProgressGradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4438B40115A3E0F400248C72 /* MDProgressGradientView.m */; };
@@ -59,6 +57,10 @@
 		443ACE0B1592F52E008B4DF2 /* MDFilesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 443ACE0A1592F52E008B4DF2 /* MDFilesViewController.m */; };
 		443ACE0E1593018D008B4DF2 /* MDFiles.m in Sources */ = {isa = PBXBuildFile; fileRef = 443ACE0D1593018D008B4DF2 /* MDFiles.m */; };
 		443D004C159410CD008CCCBE /* MDFilesTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 443D004B159410CD008CCCBE /* MDFilesTableViewCell.m */; };
+		443EE91515B546F6008801F3 /* PasscodePattern@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 443EE91415B546F6008801F3 /* PasscodePattern@2x.png */; };
+		443EE91715B54701008801F3 /* PasscodePattern.png in Resources */ = {isa = PBXBuildFile; fileRef = 443EE91615B54701008801F3 /* PasscodePattern.png */; };
+		443EE91915B5477B008801F3 /* DigitalBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 443EE91815B5477B008801F3 /* DigitalBackground.png */; };
+		443EE91B15B54785008801F3 /* DigitalBackground@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 443EE91A15B54785008801F3 /* DigitalBackground@2x.png */; };
 		4440BB621591A9740073BBAA /* MDSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4440BB611591A9740073BBAA /* MDSettingsViewController.m */; };
 		4440BB721591B8360073BBAA /* IPResolver.m in Sources */ = {isa = PBXBuildFile; fileRef = 4440BB711591B8360073BBAA /* IPResolver.m */; };
 		44421C2815A67980002B0F60 /* MDChangePasscodeController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44421C2715A67980002B0F60 /* MDChangePasscodeController.m */; };
@@ -154,8 +156,6 @@
 		4424E2C015A137A300A430D4 /* MDTimelineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDTimelineView.m; sourceTree = "<group>"; };
 		4430AA0B15B3B836008E6D2F /* MusicCover.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MusicCover.png; sourceTree = "<group>"; };
 		4430AA0C15B3B836008E6D2F /* MusicCover@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MusicCover@2x.png"; sourceTree = "<group>"; };
-		4430AA1215B3B9F3008E6D2F /* DigitalBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = DigitalBackground.png; sourceTree = "<group>"; };
-		4430AA1415B3B9F3008E6D2F /* PasscodePattern.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PasscodePattern.png; sourceTree = "<group>"; };
 		44354DFC15A572FB00BFE4E4 /* MDPasscodeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDPasscodeViewController.h; sourceTree = "<group>"; };
 		44354DFD15A572FB00BFE4E4 /* MDPasscodeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDPasscodeViewController.m; sourceTree = "<group>"; };
 		4437BB6F159EA2D100F3C8E7 /* dummy.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = dummy.mp3; sourceTree = "<group>"; };
@@ -186,6 +186,10 @@
 		443ACE0D1593018D008B4DF2 /* MDFiles.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDFiles.m; sourceTree = "<group>"; };
 		443D004A159410CD008CCCBE /* MDFilesTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDFilesTableViewCell.h; sourceTree = "<group>"; };
 		443D004B159410CD008CCCBE /* MDFilesTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDFilesTableViewCell.m; sourceTree = "<group>"; };
+		443EE91415B546F6008801F3 /* PasscodePattern@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "PasscodePattern@2x.png"; sourceTree = "<group>"; };
+		443EE91615B54701008801F3 /* PasscodePattern.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PasscodePattern.png; sourceTree = "<group>"; };
+		443EE91815B5477B008801F3 /* DigitalBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = DigitalBackground.png; sourceTree = "<group>"; };
+		443EE91A15B54785008801F3 /* DigitalBackground@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "DigitalBackground@2x.png"; sourceTree = "<group>"; };
 		4440BB601591A9740073BBAA /* MDSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDSettingsViewController.h; sourceTree = "<group>"; };
 		4440BB611591A9740073BBAA /* MDSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDSettingsViewController.m; sourceTree = "<group>"; };
 		4440BB701591B8360073BBAA /* IPResolver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IPResolver.h; sourceTree = "<group>"; };
@@ -434,7 +438,8 @@
 		4430AA1115B3B9F3008E6D2F /* DigitalBackground */ = {
 			isa = PBXGroup;
 			children = (
-				4430AA1215B3B9F3008E6D2F /* DigitalBackground.png */,
+				443EE91815B5477B008801F3 /* DigitalBackground.png */,
+				443EE91A15B54785008801F3 /* DigitalBackground@2x.png */,
 			);
 			path = DigitalBackground;
 			sourceTree = "<group>";
@@ -442,7 +447,8 @@
 		4430AA1315B3B9F3008E6D2F /* PasscodePattern */ = {
 			isa = PBXGroup;
 			children = (
-				4430AA1415B3B9F3008E6D2F /* PasscodePattern.png */,
+				443EE91615B54701008801F3 /* PasscodePattern.png */,
+				443EE91415B546F6008801F3 /* PasscodePattern@2x.png */,
 			);
 			path = PasscodePattern;
 			sourceTree = "<group>";
@@ -903,8 +909,6 @@
 				4409B06315B03E99009F9DCE /* NotSelected@2x.png in Resources */,
 				4430AA0D15B3B836008E6D2F /* MusicCover.png in Resources */,
 				4430AA0E15B3B836008E6D2F /* MusicCover@2x.png in Resources */,
-				4430AA1515B3B9F3008E6D2F /* DigitalBackground.png in Resources */,
-				4430AA1615B3B9F3008E6D2F /* PasscodePattern.png in Resources */,
 				443A5DAF15B511F8000ADB4A /* AudioIcon.png in Resources */,
 				443A5DB015B511F8000ADB4A /* AudioIcon@2x.png in Resources */,
 				443A5DB115B511F8000ADB4A /* DocumentIcon.png in Resources */,
@@ -921,6 +925,10 @@
 				443A5DBC15B511F8000ADB4A /* FilmIcon@2x.png in Resources */,
 				443A5DBE15B512E3000ADB4A /* TabbarSettings.png in Resources */,
 				443A5DC015B512F3000ADB4A /* TabbarSettings@2x.png in Resources */,
+				443EE91515B546F6008801F3 /* PasscodePattern@2x.png in Resources */,
+				443EE91715B54701008801F3 /* PasscodePattern.png in Resources */,
+				443EE91915B5477B008801F3 /* DigitalBackground.png in Resources */,
+				443EE91B15B54785008801F3 /* DigitalBackground@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
