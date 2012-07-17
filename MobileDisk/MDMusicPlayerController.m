@@ -453,16 +453,12 @@ CGImageRef createGradientImage(CGFloat theHeight)
             {
                 musicArtwork = [UIImage imageWithData:imageData];
             }
-            else
-            {
-                //give default image
-                musicArtwork = [UIImage imageNamed:@"MusicCover"];
-            }
             
         }
     }
     
-    if([metaDataItems count] == 0)
+    //if image was nil
+    if(musicArtwork == nil)
     {
         musicArtwork = [UIImage imageNamed:@"MusicCover"];
     }
