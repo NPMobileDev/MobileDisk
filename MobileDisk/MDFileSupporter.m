@@ -41,6 +41,7 @@
 //zip archive
 const CFStringRef kUTTypeZipArchive = (__bridge CFStringRef)@"com.pkware.zip-archive";
 const CFStringRef kUTTypeDoc = (__bridge CFStringRef)@"com.microsoft.word.doc";
+//identify as archive type
 const CFStringRef kUTTypeDocx = (__bridge CFStringRef)@"org.openxmlformats.openxml";
 const CFStringRef kUTTypeExcel = (__bridge CFStringRef)@"com.microsoft.excel.xls";
 
@@ -613,6 +614,7 @@ static NSArray *hiddenFileName;
         UIImage *GCDThumbnailImage = nil;
         NSString *GCDFilePath = filePath;
         NSURL *GCDFileURLPath = fileURLPath;
+        NSString *GCDFileExtension = extension;
     
         CFStringRef extensionTag = (__bridge CFStringRef)extension;
         //create UTI for file extension
@@ -645,7 +647,8 @@ static NSArray *hiddenFileName;
             }
             else
             {
-                //default image for image type
+                //default thumb for image type
+                GCDThumbnailImage = [UIImage imageNamed:@"ImageIcon"];
             }
             
         }
@@ -657,7 +660,8 @@ static NSArray *hiddenFileName;
             if(UTTypeConformsTo(compareUTI, kUTTypeAudio))
             {
                 //audio only
-                //return audio image
+                //return default thumb image
+                GCDThumbnailImage = [UIImage imageNamed:@"AudioIcon"];
             }
             else
             {
@@ -675,20 +679,59 @@ static NSArray *hiddenFileName;
                 }
                 else
                 {
-                    //default image for move type
+                    //default thumb for move type
+                    GCDThumbnailImage = [UIImage imageNamed:@"FilmIcon"];
                 }
                 
             }
             
         }
+        else if(UTTypeConformsTo(compareUTI, kUTTypeText))
+        {
+            //text thumb
+            GCDThumbnailImage = [UIImage imageNamed:@"TextDocumentIcon"];
+        }
+        else if(UTTypeConformsTo(compareUTI, kUTTypePDF))
+        {
+            //document thumb
+            GCDThumbnailImage = [UIImage imageNamed:@"DocumentIcon"];
+        }
         else if(UTTypeConformsTo(compareUTI, kUTTypeArchive))
         {
             //file is archive type
+            
+            //docx is archive type return document thumb
+            if(UTTypeConformsTo(compareUTI, kUTTypeDocx))
+            {
+                GCDThumbnailImage = [UIImage imageNamed:@"DocumentIcon"];
+            }
         }
         else
         {
             //file is other type
-            
+            if(UTTypeConformsTo(compareUTI, kUTTypeDoc))
+            {
+                //doc return document icon
+                GCDThumbnailImage = [UIImage imageNamed:@"DocumentIcon"];
+            }
+            else if(UTTypeConformsTo(compareUTI, kUTTypeExcel))
+            {
+                //excel return document icon
+                GCDThumbnailImage = [UIImage imageNamed:@"DocumentIcon"];
+            }
+            else if([GCDFileExtension isEqualToString:@"m4r"])
+            {
+                GCDThumbnailImage = [UIImage imageNamed:@"AudioIcon"];
+            }
+            else if([GCDFileExtension isEqualToString:@"aac"])
+            {
+                GCDThumbnailImage = [UIImage imageNamed:@"AudioIcon"];
+            }
+            else
+            {
+                //unknow icon
+                GCDThumbnailImage = [UIImage imageNamed:@"UnknowIcon"];
+            }
         }
         
         //free memory

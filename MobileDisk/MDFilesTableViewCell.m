@@ -208,6 +208,7 @@ const NSString *NotSelectedImageName = @"NotSelected";
     else
     {
         //a folder
+        self.imageView.image = [UIImage imageNamed:@"FolderIcon"];
     }
     
 }

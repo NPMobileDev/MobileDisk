@@ -92,6 +92,9 @@
         
         self.navBar.items = [NSArray arrayWithObject:navItem];
     }
+    
+    //set background pattern color
+    [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"PasscodePattern"]]];
 
     /**
      doing @" " instead of given nil to make sure UITextFiled delegate
