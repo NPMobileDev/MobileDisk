@@ -40,6 +40,7 @@
 			<string>html</string>
 			<string>txt</string>
 			<string>xls</string>
+			<string>ppt</string>
 		</array>
 	</dict>
 	<key>HiddenFlieName</key>

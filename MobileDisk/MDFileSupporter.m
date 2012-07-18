@@ -44,6 +44,7 @@ const CFStringRef kUTTypeDoc = (__bridge CFStringRef)@"com.microsoft.word.doc";
 //identify as archive type
 const CFStringRef kUTTypeDocx = (__bridge CFStringRef)@"org.openxmlformats.openxml";
 const CFStringRef kUTTypeExcel = (__bridge CFStringRef)@"com.microsoft.excel.xls";
+const CFStringRef kUTTypePPT = (__bridge CFStringRef)@"com.microsoft.powerpoint.ppt";
 const CFStringRef kUTTypeM4V = (__bridge CFStringRef)@"com.apple.m4v-video";
 
 static MDFileSupporter *fileSupporterInstance;
@@ -418,6 +419,20 @@ static NSArray *hiddenFileName;
         
         controller = navController;
     }
+    else if(UTTypeConformsTo(compareUTI, kUTTypePPT))
+    {
+        //PPT
+        NSURL *pptURL = [NSURL fileURLWithPath:operateFilePath];
+        
+        UINavigationController *navController = [operateStoryboard instantiateViewControllerWithIdentifier:@"MDDocumentViewController"];
+        
+        MDDocumentViewController * docController = [navController.viewControllers objectAtIndex:0];
+        
+        docController.controllerTitle = [pptURL lastPathComponent];
+        docController.theDocumentURL = pptURL;
+        
+        controller = navController;
+    }
     
     return controller;
 }
@@ -677,6 +692,11 @@ static NSArray *hiddenFileName;
         else if(UTTypeConformsTo(preCompareUTI, kUTTypeExcel))
         {
             //excel return document icon
+            thumbnailImage = [UIImage imageNamed:@"DocumentIcon"];
+        }
+        else if(UTTypeConformsTo(preCompareUTI, kUTTypePPT))
+        {
+            //ppt return document icon
             thumbnailImage = [UIImage imageNamed:@"DocumentIcon"];
         }
         else if([extension isEqualToString:@"m4r"])
