@@ -425,9 +425,13 @@ CGImageRef createGradientImage(CGFloat theHeight)
 
 -(void)CustomizedTimelineSlider
 {
-    [self.timeLineSlider setMinimumTrackImage:[UIImage imageNamed:@"SliderTrackLeft"] forState:UIControlStateNormal];
+    UIImage *leftTrack = [[UIImage imageNamed:@"SliderTrackLeft"] stretchableImageWithLeftCapWidth:14 topCapHeight:0];
     
-    [self.timeLineSlider setMaximumTrackImage:[UIImage imageNamed:@"SliderTrackRight"] forState:UIControlStateNormal];
+    [self.timeLineSlider setMinimumTrackImage:leftTrack forState:UIControlStateNormal];
+    
+    UIImage *rightTrack = [[UIImage imageNamed:@"SliderTrackRight"] stretchableImageWithLeftCapWidth:14 topCapHeight:0];
+    
+    [self.timeLineSlider setMaximumTrackImage:rightTrack forState:UIControlStateNormal];
     
     [self.timeLineSlider setThumbImage:[UIImage imageNamed:@"MusicThumb"] forState:UIControlStateNormal];
     

@@ -425,7 +425,7 @@
     }
     else
     {
-        //reset current time for music player
+        //reset current time for movie player
         [avPlayer setCurrentPlaybackTime:self.timeLineSlider.value];
     }
     
@@ -521,9 +521,13 @@
 #pragma mark - customized timeline slider
 -(void)CustomizedTimelineSlider
 {
-    [self.timeLineSlider setMinimumTrackImage:[UIImage imageNamed:@"SliderTrackLeft"] forState:UIControlStateNormal];
+    UIImage *leftTrack = [[UIImage imageNamed:@"SliderTrackLeft"] stretchableImageWithLeftCapWidth:14 topCapHeight:0];
     
-    [self.timeLineSlider setMaximumTrackImage:[UIImage imageNamed:@"SliderTrackRight"] forState:UIControlStateNormal];
+    [self.timeLineSlider setMinimumTrackImage:leftTrack forState:UIControlStateNormal];
+    
+    UIImage *rightTrack = [[UIImage imageNamed:@"SliderTrackRight"] stretchableImageWithLeftCapWidth:14 topCapHeight:0];
+    
+    [self.timeLineSlider setMaximumTrackImage:rightTrack forState:UIControlStateNormal];
     
     [self.timeLineSlider setThumbImage:[UIImage imageNamed:@"VideoThumb"] forState:UIControlStateNormal];
     
