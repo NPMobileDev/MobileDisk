@@ -46,6 +46,7 @@
 -(void)changePlayButtonToPause;
 -(void)findMusicInfoWithMusicPath:(NSURL *)musicPath;
 -(void)customizedNavigationBar;
+-(void)CustomizedTimelineSlider;
 -(void)hideTimelineAndLyrics;
 -(void)showTimelineAndLyrics;
 -(void)createGesture;
@@ -199,6 +200,8 @@
     [self createGesture];
     
     [self createVolumeSlider];
+    
+    [self CustomizedTimelineSlider];
     
     
     self.timeLineSlider.minimumValue = 0.0f;
@@ -389,6 +392,19 @@ CGImageRef createGradientImage(CGFloat theHeight)
 
     MPVolumeView *volumeView = [[MPVolumeView alloc] initWithFrame:CGRectMake(0, 0, 158, 23)];
     
+    //set volume slider's thumb image for normal and heightlighted
+    for(UIView *aView in [volumeView subviews])
+    {
+        if([[[aView class] description] isEqualToString:@"MPVolumeSlider"])
+        {
+            UISlider *volumeSlider = (UISlider*)aView;
+            
+            [volumeSlider setThumbImage:[UIImage imageNamed:@"SoundVolumeThumb"] forState:UIControlStateNormal];
+            
+            [volumeSlider setThumbImage:[UIImage imageNamed:@"SoundVolumeThumbHeightlight"] forState:UIControlStateHighlighted];
+        }
+    }
+    
     //create bar button with silder inside
     UIBarButtonItem *volumeButton = [[UIBarButtonItem alloc] initWithCustomView:volumeView];
     volumeButton.style = UIBarButtonItemStylePlain;
@@ -405,6 +421,17 @@ CGImageRef createGradientImage(CGFloat theHeight)
     NSArray *newItems = [NSArray arrayWithObjects:rewindButton, thePlayButton, fastForwardButton, spaceLine, volumeButton, nil];
     
     [self.toolbar setItems:newItems animated:NO];
+}
+
+-(void)CustomizedTimelineSlider
+{
+    [self.timeLineSlider setMinimumTrackImage:[UIImage imageNamed:@"SliderTrackLeft"] forState:UIControlStateNormal];
+    
+    [self.timeLineSlider setMaximumTrackImage:[UIImage imageNamed:@"SliderTrackRight"] forState:UIControlStateNormal];
+    
+    [self.timeLineSlider setThumbImage:[UIImage imageNamed:@"MusicThumb"] forState:UIControlStateNormal];
+    
+    [self.timeLineSlider setThumbImage:[UIImage imageNamed:@"MusicThumbHeightlight"] forState:UIControlStateHighlighted];
 }
 
 #pragma mark - Find music info

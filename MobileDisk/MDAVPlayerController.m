@@ -41,6 +41,7 @@
 -(IBAction)sliderValueChange:(id)sender;
 -(IBAction)endChangeSlider:(id)sender;
 -(void)customizedToolBar;
+-(void)CustomizedTimelineSlider;
 -(void)performUIAction;
 -(void)fadeOutUI;
 -(void)fadeInUI;
@@ -154,6 +155,7 @@
     [self customizedNavigationBar];
     [self customizedToolBar];
     [self createVolumeSlider];
+    [self CustomizedTimelineSlider];
     
     //make sure videoLayerView is at back
     [self.view sendSubviewToBack:self.videoLayerView];
@@ -485,6 +487,19 @@
     
     MPVolumeView *volumeView = [[MPVolumeView alloc] initWithFrame:CGRectMake(0, 0, 158, 23)];
     
+    //set volume slider's thumb image for normal and heightlighted
+    for(UIView *aView in [volumeView subviews])
+    {
+        if([[[aView class] description] isEqualToString:@"MPVolumeSlider"])
+        {
+            UISlider *volumeSlider = (UISlider*)aView;
+            
+            [volumeSlider setThumbImage:[UIImage imageNamed:@"SoundVolumeThumb"] forState:UIControlStateNormal];
+            
+            [volumeSlider setThumbImage:[UIImage imageNamed:@"SoundVolumeThumbHeightlight"] forState:UIControlStateHighlighted];
+        }
+    }
+    
     //create bar button with silder inside
     UIBarButtonItem *volumeButton = [[UIBarButtonItem alloc] initWithCustomView:volumeView];
     volumeButton.style = UIBarButtonItemStylePlain;
@@ -501,6 +516,18 @@
     NSArray *newItems = [NSArray arrayWithObjects:rewindButton, thePlayButton, fastForwardButton, spaceLine, volumeButton, nil];
     
     [self.toolbar setItems:newItems animated:NO];
+}
+
+#pragma mark - customized timeline slider
+-(void)CustomizedTimelineSlider
+{
+    [self.timeLineSlider setMinimumTrackImage:[UIImage imageNamed:@"SliderTrackLeft"] forState:UIControlStateNormal];
+    
+    [self.timeLineSlider setMaximumTrackImage:[UIImage imageNamed:@"SliderTrackRight"] forState:UIControlStateNormal];
+    
+    [self.timeLineSlider setThumbImage:[UIImage imageNamed:@"VideoThumb"] forState:UIControlStateNormal];
+    
+    [self.timeLineSlider setThumbImage:[UIImage imageNamed:@"VideoThumbHeightlight"] forState:UIControlStateHighlighted];
 }
 
 #pragma mark - customized UI
