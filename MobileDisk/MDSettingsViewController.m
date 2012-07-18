@@ -447,7 +447,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     [sectionHeaders addObject:NSLocalizedString(@"File", @"File")];
     
     //add header for section 3
-    [sectionHeaders addObject:NSLocalizedString(@"Passcode", @"Passcode")];
+    [sectionHeaders addObject:NSLocalizedString(@"Passcode Protection", @"Passcode Protection")];
     
 }
 

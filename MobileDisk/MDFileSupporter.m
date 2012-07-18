@@ -599,7 +599,16 @@ static NSArray *hiddenFileName;
     
     
     if([extension isEqualToString:@""])
+    {
+        thumbnailImage = [UIImage imageNamed:@"UnknowIcon"];
+        
+        NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:thumbnailImage, kThumbnailImage, theObject, kThumbnailCaller, filePath, kThumbnailGeneratedFrom, nil];
+        
+        //post notification
+        [[NSNotificationCenter defaultCenter] postNotificationName:kThumbnailGenerateNotification object:dic];
+        
         return;
+    }
     
     //is system allow to generate thumbnail
     canGenerateThumbnail = [[NSUserDefaults standardUserDefaults] boolForKey:sysGenerateThumbnail];
@@ -773,6 +782,8 @@ static NSArray *hiddenFileName;
                 //stored in cache
                 if(GCDThumbnailImage != nil)
                     [thumbnailImageCache setObject:GCDThumbnailImage forKey:GCDFilePath];
+                else
+                    GCDThumbnailImage = [UIImage imageNamed:@"ImageIcon"];
             }
             /*
             else
@@ -812,6 +823,8 @@ static NSArray *hiddenFileName;
                     //stored in cache
                     if(GCDThumbnailImage != nil)
                         [thumbnailImageCache setObject:GCDThumbnailImage forKey:GCDFilePath];
+                    else
+                        GCDThumbnailImage = [UIImage imageNamed:@"FilmIcon"];
                 }
                 /*
                 else
