@@ -11,6 +11,7 @@
 		<key>VideoAudio</key>
 		<array>
 			<string>mp4</string>
+			<string>m4v</string>
 			<string>mp3</string>
 			<string>mov</string>
 			<string>m4a</string>

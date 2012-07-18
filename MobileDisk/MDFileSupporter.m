@@ -44,6 +44,7 @@ const CFStringRef kUTTypeDoc = (__bridge CFStringRef)@"com.microsoft.word.doc";
 //identify as archive type
 const CFStringRef kUTTypeDocx = (__bridge CFStringRef)@"org.openxmlformats.openxml";
 const CFStringRef kUTTypeExcel = (__bridge CFStringRef)@"com.microsoft.excel.xls";
+const CFStringRef kUTTypeM4V = (__bridge CFStringRef)@"com.apple.m4v-video";
 
 static MDFileSupporter *fileSupporterInstance;
 static NSArray *hiddenFileName;
@@ -270,6 +271,11 @@ static NSArray *hiddenFileName;
     if(UTTypeConformsTo(compareUTI, kUTTypeMPEG4))
     {
         //mp4 video
+        controller = [self findAudioVideoController];
+    }
+    else if(UTTypeConformsTo(compareUTI, kUTTypeM4V))
+    {
+        //m4v video
         controller = [self findAudioVideoController];
     }
     else if(UTTypeConformsTo(compareUTI, kUTTypeMP3))
