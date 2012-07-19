@@ -689,6 +689,10 @@ static NSArray *hiddenFileName;
         {
             thumbnailImage = [UIImage imageNamed:@"DocumentIcon"];
         }
+        else
+        {
+            thumbnailImage = [UIImage imageNamed:@"ZipIcon"];
+        }
     }
     else
     {
