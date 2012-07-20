@@ -514,7 +514,7 @@ CGImageRef createGradientImage(CGFloat theHeight)
     //create a update timer if needed
     if(updateTimer == nil)
     {
-        updateTimer = [NSTimer scheduledTimerWithTimeInterval:.01 target:self selector:@selector(updateTimeline) userInfo:nil repeats:YES];
+        updateTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(updateTimeline) userInfo:nil repeats:YES];
         
         //this way can make sure timer can perform it's selector without been blocked
         [[NSRunLoop mainRunLoop] addTimer:updateTimer forMode:NSRunLoopCommonModes];
@@ -604,10 +604,12 @@ CGImageRef createGradientImage(CGFloat theHeight)
 {
     if(canUpdateTimeline)
     {
-        self.timeLineSlider.value = round(musicPlayer.currentTime);
-        
-        [self updateTimeLabels];
-        
+        if(self.timeLineSlider.value != round(musicPlayer.currentTime))
+        {
+            self.timeLineSlider.value = round(musicPlayer.currentTime);
+            
+            [self updateTimeLabels];
+        }
     }
 
     //NSLog(@"total %f", self.timeLineSlider.maximumValue);

@@ -343,10 +343,11 @@
     [avPlayer prepareToPlay];
     [avPlayer play];
     
+    
     //create a update timer if needed
     if(updateTimer == nil)
     {
-        updateTimer = [NSTimer scheduledTimerWithTimeInterval:.01 target:self selector:@selector(updateTimeline) userInfo:nil repeats:YES];
+        updateTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(updateTimeline) userInfo:nil repeats:YES];
         
         //this way can make sure timer can perform it's selector without been blocked
         [[NSRunLoop mainRunLoop] addTimer:updateTimer forMode:NSRunLoopCommonModes];
@@ -354,6 +355,7 @@
     
     //start timer
     [updateTimer fire];
+     
 }
 
 -(void)pause
@@ -382,8 +384,12 @@
 {
     if(canUpdateTimeline)
     {
-        self.timeLineSlider.value = round(avPlayer.currentPlaybackTime);
-        [self updateTimeLabels];
+        if(self.timeLineSlider.value != round(avPlayer.currentPlaybackTime))
+        {
+            self.timeLineSlider.value = round(avPlayer.currentPlaybackTime);
+            [self updateTimeLabels];
+        }
+
         
     }
     
