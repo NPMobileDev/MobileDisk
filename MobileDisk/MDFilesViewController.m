@@ -443,9 +443,9 @@ const float ToolBarAnimationDuration = 0.1f;
             }
             else
             {
-                NSString *msg = [NSString stringWithFormat:NSLocalizedString(@"The file \"%@\" does not supported to open in this app", @"The file \"%@\" does not supported to open in this app"), file.fileName];
+                NSString *msg = [NSString stringWithFormat:NSLocalizedString(@"The file \"%@\" can not be opened in this app", @"The file \"%@\" can not be opened in this app"), file.fileName];
                 
-                UIAlertView *notSupportAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Not support", @"Not support") message:msg delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles: nil];
+                UIAlertView *notSupportAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Open file", @"Open file") message:msg delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles: nil];
                 
                 [notSupportAlert show];
             }
@@ -896,7 +896,7 @@ const float ToolBarAnimationDuration = 0.1f;
 -(void)AddFolderInputNameWasEmpty:(MDAddFolderAlertView *)object
 {
     //check if text field's text is empty
-    UIAlertView *addFolderinvaildAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", @"Error") message:NSLocalizedString(@"You have to give a name for a new folder", @"You have to give a name for a new folder") delegate:nil cancelButtonTitle:nil otherButtonTitles:NSLocalizedString(@"OK", @"OK"), nil];
+    UIAlertView *addFolderinvaildAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", @"Error") message:NSLocalizedString(@"You have to give a name for new folder", @"You have to give a name for new folder") delegate:nil cancelButtonTitle:nil otherButtonTitles:NSLocalizedString(@"OK", @"OK"), nil];
     
     [addFolderinvaildAlert show];
     
