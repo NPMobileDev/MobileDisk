@@ -19,5 +19,7 @@
 @property (strong, nonatomic) UIWindow *window;
 
 +(NSString *)documentDirectory;
++(void)disableIdleTime;
++(void)enableIdleTime;
 
 @end

@@ -16,7 +16,7 @@
 #import "MDForegroundViewController.h"
 
 
-
+static int idleTimeCount = 0;
 
 @implementation MobileDiskAppDelegate{
     
@@ -26,6 +26,25 @@
 
 
 @synthesize window = _window;
+
+#pragma enable/disable idle time
++(void)disableIdleTime
+{
+    idleTimeCount++;
+    
+    [UIApplication sharedApplication].idleTimerDisabled = YES;
+}
+
++(void)enableIdleTime
+{
+    idleTimeCount--;
+    
+    if(idleTimeCount == 0)
+    {
+        [UIApplication sharedApplication].idleTimerDisabled = NO;
+    }
+    
+}
 
 #pragma mark - Configure http server
 -(void)configureHttpServer

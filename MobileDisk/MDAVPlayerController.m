@@ -199,7 +199,7 @@
     [self.loadingIndicator startAnimating];
     
     //dont sleep
-    [UIApplication sharedApplication].idleTimerDisabled = YES;
+    [MobileDiskAppDelegate disableIdleTime];
 }
 
 - (void)viewDidUnload
@@ -640,7 +640,7 @@
     [[UIApplication sharedApplication] setStatusBarHidden:NO];
     
     //can sleep
-    [UIApplication sharedApplication].idleTimerDisabled = NO;
+    [MobileDiskAppDelegate enableIdleTime];
     
     [self dismissModalViewControllerAnimated:YES];
 }

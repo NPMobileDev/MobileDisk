@@ -13,6 +13,7 @@
 #import "HTTPServer.h"
 #import "GCDAsyncSocket.h"
 #import "MDFileSupporter.h"
+#import "MobileDiskAppDelegate.h"
 
 @interface MDHTTPConnection ()
 
@@ -81,7 +82,7 @@
 	// Override me to allocate buffers, file handles, etc.
     
     //dont go to sleep
-    [UIApplication sharedApplication].idleTimerDisabled = YES;
+    [MobileDiskAppDelegate disableIdleTime];
     
     NSLog(@"body size:%llu", contentLength);
     
@@ -251,7 +252,7 @@
     NSLog(@"finish body");
     
     //can go to sleep
-    [UIApplication sharedApplication].idleTimerDisabled = NO;
+    [MobileDiskAppDelegate enableIdleTime];
 }
 
 

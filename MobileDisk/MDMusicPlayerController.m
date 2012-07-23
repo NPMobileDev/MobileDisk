@@ -14,6 +14,7 @@
 #import "MobileDiskAppDelegate.h"
 
 
+
 @interface MDMusicPlayerController ()
 
 @property (nonatomic, weak) IBOutlet UISlider *timeLineSlider;
@@ -223,8 +224,7 @@
     wasEnterBackground= NO;
     
     //dont sleep
-    [UIApplication sharedApplication].idleTimerDisabled = YES;
-
+    [MobileDiskAppDelegate disableIdleTime];
 }
 
 - (void)viewDidUnload
@@ -669,7 +669,7 @@ CGImageRef createGradientImage(CGFloat theHeight)
     musicPlayer = nil;
     
     //can go to sleep
-    [UIApplication sharedApplication].idleTimerDisabled = NO;
+    [MobileDiskAppDelegate enableIdleTime];
     
     [self dismissModalViewControllerAnimated:YES];
 }

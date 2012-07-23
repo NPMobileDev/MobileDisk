@@ -91,7 +91,7 @@
 -(void)doUnarchiveToPath:(NSString *)unarchivePath
 {
     //dont sleep
-    [UIApplication sharedApplication].idleTimerDisabled = YES;
+    [MobileDiskAppDelegate disableIdleTime];
     
     //archive file location to string
     NSString *pathOfArchive = [self.archiveFilePath path];
@@ -125,7 +125,7 @@
 -(void)unarchiveFinished
 {
     //can sleep
-    [UIApplication sharedApplication].idleTimerDisabled = NO;
+    [MobileDiskAppDelegate enableIdleTime];
     
     [progressView dismiss];
     [self dismissViewControllerAnimated:YES completion:nil];
