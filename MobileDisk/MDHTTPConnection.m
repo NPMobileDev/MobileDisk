@@ -396,7 +396,7 @@
     [htmlStrCode appendString:@"<style>html {background-color:#eeeeee} body { background-color:#FFFFFF; font-family:Tahoma,Arial,Helvetica,sans-serif; font-size:18x; margin-left:15%; margin-right:15%; border:3px groove #006600; padding:15px; } </style>"];
     [htmlStrCode appendString:@"</head><body>"];
     [htmlStrCode appendFormat:@"<h1>Files from %@</h1>", [config server].name];
-    [htmlStrCode appendString:@"<bq>The following files are hosted live from the iPhone's Docs folder.</bq>"];
+    //[htmlStrCode appendString:@"<bq>The following files are hosted live from the iPhone's Docs folder.</bq>"];
     [htmlStrCode appendString:@"<p>"];
     
     //We dont show root and back if we are in root
