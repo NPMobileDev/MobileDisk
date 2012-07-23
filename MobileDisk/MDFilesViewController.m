@@ -207,6 +207,7 @@ const float ToolBarAnimationDuration = 0.1f;
         return NO;
     }
     
+    [self becomeFirstResponder];
     
     MDFiles *file = [filesArray objectAtIndex:indexPath.row];
     
