@@ -361,7 +361,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     NSString *ipStr = nil;
     NSString *httpAddress;
     
-    /*
+
     for(int i=0; i<4 ; i++)
     {
         ipStr = [IPs objectForKey:[NSString stringWithFormat:@"en%i", i]];
@@ -371,17 +371,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
             break;
         }
     }
-     */
-    
-    int i =0;
-    
-    do {
-        
-        ipStr = [IPs objectForKey:[NSString stringWithFormat:@"en%i", i]];
-        
-        i++;
-        
-    } while (ipStr == nil);
+
     
     if(ipStr != nil)
     {
