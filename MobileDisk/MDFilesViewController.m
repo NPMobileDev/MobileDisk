@@ -202,6 +202,12 @@ const float ToolBarAnimationDuration = 0.1f;
     //get row index by touch point
     NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:touchPoint];
     
+    if(indexPath == nil)
+    {
+        return NO;
+    }
+    
+    
     MDFiles *file = [filesArray objectAtIndex:indexPath.row];
     
     //create UIMenuItem
@@ -211,6 +217,7 @@ const float ToolBarAnimationDuration = 0.1f;
     UIMenuController *menu = [UIMenuController sharedMenuController];
     [menu setMenuItems:[NSArray arrayWithObject:menuItem]];
     [menu setTargetRect:CGRectMake(touchPoint.x, touchPoint.y, menu.menuFrame.size.width, menu.menuFrame.size.height) inView:self.tableView];
+
     [menu setMenuVisible:YES animated:YES];
     [menu update];
     
