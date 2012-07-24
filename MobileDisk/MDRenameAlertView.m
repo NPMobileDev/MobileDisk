@@ -52,6 +52,7 @@
         renameFileTextField.placeholder = NSLocalizedString(@"New name", @"New name");
         renameFileTextField.backgroundColor = [UIColor whiteColor];
         renameFileTextField.borderStyle = UITextBorderStyleRoundedRect;
+        renameFileTextField.clearButtonMode = UITextFieldViewModeAlways;
         renameFileTextField.text = nil;
     }
     

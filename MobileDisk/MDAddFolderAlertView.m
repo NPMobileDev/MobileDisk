@@ -49,6 +49,7 @@
         newFolderNameTextField.placeholder = NSLocalizedString(@"Folder name", @"Folder name");
         newFolderNameTextField.backgroundColor = [UIColor whiteColor];
         newFolderNameTextField.borderStyle = UITextBorderStyleRoundedRect;
+        newFolderNameTextField.clearButtonMode = UITextFieldViewModeAlways;
         newFolderNameTextField.text = nil;
     }
     
