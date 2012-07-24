@@ -619,6 +619,39 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     {
         NSError *serverError;
         
+        //find available port
+        int port = kHttpServerPort;
+        
+        while (YES) {
+            
+            [self.httpServer stop];
+            [self.httpServer setPort:port];
+            
+            if([self.httpServer start:&serverError])
+            {
+                //port available
+                break;
+            }
+            else
+            {
+                if([serverError.domain isEqualToString:NSPOSIXErrorDomain] && serverError.code == 48)
+                {
+                    //address in used
+                    port++;
+                }
+                else
+                {
+                    //other error
+                    break;
+                }
+            }
+        }
+        
+        [self.httpServer stop];
+        
+        [self performSelector:@selector(startServer) withObject:nil afterDelay:0.1];
+    
+        /*
         //check if http server is already started
         if([self.httpServer isRunning])
         {
@@ -641,7 +674,13 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
             
             DDLogError(@"Error starting HTTP Server: %@", serverError);
             
+            NSString *msg = NSLocalizedString(@"Unable to start http server", @"Unable to start http server");
+            
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", @"Error") message:msg delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil];
+            
+            [alert show];
         }
+         */
     }
     else
     {
@@ -652,6 +691,39 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
         
         //reload table section
         [self reloadTableViewSection:0 WithAnimation:YES];
+    }
+}
+
+-(void)startServer
+{
+    NSError *serverError;
+    //check if http server is already started
+    if([self.httpServer isRunning])
+    {
+        //stop it first
+        [self.httpServer stop];
+    }
+    
+    //start http server
+    if([self.httpServer start:&serverError])
+    {
+        httpServerON = YES;
+        
+        DDLogInfo(@"Started HTTP Server on port %hu", [self.httpServer listeningPort]);
+        
+        [self resolveIPAddress];
+    }
+    else
+    {
+        httpServerON = NO;
+        
+        DDLogError(@"Error starting HTTP Server: %@", serverError);
+        
+        NSString *msg = NSLocalizedString(@"Unable to start http server", @"Unable to start http server");
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", @"Error") message:msg delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil];
+        
+        [alert show];
     }
 }
 
