@@ -760,7 +760,16 @@ const float ToolBarAnimationDuration = 0.1f;
 
 -(void)renameFiles
 {
+    //new file name without extension
+    NSIndexPath *selectedIndex = [selectedIndexPaths lastObject];
+    MDFiles *file = [filesArray objectAtIndex:selectedIndex.row];
+    NSString *extension = [[file.fileName componentsSeparatedByString:@"."] lastObject];
+    extension = [NSString stringWithFormat:@".%@", extension];
+    NSArray *spliteString = [file.fileName componentsSeparatedByString:extension];
+    NSString *filename = [spliteString objectAtIndex:0];
+    
     MDRenameAlertView *action = [[MDRenameAlertView alloc] initAlertViewWithDelegate:self];
+    [action setOriginalFilename:filename];
     [action showAlertView];
     
     currentAction = action;
@@ -941,7 +950,16 @@ const float ToolBarAnimationDuration = 0.1f;
 
 -(void)MDRenameAlertView:(MDRenameAlertView *)object didInputNameWithName:(NSString *)inputName
 {
+    //find extension
+    NSIndexPath *selectedIndex = [selectedIndexPaths lastObject];
+    MDFiles *file = [filesArray objectAtIndex:selectedIndex.row];
+    NSString *extension = [file.fileName pathExtension];
+    
+    if(![extension isEqualToString:@""])
+        extension = [NSString stringWithFormat:@".%@", extension];
+    
     NSString *checkedFilePath = [self.workingPath stringByAppendingPathComponent:inputName];
+    checkedFilePath = [checkedFilePath stringByAppendingString:extension];
     
     //check if name has been used 
     if([[NSFileManager defaultManager] fileExistsAtPath:checkedFilePath])

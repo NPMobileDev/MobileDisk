@@ -19,6 +19,8 @@
 
 @interface MDRenameAlertView : NSObject<UIAlertViewDelegate>
 
+@property (nonatomic, copy, setter = setOriginalFilename:) NSString *originalFilename;
+
 -(id)initAlertViewWithDelegate:(id<MDRenameAlertViewDelegate>)theDelegate;
 -(void)showAlertView;
 

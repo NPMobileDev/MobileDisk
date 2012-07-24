@@ -24,6 +24,8 @@
     UITextField *renameFileTextField;
 }
 
+@synthesize originalFilename = _originalFilename;
+
 -(id)initAlertViewWithDelegate:(id<MDRenameAlertViewDelegate>)theDelegate
 {
     if((self = [super init]))
@@ -38,6 +40,7 @@
 
 -(void)dealloc
 {
+    self.originalFilename = nil;
     NSLog(@"MDRenameAlertView dealloc");
 }
 
@@ -83,6 +86,13 @@
             [delegate MDRenameAlertView:self didInputNameWithName:renameFileTextField.text];
         }
     }
+}
+
+#pragma mark - setter
+-(void)setOriginalFilename:(NSString *)filename
+{
+    _originalFilename = filename;
+    renameFileTextField.text = _originalFilename;
 }
 
 @end
