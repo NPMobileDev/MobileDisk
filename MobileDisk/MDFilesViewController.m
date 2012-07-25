@@ -10,6 +10,7 @@
 #import "MDFiles.h"
 #import "MDFilesTableViewCell.h"
 #import "MDFileSupporter.h"
+#import "MDDeletingViewController.h"
 
 
 @interface MDFilesViewController ()
@@ -46,7 +47,7 @@ const float ToolBarAnimationDuration = 0.1f;
     id currentAction;
     
     //the content in current directory
-    NSMutableArray *filesArray;
+    __block NSMutableArray *filesArray;
     
     //store selected indexpath
     NSMutableArray *selectedIndexPaths;
@@ -58,6 +59,8 @@ const float ToolBarAnimationDuration = 0.1f;
     BOOL isMovingFiles;
     
     MDFileSupporter *fileSupporter;
+    
+    MDDeletingViewController *deletingController;
 
 }
 
@@ -987,6 +990,40 @@ const float ToolBarAnimationDuration = 0.1f;
     //check if there at least one file selected 
     if([selectedIndexPaths count] != 0)
     {
+        __block NSArray *indexPaths = [selectedIndexPaths copy];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(RemoveItemComplete:) name:@"RemoveItemComplete" object:nil];
+        
+        deletingController = [self.storyboard instantiateViewControllerWithIdentifier:@"MDDeletingViewController"];
+        
+        [self presentViewController:deletingController animated:NO completion:nil];
+        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+            //go through each selected IndexPath
+            for(NSIndexPath *indexPath in indexPaths)
+            {
+                NSError *error;
+                
+                MDFiles *file = [filesArray objectAtIndex:indexPath.row];
+                
+
+                //delete file
+                [[NSFileManager defaultManager] removeItemAtPath:file.filePath error:&error];
+
+                
+                if(error != nil)
+                {
+                    NSLog(@"There is an error %@ while deleting file at path %@", error, file.filePath);
+                }
+            }
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"RemoveItemComplete" object:nil];
+            
+        });
+        
+        
+        /*
         //go through each selected IndexPath
         for(NSIndexPath *indexPath in selectedIndexPaths)
         {
@@ -1005,13 +1042,29 @@ const float ToolBarAnimationDuration = 0.1f;
         
         //clrear selected IndexPaths
         [selectedIndexPaths removeAllObjects];
+         */
+         
     }
     else
     {
         NSLog(@"no selected file IndexPath to perform delete action");
     }
     
-    [self reloadTableViewData];
+    //[self reloadTableViewData];
+}
+
+-(void)RemoveItemComplete:(NSNotification*)notification
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RemoveItemComplete" object:nil];
+    
+    //clrear selected IndexPaths
+    [selectedIndexPaths removeAllObjects];
+    
+    [deletingController dismissViewControllerAnimated:NO completion:nil];
+    
+    deletingController = nil;
+    
+    //[self reloadTableViewData];
 }
 
 -(void)doDeselectAll
