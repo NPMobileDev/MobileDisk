@@ -204,8 +204,6 @@ static NSArray *hiddenFileName;
     
     NSLog(@"declare info:%@", declareInfo);
     NSLog(@"conform types:%@", conformType);
-
-    
     
     if (UTTypeConformsTo(compareUTI, kUTTypeImage)) 
     {

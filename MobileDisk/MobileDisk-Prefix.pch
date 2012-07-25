@@ -14,6 +14,12 @@
     #import <dispatch/dispatch.h>
 #endif
 
+#ifdef DEBUG
+#define NSLog( s, ... ) NSLog( @"<%p %@:(%d)(%s)> %@", self, [[NSString stringWithUTF8String:__FILE__] lastPathComponent], __LINE__, __FUNCTION__, [NSString stringWithFormat:(s), ##__VA_ARGS__] )
+#else
+#define NSLog( s, ... ) 
+#endif
+
 #ifndef MD_Custom_Notification
     #define kResolveIPNotification @"ResolveIPNotification"
 #endif
