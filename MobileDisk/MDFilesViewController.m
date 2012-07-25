@@ -11,6 +11,7 @@
 #import "MDFilesTableViewCell.h"
 #import "MDFileSupporter.h"
 #import "MDDeletingViewController.h"
+#import "MobileDiskAppDelegate.h"
 
 
 @interface MDFilesViewController ()
@@ -990,6 +991,9 @@ const float ToolBarAnimationDuration = 0.1f;
     //check if there at least one file selected 
     if([selectedIndexPaths count] != 0)
     {
+        //dont sleep
+        [MobileDiskAppDelegate disableIdleTime];
+        
         __block NSArray *indexPaths = [selectedIndexPaths copy];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(RemoveItemComplete:) name:@"RemoveItemComplete" object:nil];
@@ -1055,6 +1059,9 @@ const float ToolBarAnimationDuration = 0.1f;
 
 -(void)RemoveItemComplete:(NSNotification*)notification
 {
+    //can sleep
+    [MobileDiskAppDelegate enableIdleTime];
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RemoveItemComplete" object:nil];
     
     //clrear selected IndexPaths
