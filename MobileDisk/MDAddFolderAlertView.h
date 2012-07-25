@@ -18,7 +18,7 @@
 @end
 
 
-@interface MDAddFolderAlertView : NSObject<UIAlertViewDelegate>
+@interface MDAddFolderAlertView : NSObject<UIAlertViewDelegate, UITextFieldDelegate>
 
 -(id)initAlertViewWithDelegate:(id<MDAddFolderAlertViewDelegate>)theDelegate;
 -(void)showAlertView;

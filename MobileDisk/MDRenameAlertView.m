@@ -53,7 +53,9 @@
         renameFileTextField.backgroundColor = [UIColor whiteColor];
         renameFileTextField.borderStyle = UITextBorderStyleRoundedRect;
         renameFileTextField.clearButtonMode = UITextFieldViewModeAlways;
+        renameFileTextField.returnKeyType = UIReturnKeyDone;
         renameFileTextField.text = nil;
+        renameFileTextField.delegate = self;
     }
     
     //use alert view to let user to type in new name
@@ -69,6 +71,14 @@
     [theAlertView show];
     
     [renameFileTextField becomeFirstResponder];
+}
+
+#pragma mark - UITextField delegate
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [theAlertView dismissWithClickedButtonIndex:1 animated:YES];
+    
+    return NO;
 }
 
 #pragma mark - UIAlertView delegate

@@ -50,7 +50,9 @@
         newFolderNameTextField.backgroundColor = [UIColor whiteColor];
         newFolderNameTextField.borderStyle = UITextBorderStyleRoundedRect;
         newFolderNameTextField.clearButtonMode = UITextFieldViewModeAlways;
+        newFolderNameTextField.returnKeyType = UIReturnKeyDone;
         newFolderNameTextField.text = nil;
+        newFolderNameTextField.delegate = self;
     }
     
     //use alert view to let user to type in folder name
@@ -66,6 +68,14 @@
     [theAlertView show];
     
     [newFolderNameTextField becomeFirstResponder];
+}
+
+#pragma mark - UITextField delegate
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [theAlertView dismissWithClickedButtonIndex:1 animated:YES];
+    
+    return NO;
 }
 
 #pragma mark - UIAlertView delegate
