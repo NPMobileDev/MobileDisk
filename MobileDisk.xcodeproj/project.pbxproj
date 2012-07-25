@@ -28,6 +28,12 @@
 		441AB991159C646B00BAAA19 /* MDScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 441AB990159C646B00BAAA19 /* MDScrollView.m */; };
 		441AB99D159C75B600BAAA19 /* MDAVPlayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 441AB99C159C75B600BAAA19 /* MDAVPlayerController.m */; };
 		441AB99F159C766C00BAAA19 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 441AB99E159C766C00BAAA19 /* MediaPlayer.framework */; };
+		441B4F2115C01BB400801A8D /* MDAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 441B4F1615C01BB400801A8D /* MDAction.m */; };
+		441B4F2215C01BB400801A8D /* MDAddFolderAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 441B4F1815C01BB400801A8D /* MDAddFolderAlertView.m */; };
+		441B4F2315C01BB400801A8D /* MDConfirmDeleteAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 441B4F1A15C01BB400801A8D /* MDConfirmDeleteAlertView.m */; };
+		441B4F2415C01BB400801A8D /* MDNonSelectedActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 441B4F1C15C01BB400801A8D /* MDNonSelectedActionSheet.m */; };
+		441B4F2515C01BB400801A8D /* MDRenameAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 441B4F1E15C01BB400801A8D /* MDRenameAlertView.m */; };
+		441B4F2615C01BB400801A8D /* MDSelectedActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 441B4F2015C01BB400801A8D /* MDSelectedActionSheet.m */; };
 		4424E2C115A137A300A430D4 /* MDTimelineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4424E2C015A137A300A430D4 /* MDTimelineView.m */; };
 		4430AA0D15B3B836008E6D2F /* MusicCover.png in Resources */ = {isa = PBXBuildFile; fileRef = 4430AA0B15B3B836008E6D2F /* MusicCover.png */; };
 		4430AA0E15B3B836008E6D2F /* MusicCover@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4430AA0C15B3B836008E6D2F /* MusicCover@2x.png */; };
@@ -64,7 +70,6 @@
 		4440BB621591A9740073BBAA /* MDSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4440BB611591A9740073BBAA /* MDSettingsViewController.m */; };
 		4440BB721591B8360073BBAA /* IPResolver.m in Sources */ = {isa = PBXBuildFile; fileRef = 4440BB711591B8360073BBAA /* IPResolver.m */; };
 		44421C2815A67980002B0F60 /* MDChangePasscodeController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44421C2715A67980002B0F60 /* MDChangePasscodeController.m */; };
-		44421C4115A6C6DE002B0F60 /* MDConfirmDeleteAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 44421C4015A6C6DE002B0F60 /* MDConfirmDeleteAlertView.m */; };
 		44489AB315AA653000FA055D /* TableCellGradient.png in Resources */ = {isa = PBXBuildFile; fileRef = 44489AB215AA653000FA055D /* TableCellGradient.png */; };
 		444904E715BFB71C0088B947 /* MDDeletingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 444904E615BFB71C0088B947 /* MDDeletingViewController.m */; };
 		444FF9D4159AA0770033BB3B /* MobileDiskInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 444FF9D3159AA0770033BB3B /* MobileDiskInfo.plist */; };
@@ -75,10 +80,6 @@
 		44538B00159D4D6200CE7730 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44538AFF159D4D6200CE7730 /* AVFoundation.framework */; };
 		445D13ED1599391300B7D777 /* MDMoveFilesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 445D13EC1599391300B7D777 /* MDMoveFilesViewController.m */; };
 		445D13F115993AAB00B7D777 /* MDMoveFilesNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 445D13F015993AAB00B7D777 /* MDMoveFilesNavigationController.m */; };
-		445D13F81599A7FE00B7D777 /* MDRenameAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 445D13F71599A7FE00B7D777 /* MDRenameAlertView.m */; };
-		445D13FB1599AF1300B7D777 /* MDAddFolderAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 445D13FA1599AF1300B7D777 /* MDAddFolderAlertView.m */; };
-		445D13FE1599B50200B7D777 /* MDNonSelectedActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 445D13FD1599B50200B7D777 /* MDNonSelectedActionSheet.m */; };
-		445D14011599BB4800B7D777 /* MDSelectedActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 445D14001599BB4800B7D777 /* MDSelectedActionSheet.m */; };
 		447CD7EC159C04AE00464D28 /* MDImageViewerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 447CD7EB159C04AE00464D28 /* MDImageViewerController.m */; };
 		447CD7EF159C37A700464D28 /* UIImage+Resize.m in Sources */ = {isa = PBXBuildFile; fileRef = 447CD7EE159C37A700464D28 /* UIImage+Resize.m */; };
 		4494309C158EB4C000ADAE89 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4494309B158EB4C000ADAE89 /* UIKit.framework */; };
@@ -176,6 +177,18 @@
 		441AB99B159C75B600BAAA19 /* MDAVPlayerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDAVPlayerController.h; sourceTree = "<group>"; };
 		441AB99C159C75B600BAAA19 /* MDAVPlayerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDAVPlayerController.m; sourceTree = "<group>"; };
 		441AB99E159C766C00BAAA19 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
+		441B4F1515C01BB400801A8D /* MDAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDAction.h; sourceTree = "<group>"; };
+		441B4F1615C01BB400801A8D /* MDAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDAction.m; sourceTree = "<group>"; };
+		441B4F1715C01BB400801A8D /* MDAddFolderAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDAddFolderAlertView.h; sourceTree = "<group>"; };
+		441B4F1815C01BB400801A8D /* MDAddFolderAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDAddFolderAlertView.m; sourceTree = "<group>"; };
+		441B4F1915C01BB400801A8D /* MDConfirmDeleteAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDConfirmDeleteAlertView.h; sourceTree = "<group>"; };
+		441B4F1A15C01BB400801A8D /* MDConfirmDeleteAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDConfirmDeleteAlertView.m; sourceTree = "<group>"; };
+		441B4F1B15C01BB400801A8D /* MDNonSelectedActionSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDNonSelectedActionSheet.h; sourceTree = "<group>"; };
+		441B4F1C15C01BB400801A8D /* MDNonSelectedActionSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDNonSelectedActionSheet.m; sourceTree = "<group>"; };
+		441B4F1D15C01BB400801A8D /* MDRenameAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDRenameAlertView.h; sourceTree = "<group>"; };
+		441B4F1E15C01BB400801A8D /* MDRenameAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDRenameAlertView.m; sourceTree = "<group>"; };
+		441B4F1F15C01BB400801A8D /* MDSelectedActionSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDSelectedActionSheet.h; sourceTree = "<group>"; };
+		441B4F2015C01BB400801A8D /* MDSelectedActionSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDSelectedActionSheet.m; sourceTree = "<group>"; };
 		4424E2BF15A137A300A430D4 /* MDTimelineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDTimelineView.h; sourceTree = "<group>"; };
 		4424E2C015A137A300A430D4 /* MDTimelineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDTimelineView.m; sourceTree = "<group>"; };
 		4430AA0B15B3B836008E6D2F /* MusicCover.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MusicCover.png; sourceTree = "<group>"; };
@@ -222,8 +235,6 @@
 		4440BB711591B8360073BBAA /* IPResolver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IPResolver.m; sourceTree = "<group>"; };
 		44421C2615A67980002B0F60 /* MDChangePasscodeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDChangePasscodeController.h; sourceTree = "<group>"; };
 		44421C2715A67980002B0F60 /* MDChangePasscodeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDChangePasscodeController.m; sourceTree = "<group>"; };
-		44421C3F15A6C6DE002B0F60 /* MDConfirmDeleteAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDConfirmDeleteAlertView.h; sourceTree = "<group>"; };
-		44421C4015A6C6DE002B0F60 /* MDConfirmDeleteAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDConfirmDeleteAlertView.m; sourceTree = "<group>"; };
 		44489AB215AA653000FA055D /* TableCellGradient.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TableCellGradient.png; sourceTree = "<group>"; };
 		444904E515BFB71C0088B947 /* MDDeletingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MDDeletingViewController.h; path = DeletingHUD/MDDeletingViewController.h; sourceTree = "<group>"; };
 		444904E615BFB71C0088B947 /* MDDeletingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MDDeletingViewController.m; path = DeletingHUD/MDDeletingViewController.m; sourceTree = "<group>"; };
@@ -240,14 +251,6 @@
 		445D13EC1599391300B7D777 /* MDMoveFilesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDMoveFilesViewController.m; sourceTree = "<group>"; };
 		445D13EF15993AAB00B7D777 /* MDMoveFilesNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDMoveFilesNavigationController.h; sourceTree = "<group>"; };
 		445D13F015993AAB00B7D777 /* MDMoveFilesNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDMoveFilesNavigationController.m; sourceTree = "<group>"; };
-		445D13F61599A7FE00B7D777 /* MDRenameAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDRenameAlertView.h; sourceTree = "<group>"; };
-		445D13F71599A7FE00B7D777 /* MDRenameAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDRenameAlertView.m; sourceTree = "<group>"; };
-		445D13F91599AF1300B7D777 /* MDAddFolderAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDAddFolderAlertView.h; sourceTree = "<group>"; };
-		445D13FA1599AF1300B7D777 /* MDAddFolderAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDAddFolderAlertView.m; sourceTree = "<group>"; };
-		445D13FC1599B50200B7D777 /* MDNonSelectedActionSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDNonSelectedActionSheet.h; sourceTree = "<group>"; };
-		445D13FD1599B50200B7D777 /* MDNonSelectedActionSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDNonSelectedActionSheet.m; sourceTree = "<group>"; };
-		445D13FF1599BB4800B7D777 /* MDSelectedActionSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDSelectedActionSheet.h; sourceTree = "<group>"; };
-		445D14001599BB4800B7D777 /* MDSelectedActionSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDSelectedActionSheet.m; sourceTree = "<group>"; };
 		447CD7EA159C04AE00464D28 /* MDImageViewerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDImageViewerController.h; sourceTree = "<group>"; };
 		447CD7EB159C04AE00464D28 /* MDImageViewerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDImageViewerController.m; sourceTree = "<group>"; };
 		447CD7ED159C37A700464D28 /* UIImage+Resize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Resize.h"; sourceTree = "<group>"; };
@@ -468,6 +471,25 @@
 				441AB99C159C75B600BAAA19 /* MDAVPlayerController.m */,
 			);
 			name = AVPlayer;
+			sourceTree = "<group>";
+		};
+		441B4F1415C01BB400801A8D /* Actions */ = {
+			isa = PBXGroup;
+			children = (
+				441B4F1515C01BB400801A8D /* MDAction.h */,
+				441B4F1615C01BB400801A8D /* MDAction.m */,
+				441B4F1715C01BB400801A8D /* MDAddFolderAlertView.h */,
+				441B4F1815C01BB400801A8D /* MDAddFolderAlertView.m */,
+				441B4F1915C01BB400801A8D /* MDConfirmDeleteAlertView.h */,
+				441B4F1A15C01BB400801A8D /* MDConfirmDeleteAlertView.m */,
+				441B4F1B15C01BB400801A8D /* MDNonSelectedActionSheet.h */,
+				441B4F1C15C01BB400801A8D /* MDNonSelectedActionSheet.m */,
+				441B4F1D15C01BB400801A8D /* MDRenameAlertView.h */,
+				441B4F1E15C01BB400801A8D /* MDRenameAlertView.m */,
+				441B4F1F15C01BB400801A8D /* MDSelectedActionSheet.h */,
+				441B4F2015C01BB400801A8D /* MDSelectedActionSheet.m */,
+			);
+			path = Actions;
 			sourceTree = "<group>";
 		};
 		4430AA0A15B3B836008E6D2F /* MusicCover */ = {
@@ -694,23 +716,6 @@
 			name = MusicPlayer;
 			sourceTree = "<group>";
 		};
-		445D13F21599A75A00B7D777 /* Actions */ = {
-			isa = PBXGroup;
-			children = (
-				445D13F61599A7FE00B7D777 /* MDRenameAlertView.h */,
-				445D13F71599A7FE00B7D777 /* MDRenameAlertView.m */,
-				445D13F91599AF1300B7D777 /* MDAddFolderAlertView.h */,
-				445D13FA1599AF1300B7D777 /* MDAddFolderAlertView.m */,
-				445D13FC1599B50200B7D777 /* MDNonSelectedActionSheet.h */,
-				445D13FD1599B50200B7D777 /* MDNonSelectedActionSheet.m */,
-				445D13FF1599BB4800B7D777 /* MDSelectedActionSheet.h */,
-				445D14001599BB4800B7D777 /* MDSelectedActionSheet.m */,
-				44421C3F15A6C6DE002B0F60 /* MDConfirmDeleteAlertView.h */,
-				44421C4015A6C6DE002B0F60 /* MDConfirmDeleteAlertView.m */,
-			);
-			name = Actions;
-			sourceTree = "<group>";
-		};
 		447CD7E8159C047600464D28 /* ImageViewer */ = {
 			isa = PBXGroup;
 			children = (
@@ -763,6 +768,7 @@
 				44489AB015AA650900FA055D /* Images */,
 				4416082815A29F4C00770FF5 /* ThirdLib */,
 				44354DF815A5727C00BFE4E4 /* Passcode */,
+				441B4F1415C01BB400801A8D /* Actions */,
 				444904E315BFB6B00088B947 /* DeletingHUD */,
 				4416083B15A335B300770FF5 /* ProgressHUD */,
 				4416082415A29EF900770FF5 /* UnzipView */,
@@ -771,7 +777,6 @@
 				447CD7E8159C047600464D28 /* ImageViewer */,
 				444FF9E0159B2BCD0033BB3B /* DocumentViewer */,
 				444FF9D7159AD4200033BB3B /* FileSupporter */,
-				445D13F21599A75A00B7D777 /* Actions */,
 				443ACDFE1592EF76008B4DF2 /* Files */,
 				4440BB5E1591A9190073BBAA /* Settings */,
 				449430AA158EB4C000ADAE89 /* MobileDiskAppDelegate.h */,
@@ -1158,10 +1163,6 @@
 				443D004C159410CD008CCCBE /* MDFilesTableViewCell.m in Sources */,
 				445D13ED1599391300B7D777 /* MDMoveFilesViewController.m in Sources */,
 				445D13F115993AAB00B7D777 /* MDMoveFilesNavigationController.m in Sources */,
-				445D13F81599A7FE00B7D777 /* MDRenameAlertView.m in Sources */,
-				445D13FB1599AF1300B7D777 /* MDAddFolderAlertView.m in Sources */,
-				445D13FE1599B50200B7D777 /* MDNonSelectedActionSheet.m in Sources */,
-				445D14011599BB4800B7D777 /* MDSelectedActionSheet.m in Sources */,
 				444FF9DA159AD45F0033BB3B /* MDFileSupporter.m in Sources */,
 				444FF9E3159B2BF70033BB3B /* MDDocumentViewController.m in Sources */,
 				447CD7EC159C04AE00464D28 /* MDImageViewerController.m in Sources */,
@@ -1181,9 +1182,14 @@
 				4438B40215A3E0F400248C72 /* MDProgressGradientView.m in Sources */,
 				44354DFE15A572FB00BFE4E4 /* MDPasscodeViewController.m in Sources */,
 				44421C2815A67980002B0F60 /* MDChangePasscodeController.m in Sources */,
-				44421C4115A6C6DE002B0F60 /* MDConfirmDeleteAlertView.m in Sources */,
 				4409B01015AFBF76009F9DCE /* MDForegroundViewController.m in Sources */,
 				444904E715BFB71C0088B947 /* MDDeletingViewController.m in Sources */,
+				441B4F2115C01BB400801A8D /* MDAction.m in Sources */,
+				441B4F2215C01BB400801A8D /* MDAddFolderAlertView.m in Sources */,
+				441B4F2315C01BB400801A8D /* MDConfirmDeleteAlertView.m in Sources */,
+				441B4F2415C01BB400801A8D /* MDNonSelectedActionSheet.m in Sources */,
+				441B4F2515C01BB400801A8D /* MDRenameAlertView.m in Sources */,
+				441B4F2615C01BB400801A8D /* MDSelectedActionSheet.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

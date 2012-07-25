@@ -12,6 +12,7 @@
 #import "MDFileSupporter.h"
 #import "MDDeletingViewController.h"
 #import "MobileDiskAppDelegate.h"
+#import "MDAction.h"
 
 
 @interface MDFilesViewController ()
@@ -86,6 +87,8 @@ const float ToolBarAnimationDuration = 0.1f;
 {
     self.workingPath = nil;
     self.controllerTitle = nil;
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -174,6 +177,8 @@ const float ToolBarAnimationDuration = 0.1f;
     
     [self.tableView addGestureRecognizer:longPress];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(enterbackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
+    
 }
 
 - (void)viewDidUnload
@@ -196,6 +201,32 @@ const float ToolBarAnimationDuration = 0.1f;
 -(BOOL)canBecomeFirstResponder
 {
     return YES;
+}
+
+#pragma mark - Enter Background notification
+-(void)enterbackground:(NSNotification*)notification
+{
+    if(currentAction != nil)
+    {
+        MDAction * theAction = currentAction;
+        
+        if([[theAction.theUIAction class] isSubclassOfClass:[UIAlertView class]])
+        {
+            UIAlertView *alert = theAction.theUIAction;
+            
+            [alert dismissWithClickedButtonIndex:alert.cancelButtonIndex animated:NO];
+            
+            currentAction = nil;
+        }
+        else if([[theAction.theUIAction class] isSubclassOfClass:[UIActionSheet class]])
+        {
+            UIActionSheet *actionSheet = theAction.theUIAction;
+            
+            [actionSheet dismissWithClickedButtonIndex:actionSheet.cancelButtonIndex animated:NO];
+            
+            currentAction = nil;
+        }
+    }
 }
 
 #pragma mark - Long press gesture delegate
