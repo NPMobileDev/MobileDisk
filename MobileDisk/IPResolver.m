@@ -54,8 +54,12 @@
                     [ip appendFormat:@"%d", base[i]];
                 }
                 
-                //add to dictionary
-                [resultIP setObject:(NSString*)ip forKey:[NSString stringWithFormat:@"%s", cursor->ifa_name]];
+                //add to dictionary if it is wifi
+                if([[NSString stringWithUTF8String:cursor->ifa_name] isEqualToString:@"en0"])
+                {
+                    [resultIP setObject:(NSString*)ip forKey:[NSString stringWithFormat:@"%s", cursor->ifa_name]];                    
+                }
+
             }
             
             //change current pointer to next ifaddrs

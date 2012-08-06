@@ -362,16 +362,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     NSString *httpAddress;
     
 
-    for(int i=0; i<4 ; i++)
-    {
-        ipStr = [IPs objectForKey:[NSString stringWithFormat:@"en%i", i]];
-        
-        if(ipStr != nil)
-        {
-            break;
-        }
-    }
-
+    ipStr = [IPs objectForKey:@"en0"];
     
     if(ipStr != nil)
     {
