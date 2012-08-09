@@ -13,6 +13,7 @@
 #define sysPasscodeStatus @"PasscodeStatus"
 #define sysPasscodeNumber @"PasscodeNumber"
 #define sysApplicationEnterForeground @"ApplicationEnterForeground"
+#define sysLicenseAgree @"AppLicenseAgreement"
 
 @interface MobileDiskAppDelegate : UIResponder <UIApplicationDelegate, MDPasscodeViewControllerDelegate>
 

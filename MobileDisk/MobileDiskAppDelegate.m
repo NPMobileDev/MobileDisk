@@ -103,7 +103,7 @@ static int idleTimeCount = 0;
 
 -(void)registerUserDefaults
 {
-    NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], sysGenerateThumbnail, [NSNumber numberWithBool:NO], sysPasscodeStatus, @"-1", sysPasscodeNumber, nil];
+    NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], sysGenerateThumbnail, [NSNumber numberWithBool:NO], sysPasscodeStatus, @"-1", sysPasscodeNumber, [NSNumber numberWithBool:NO], sysLicenseAgree, nil];
     
     [[NSUserDefaults standardUserDefaults] registerDefaults:dic];
 }

@@ -95,6 +95,18 @@ const float ToolBarAnimationDuration = 0.1f;
 {
     [super viewWillAppear:animated];
     
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSNumber *boolNumber = [userDefaults objectForKey:sysLicenseAgree];
+    BOOL licenseAgreement = [boolNumber boolValue];
+    
+    if(licenseAgreement == NO)
+    {
+        //show license agreement
+        UIViewController *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"MDLicenseAgreementViewController"];
+        
+        [self presentViewController:controller animated:YES completion:nil];
+    }
+    
     //self.title = self.controllerTitle;
     
     [self reloadTableViewData];
