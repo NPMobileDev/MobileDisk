@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MDUnarchiveViewController : UITableViewController
+@interface MDUnarchiveViewController : UIViewController<UITableViewDataSource, UITableViewDelegate>
 
 @property (nonatomic, copy) NSString *workingPath;
 @property (nonatomic, copy) NSString *controllerTitle;

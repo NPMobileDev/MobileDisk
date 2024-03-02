@@ -38,6 +38,10 @@
 -(void)doMoveFiles:(NSArray *)filesToMove ToDestinationPath:(NSString *)destPath;
 -(void)prepareNavigationBarButtonsForEditTable;
 -(void)prepareNavigationBarButtonsForDoneEditingTable;
+-(void)prepareNavigationBarButtonsForBeginSearch;// add 8/27/2012
+-(void)prepareNavigationBarButtonsForEndSearch;// add 8/27/2012
+-(void)clearSelectedItem;//add 8/27/2012
+-(NSArray*)getNumberOfImageForPreview;//add 9/12/2012
 
 @end
 
@@ -63,7 +67,28 @@ const float ToolBarAnimationDuration = 0.1f;
     MDFileSupporter *fileSupporter;
     
     MDDeletingViewController *deletingController;
-
+    
+    //search bar 8/27/2012
+    UISearchBar *theSearchBar;
+    
+    //search keyword, preserved last search keyword 8/27/2012
+    NSString *searchKeyword;
+    
+    /**image view controller **/
+    //for image viewer 9/12/2012
+    //store the path to image
+    NSArray *numberOfImageToPreview;
+    NSString *beginShowImagePath;
+    
+    //UIDocumentInteractionController for open file in other app
+    //9/14/2012
+    UIDocumentInteractionController *docController;
+    
+    //9/14/2012 hold index of file that user tap on
+    NSInteger openFileIndex;
+    
+    //9/18/2012
+    NSString *copyedFileName;
 }
 
 @synthesize workingPath = _workingPath;
@@ -89,6 +114,9 @@ const float ToolBarAnimationDuration = 0.1f;
     self.controllerTitle = nil;
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
+    
+    //9/28/2012
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIMenuControllerWillHideMenuNotification object:nil];
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -107,7 +135,9 @@ const float ToolBarAnimationDuration = 0.1f;
         [self presentViewController:controller animated:YES completion:nil];
     }
     
+    
     //self.title = self.controllerTitle;
+    
     
     [self reloadTableViewData];
 }
@@ -124,6 +154,13 @@ const float ToolBarAnimationDuration = 0.1f;
      When viewDidAppear new navigation item is already added
      **/
     [self customizedNavigationBar];
+    
+    //**9/20/2012 4inch**//
+    if(toolbar)
+        toolbar = nil;
+    
+    [self createToolBar];
+    //**9/20/2012 4inch**//
     
     /**
      we add tool bar to view here because we want it to be on this view controller
@@ -181,8 +218,18 @@ const float ToolBarAnimationDuration = 0.1f;
     
     fileSupporter = [MDFileSupporter sharedFileSupporter];
     
+    //add search bar 8/27/2012
+    NSString *searchPlaceholder = NSLocalizedString(@"keyword or left blank to display all", @"keyword or left blank to display all");
+    theSearchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
+    theSearchBar.autocapitalizationType = UITextAutocapitalizationTypeSentences;
+    theSearchBar.autocorrectionType = UITextAutocorrectionTypeNo;
+    theSearchBar.placeholder = searchPlaceholder;
+    theSearchBar.delegate = self;
+    self.tableView.tableHeaderView = theSearchBar;
+    
+    //**9/20/2012 4inch**//
     //create tool bar
-    [self createToolBar];
+    //[self createToolBar];
     
     UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] init];
     [longPress setDelegate:self];
@@ -190,6 +237,9 @@ const float ToolBarAnimationDuration = 0.1f;
     [self.tableView addGestureRecognizer:longPress];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(enterbackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
+    
+    //9/18/2012
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uiMenuControllerWillHide:) name:UIMenuControllerWillHideMenuNotification object:nil];
     
 }
 
@@ -202,6 +252,9 @@ const float ToolBarAnimationDuration = 0.1f;
     filesArray = nil;
     toolbar =nil;
     currentAction = nil;
+    
+    //search bar 8/27/2012
+    theSearchBar = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -209,10 +262,128 @@ const float ToolBarAnimationDuration = 0.1f;
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
+//**9/20/2012 4inch**//
+- (NSUInteger)supportedInterfaceOrientations
+{
+    return UIInterfaceOrientationMaskAllButUpsideDown;
+}
+
+//**9/20/2012 4inch**//
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
+{
+    UIInterfaceOrientation orientation = [UIDevice currentDevice].orientation;
+    
+    if(orientation == UIInterfaceOrientationPortraitUpsideDown)
+        return UIInterfaceOrientationPortrait;
+    
+    return orientation;
+}
+
+//9/20/2012 4inch
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+{
+    if(self.tableView.isEditing)
+    {
+        //table view frame
+        CGRect tableViewFrame = self.tableView.frame;
+        tableViewFrame.size.height -= toolbar.frame.size.height;
+        
+        self.tableView.frame = tableViewFrame;
+    }
+
+}
+
 //used for UIMenuController
 -(BOOL)canBecomeFirstResponder
 {
     return YES;
+}
+
+#pragma mark - UISearchBar delegate 8/27/2012
+-(void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar
+{
+    [theSearchBar setShowsCancelButton:YES animated:YES];
+    [self prepareNavigationBarButtonsForBeginSearch];
+}
+
+-(void)searchBarTextDidEndEditing:(UISearchBar *)searchBar
+{
+    [theSearchBar setShowsCancelButton:NO animated:YES];
+    
+    if(!self.tableView.isEditing)
+        [self prepareNavigationBarButtonsForEndSearch];
+}
+
+
+-(void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
+{
+    [theSearchBar resignFirstResponder];
+}
+
+-(void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
+{
+    [self clearSelectedItem];//add 8/27/2012
+    
+    //set search keyword
+    searchKeyword = theSearchBar.text;
+    
+    [theSearchBar resignFirstResponder];
+    
+    [self reloadTableViewData];
+}
+
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
+{
+    if([searchText isEqualToString:@""])
+    {
+        [self clearSelectedItem];//add 8/27/2012
+        
+        searchKeyword = @"";
+        
+        [self reloadTableViewData];
+    }
+}
+
+#pragma mark - UISearchBar relate methods 8/27/2012
+-(void)prepareNavigationBarButtonsForBeginSearch
+{
+    //get topmost navigation item which current controller has
+    UINavigationItem *navItem = [self.navigationController.navigationBar.items lastObject];
+    
+    //create done button
+    UIBarButtonItem *doneButton = [navItem.rightBarButtonItems objectAtIndex:1];
+    
+    //refresh button
+    UIBarButtonItem *refreshButton = [navItem.rightBarButtonItems objectAtIndex:0];
+    
+    refreshButton.enabled = NO;
+    
+    NSArray *rightButtons = [NSArray arrayWithObjects:refreshButton, doneButton, nil];
+    
+    //reassign right buttons
+    [navItem setRightBarButtonItems:rightButtons animated:YES];
+    
+}
+
+-(void)prepareNavigationBarButtonsForEndSearch
+{
+    //get topmost navigation item which current controller has
+    UINavigationItem *navItem = [self.navigationController.navigationBar.items lastObject];
+    
+    
+    //create edit button
+    UIBarButtonItem *editButton = [navItem.rightBarButtonItems objectAtIndex:1];
+    
+    //refresh button
+    UIBarButtonItem *refreshButton = [navItem.rightBarButtonItems objectAtIndex:0];
+    
+    refreshButton.enabled = YES;
+    
+    NSArray * rightButtons = [NSArray arrayWithObjects:refreshButton, editButton, nil];
+    
+    //reassign right buttons
+    [navItem setRightBarButtonItems:rightButtons animated:YES];
+    
 }
 
 #pragma mark - Enter Background notification
@@ -258,8 +429,11 @@ const float ToolBarAnimationDuration = 0.1f;
     
     MDFiles *file = [filesArray objectAtIndex:indexPath.row];
     
+    //pre copy file name with trim out extension 9/18/2012
+    copyedFileName = [file.fileName stringByDeletingPathExtension];
+    
     //create UIMenuItem
-    UIMenuItem *menuItem = [[UIMenuItem alloc] initWithTitle:file.fileName action:@selector(noActionSelector)];
+    UIMenuItem *menuItem = [[UIMenuItem alloc] initWithTitle:file.fileName action:@selector(copyFileName)];
     
     //show UIMenuController and setup 
     UIMenuController *menu = [UIMenuController sharedMenuController];
@@ -272,10 +446,19 @@ const float ToolBarAnimationDuration = 0.1f;
     return YES;
 }
 
-//used for create UIMenuItem
--(void)noActionSelector
+//modify 9/18/2012
+//used for UIMenuItem
+-(void)copyFileName
 {
-    //a dummy selector
+    UIPasteboard *pasteBoard = [UIPasteboard generalPasteboard];
+    pasteBoard.string = copyedFileName;
+}
+
+//add 9/18/2012
+-(void)uiMenuControllerWillHide:(NSNotification*)notification
+{
+    UIMenuController *menu = [UIMenuController sharedMenuController];
+    menu.menuItems = nil;
 }
 
 #pragma mark - Customized navigation bar
@@ -328,10 +511,18 @@ const float ToolBarAnimationDuration = 0.1f;
     if(toolbar == nil)
     {
         /**
-         use design tool to find out position 431=480(iphone height)-49(tabbar height)
+         use design tool to find out position
          tool bar is behide tabbar at beginning
          **/
-        toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 431, 320, 44)];
+        //**9/20/2012 4inch**//
+        CGRect viewBound = self.view.bounds;
+        
+        //toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 431, 320, 44)];
+        toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, viewBound.size.height+20+self.navigationController.navigationBar.frame.size.height, viewBound.size.width, 44)];
+        
+        toolbar.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
+         //**9/20/2012 4inch**//
+
         
         //add tool bar items
         //add Add folder item
@@ -401,6 +592,7 @@ const float ToolBarAnimationDuration = 0.1f;
     [cell configureCellForFile:theFile];
     
     return cell;
+
 }
 
 
@@ -452,6 +644,7 @@ const float ToolBarAnimationDuration = 0.1f;
 }
  */
 
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Navigation logic may go here. Create and push another view controller.
@@ -463,9 +656,13 @@ const float ToolBarAnimationDuration = 0.1f;
      */
     MDFiles *file = [filesArray objectAtIndex:indexPath.row];
     
+    //add 9/14/2012
+    openFileIndex = indexPath.row;
+    
     //check table is in editing mode
     if(!tableView.isEditing)
     {
+        [theSearchBar resignFirstResponder];// add 8/27/2012
         
         if(!file.isFile)
         {
@@ -483,27 +680,41 @@ const float ToolBarAnimationDuration = 0.1f;
         }
         else
         {
+            
             //is a file
             //check if file is supported
             if([fileSupporter isFileSupported:file.filePath])
             {
-                UIViewController *theController = [fileSupporter findControllerToOpenFile:file.filePath WithStoryboard:self.storyboard];
+                //modify 9/14/2012
+                MDOpenFileActionSheet *action = [[MDOpenFileActionSheet alloc] initActionSheetWithDelegate:self];
                 
-                if(theController != nil)
-                {
-                    //present controller
-                    [self.navigationController presentViewController:theController animated:YES completion:nil];
-                    
-                }
+                [action showFromView:self.navigationController.parentViewController.view];
+                
+                currentAction = action;
+                
             }
             else
             {
-                NSString *msg = [NSString stringWithFormat:NSLocalizedString(@"The file \"%@\" can not be opened in this app", @"The file \"%@\" can not be opened in this app"), file.fileName];
+                //modify 9/14/2012
+                NSURL *fileURL = [NSURL fileURLWithPath:file.filePath];
+                docController = [UIDocumentInteractionController interactionControllerWithURL:fileURL];
                 
-                UIAlertView *notSupportAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Open file", @"Open file") message:msg delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles: nil];
+                docController.delegate = self;
                 
-                [notSupportAlert show];
+                if(![docController presentOpenInMenuFromRect:CGRectZero inView:self.navigationController.parentViewController.view animated:YES])
+                {
+                    
+                    docController = nil;
+                    
+                    NSString *msg = [NSString stringWithFormat:NSLocalizedString(@"The file \"%@\" can not be opened in this app", @"The file \"%@\" can not be opened in this app"), file.fileName];
+                    
+                    UIAlertView *notSupportAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Open file", @"Open file") message:msg delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles: nil];
+                    
+                    [notSupportAlert show];
+                }
+
             }
+            
         }
         
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
@@ -543,6 +754,92 @@ const float ToolBarAnimationDuration = 0.1f;
 
 }
 
+#pragma mark - UIDocumentInteractionController delegate 9/14/2012
+- (void) documentInteractionController: (UIDocumentInteractionController *) controller didEndSendingToApplication: (NSString *) application
+{
+    docController = nil;
+}
+
+
+#pragma mark - MDImageViewerController delegate 9/12/2012
+-(NSUInteger)numberOfImage
+{
+    numberOfImageToPreview = [self getNumberOfImageForPreview];
+    
+    return numberOfImageToPreview.count;
+}
+
+-(NSUInteger)beginWithPageIndex
+{
+    if(beginShowImagePath != nil)
+    {
+        for(int i =0; i<=(numberOfImageToPreview.count-1); i++)
+        {
+            NSString *path = [numberOfImageToPreview objectAtIndex:i];
+            
+            if([beginShowImagePath isEqualToString:path])
+                return i;
+        }
+    }
+    
+    return 0;
+}
+
+-(NSString*)imagePathForImageIndexToDisplay:(NSUInteger)index
+{
+    return [numberOfImageToPreview objectAtIndex:index];
+}
+
+-(void)finishImageViewing
+{
+    numberOfImageToPreview = nil;
+    beginShowImagePath = nil;
+    [self.navigationController dismissModalViewControllerAnimated:YES];
+}
+
+#pragma mark - get number of image for preview 9/12/2012
+-(NSArray*)getNumberOfImageForPreview
+{
+    if(numberOfImageToPreview)
+        numberOfImageToPreview = nil;
+    
+    NSMutableArray *images = [[NSMutableArray alloc] init];
+    
+    MDFileSupporter *thefileSupporter = [MDFileSupporter sharedFileSupporter];
+    
+    //scan through file array to find image
+    for(MDFiles *file in filesArray)
+    {
+        //check if file is supported
+        if([thefileSupporter isFileSupported:file.filePath])
+        {
+            //check if it is image
+            NSString *extension = [file.filePath pathExtension];
+            
+            //check extension is available
+            if(![extension isEqualToString:@""])
+            {
+                CFStringRef extensionTag = (__bridge CFStringRef)extension;
+                
+                //create UTI for file extension
+                CFStringRef compareUTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, extensionTag, NULL);
+                
+                if (UTTypeConformsTo(compareUTI, kUTTypeImage))
+                {
+                    //it is image add to array
+                    NSString *path = [file.filePath copy];
+                    [images addObject:path];
+                }
+                
+                CFRelease(compareUTI);
+            }
+        }
+    }
+    
+    return images;
+}
+
+
 #pragma mark - Find content in working path
 -(void)findContentInWorkingPath:(NSString *)path
 {
@@ -566,19 +863,62 @@ const float ToolBarAnimationDuration = 0.1f;
     
     if(error == nil)
     {
-        //store content
-        for(NSString *theContent in contents)
+        //check if search keyword is available 8/27/2012
+        if(searchKeyword == nil || searchKeyword == @"")
         {
-            if([fileSupporter canShowFileName:theContent])
+            //store content
+            for(NSString *theContent in contents)
             {
-                //init file info object
-                MDFiles *file = [[MDFiles alloc] initWithFilePath:self.workingPath FileName:theContent];
+                if([fileSupporter canShowFileName:theContent])
+                {
+                    //init file info object
+                    MDFiles *file = [[MDFiles alloc] initWithFilePath:self.workingPath FileName:theContent];
+                    
+                    //add to diectoryContents
+                    [filesArray addObject:file];
+                }
                 
-                //add to diectoryContents
-                [filesArray addObject:file];
             }
-
         }
+        else
+        {
+            //store content with filter result 8/27/2012
+            for(NSString *theContent in contents)
+            {
+                if([fileSupporter canShowFileName:theContent])
+                {
+                    NSString *searchedString = [theContent copy];
+                    
+                    /**see if it is file or directory, and trim out extension if it is file**/
+                    NSString *thePath = [self.workingPath stringByAppendingPathComponent:searchedString];
+                    
+                    //set file type
+                    NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:thePath error:&error];
+                    
+                    NSString *fileType = [fileAttributes objectForKey:NSFileType];
+                    
+                    if([fileType isEqualToString:NSFileTypeRegular])
+                    {
+                        //it is file trim out file extension
+                        searchedString = [searchedString stringByDeletingPathExtension];
+                    }
+                    
+                    //check if match search keyword
+                    if([searchedString rangeOfString:searchKeyword].location != NSNotFound)
+                    {
+                        //init file info object
+                        MDFiles *file = [[MDFiles alloc] initWithFilePath:self.workingPath FileName:theContent];
+                        
+                        //add to diectoryContents
+                        [filesArray addObject:file];
+                    }
+                    
+
+                }
+                
+            }
+        }
+
     }
     else
     {
@@ -598,8 +938,11 @@ const float ToolBarAnimationDuration = 0.1f;
 -(void)editTableView
 {
     NSLog(@"Editing table");
-    [self.tableView setEditing:YES animated:YES];
     
+    //resign search bar 8/27/2012
+    [theSearchBar resignFirstResponder];
+    
+    [self.tableView setEditing:YES animated:YES];
 
     [self prepareNavigationBarButtonsForEditTable];
     
@@ -614,6 +957,9 @@ const float ToolBarAnimationDuration = 0.1f;
 {
     NSLog(@"Done editing table");
     
+    //resign search bar 8/27/2012
+    [theSearchBar resignFirstResponder];
+    
     [self.tableView setEditing:NO animated:YES];
     
     [self prepareNavigationBarButtonsForDoneEditingTable];
@@ -624,25 +970,7 @@ const float ToolBarAnimationDuration = 0.1f;
     [self hideToolBar];
     
     
-    //clear all selected cell index path from array
-    if(selectedIndexPaths != nil)
-    {
-        for(NSIndexPath *indexPath in selectedIndexPaths)
-        {
-            //set file isSelected to NO
-            MDFiles *file = [filesArray objectAtIndex:indexPath.row];
-            
-            file.isSelected = NO;
-            
-            //reset cell selected indicator image as well
-            MDFilesTableViewCell *cell = (MDFilesTableViewCell*)[self.tableView cellForRowAtIndexPath:indexPath];
-            UIImageView *selectedIndicator = cell.selectionIndicator;
-            
-            selectedIndicator.image = [UIImage imageNamed:cell.notSelectedIndicatorName];
-        }
-        
-        [selectedIndexPaths removeAllObjects];
-    }
+    [self clearSelectedItem];//add 8/27/2012
     
     [self updateToolBar];
 }
@@ -752,7 +1080,7 @@ const float ToolBarAnimationDuration = 0.1f;
     }
 }
 
-//show tool bar
+//show tool bar modify 9/20/2012
 -(void)showToolBar
 {
     //tool bar frame
@@ -792,6 +1120,30 @@ const float ToolBarAnimationDuration = 0.1f;
     self.tableView.frame = tableViewFrame;
     
     [UIView commitAnimations];
+}
+
+//add 8/27/2012
+-(void)clearSelectedItem
+{
+    //clear all selected cell index path from array
+    if(selectedIndexPaths != nil)
+    {
+        for(NSIndexPath *indexPath in selectedIndexPaths)
+        {
+            //set file isSelected to NO
+            MDFiles *file = [filesArray objectAtIndex:indexPath.row];
+            
+            file.isSelected = NO;
+            
+            //reset cell selected indicator image as well
+            MDFilesTableViewCell *cell = (MDFilesTableViewCell*)[self.tableView cellForRowAtIndexPath:indexPath];
+            UIImageView *selectedIndicator = cell.selectionIndicator;
+            
+            selectedIndicator.image = [UIImage imageNamed:cell.notSelectedIndicatorName];
+        }
+        
+        [selectedIndexPaths removeAllObjects];
+    }
 }
 
 #pragma mark - ToolBar items' method
@@ -905,6 +1257,48 @@ const float ToolBarAnimationDuration = 0.1f;
     }
 }
  */
+
+#pragma mark - MDOpenFileActionSheet delegate 9/14/2012
+-(void)MDOFDidClickedOpenFileButton:(MDOpenFileActionSheet *)object
+{
+    MDFiles *file = [filesArray objectAtIndex:openFileIndex];
+    
+    UIViewController *theController = [fileSupporter findControllerToOpenFile:file.filePath WithStoryboard:self.storyboard];
+    
+    if(theController != nil)
+    {
+        /***9/12/2012***/
+        //check if return controller is image viewer
+        if([[theController class] isSubclassOfClass:[MDImageViewerController class]])
+        {
+            //set delegate
+            MDImageViewerController *imageViewController = (MDImageViewerController*)theController;
+            imageViewController.theDelegate = self;
+            
+            //assign begin show image identifier
+            MDFiles *file = (MDFiles*)[filesArray objectAtIndex:openFileIndex];
+            beginShowImagePath = [file.filePath copy];
+        }
+        /***9/12/2012***/
+        
+        //present controller
+        [self.navigationController presentViewController:theController animated:YES completion:nil];
+        
+    }
+}
+
+-(void)MDOFDidClickedOpenFileInButton:(MDOpenFileActionSheet *)object;
+{
+    MDFiles *file = [filesArray objectAtIndex:openFileIndex];
+    
+    NSURL *fileURL = [NSURL fileURLWithPath:file.filePath];
+    docController = [UIDocumentInteractionController interactionControllerWithURL:fileURL];
+    
+    docController.delegate = self;
+    
+    [docController presentOpenInMenuFromRect:CGRectZero inView:self.navigationController.parentViewController.view animated:YES];
+}
+
 
 #pragma mark - MDSelectedActionSheet delegate
 -(void)MDSDidClickedDeleteButton:(MDSelectedActionSheet *)object
@@ -1045,7 +1439,9 @@ const float ToolBarAnimationDuration = 0.1f;
         
         [self presentViewController:deletingController animated:NO completion:nil];
         
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        /**modify deleting run on main queue 2/29/2012**/
+        //dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0)
+        dispatch_async(dispatch_get_main_queue(), ^{
         
             //go through each selected IndexPath
             for(NSIndexPath *indexPath in indexPaths)
@@ -1136,6 +1532,8 @@ const float ToolBarAnimationDuration = 0.1f;
         
         //clrear selected IndexPaths
         [selectedIndexPaths removeAllObjects];
+        
+        [self updateToolBar];
     }
     else
     {
@@ -1171,6 +1569,8 @@ const float ToolBarAnimationDuration = 0.1f;
     }
     
     [self.tableView reloadData];
+    
+    [self updateToolBar];
 }
 
 -(void)doMoveFiles
@@ -1275,11 +1675,13 @@ const float ToolBarAnimationDuration = 0.1f;
     //remove old file representation from files array
     [filesArray removeObjectAtIndex:indexPath.row];
     
+    
     //delete cell
     [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
     
     //insert new file representation
     [filesArray insertObject:newfile atIndex:indexPath.row];
+    
     
     NSArray *insertIndexPaths = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:objectIndex inSection:0]];
     
@@ -1289,6 +1691,8 @@ const float ToolBarAnimationDuration = 0.1f;
     
     //finally we remove selected IndexPath
     [selectedIndexPaths removeAllObjects];
+    
+    [self updateToolBar];
 }
 
 #pragma mark - MDMoveFilesNavigationController delegate

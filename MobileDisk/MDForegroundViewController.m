@@ -55,6 +55,17 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
+//9/20/2012
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
+{
+    return UIInterfaceOrientationPortrait;
+}
+//9/20/2012
+- (NSUInteger)supportedInterfaceOrientations
+{
+    return UIInterfaceOrientationMaskPortrait;
+}
+
 -(void)appEnterForeground:(NSNotification*)notification
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];

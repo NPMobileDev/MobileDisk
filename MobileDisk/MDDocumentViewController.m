@@ -75,6 +75,12 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
+//**9/20/2012 4inch**//
+- (NSUInteger)supportedInterfaceOrientations
+{
+    return UIInterfaceOrientationMaskAllButUpsideDown;
+}
+
 -(void)doneReadingDocument
 {
     [self dismissModalViewControllerAnimated:YES];

@@ -21,7 +21,7 @@
     UIAlertView *theAlertView;
     
     //text field to type in name for new folder
-    UITextField *renameFileTextField;
+    //UITextField *renameFileTextField;
 }
 
 @synthesize originalFilename = _originalFilename;
@@ -47,6 +47,7 @@
 
 -(UIAlertView*)createAlertView
 {
+    /*
     if(renameFileTextField == nil)
     {
         renameFileTextField = [[UITextField alloc] initWithFrame:CGRectMake(12, 45, 260, 25)];
@@ -63,15 +64,27 @@
     UIAlertView *renameAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Rename", @"Rename") message:@"this gets covered" delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel") otherButtonTitles:NSLocalizedString(@"Rename", @"Rename"), nil];
     
     [renameAlert addSubview:renameFileTextField];
+     */
+    
+    UIAlertView *renameAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Rename", @"Rename") message:nil delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel") otherButtonTitles:NSLocalizedString(@"Rename", @"Rename"), nil];
+    
+    renameAlert.alertViewStyle = UIAlertViewStylePlainTextInput;
     
     return renameAlert;
 }
 
 -(void)showAlertView
 {
+    UITextField *textField = [(UIAlertView*)self.theUIAction textFieldAtIndex:0];
+    textField.placeholder = NSLocalizedString(@"New name", @"New name");
+    textField.clearButtonMode = UITextFieldViewModeAlways;
+    textField.returnKeyType = UIReturnKeyDone;
+    textField.text = _originalFilename;
+    textField.delegate = self;
+    
     [theAlertView show];
     
-    [renameFileTextField becomeFirstResponder];
+    //[renameFileTextField becomeFirstResponder];
 }
 
 #pragma mark - UITextField delegate
@@ -87,6 +100,7 @@
 {
     if(buttonIndex == 1)
     {
+        /*
         //check if text field's text is empty
         if([renameFileTextField.text isEqualToString:@""])
         {
@@ -97,6 +111,18 @@
             
             [delegate MDRenameAlertView:self didInputNameWithName:renameFileTextField.text];
         }
+         */
+        
+        UITextField *textField = [alertView textFieldAtIndex:0];
+        
+        if([textField.text isEqualToString:@""])
+        {
+            [delegate RenameInputNameWasEmpty:self];
+        }
+        else
+        {
+            [delegate MDRenameAlertView:self didInputNameWithName:textField.text];
+        }
     }
 }
 
@@ -104,7 +130,7 @@
 -(void)setOriginalFilename:(NSString *)filename
 {
     _originalFilename = filename;
-    renameFileTextField.text = _originalFilename;
+    //renameFileTextField.text = _originalFilename;
 }
 
 @end

@@ -21,7 +21,7 @@
     UIAlertView *theAlertView;
     
     //text field to type in name for new folder
-    UITextField *newFolderNameTextField;
+    //UITextField *newFolderNameTextField;
 }
 
 -(id)initAlertViewWithDelegate:(id<MDAddFolderAlertViewDelegate>)theDelegate
@@ -45,6 +45,8 @@
 
 -(UIAlertView*)createAlertView
 {
+
+    /*
     if(newFolderNameTextField == nil)
     {
         newFolderNameTextField = [[UITextField alloc] initWithFrame:CGRectMake(12, 45, 260, 25)];
@@ -56,20 +58,36 @@
         newFolderNameTextField.text = nil;
         newFolderNameTextField.delegate = self;
     }
+
     
     //use alert view to let user to type in folder name
+
     UIAlertView *addFolderAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Add folder", @"Add folder") message:@"this gets covered" delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel") otherButtonTitles:NSLocalizedString(@"Add", @"Add"), nil];
+
     
     [addFolderAlert addSubview:newFolderNameTextField];
+     */
+    UIAlertView *addFolderAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Add folder", @"Add folder") message:nil delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel") otherButtonTitles:NSLocalizedString(@"Add", @"Add"), nil];
+    
+    addFolderAlert.alertViewStyle = UIAlertViewStylePlainTextInput;
+    
+
     
     return addFolderAlert;
 }
 
 -(void)showAlertView
 {
+    UITextField *textField = [(UIAlertView*)self.theUIAction textFieldAtIndex:0];
+    textField.placeholder = NSLocalizedString(@"Folder name", @"Folder name");
+    textField.clearButtonMode = UITextFieldViewModeAlways;
+    textField.returnKeyType = UIReturnKeyDone;
+    textField.text = nil;
+    textField.delegate = self;
+    
     [theAlertView show];
     
-    [newFolderNameTextField becomeFirstResponder];
+    //[newFolderNameTextField becomeFirstResponder];
 }
 
 #pragma mark - UITextField delegate
@@ -85,6 +103,7 @@
 {
     if(buttonIndex == 1)
     {
+        /*
         //check if text field's text is empty
         if([newFolderNameTextField.text isEqualToString:@""])
         {
@@ -94,6 +113,19 @@
         {
             [delegate MDAddFolderAlertView:self didAddFolderWithName:newFolderNameTextField.text];
         }
+         */
+        
+        UITextField *textField = [alertView textFieldAtIndex:0];
+        
+        if([textField.text isEqualToString:@""])
+        {
+            [delegate AddFolderInputNameWasEmpty:self];
+        }
+        else
+        {
+            [delegate MDAddFolderAlertView:self didAddFolderWithName:textField.text];
+        }
+        
     }
 }
 

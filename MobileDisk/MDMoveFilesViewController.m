@@ -12,6 +12,8 @@
 
 @interface MDMoveFilesViewController ()
 
+@property (nonatomic, weak) IBOutlet UITableView *tableView;
+
 -(void)findContentDirectoriesInWorkingPath:(NSString *)path;
 -(void)configureCell:(UITableViewCell *)cell WithIndexPath:(NSIndexPath *)indexPath;
 -(void)customizedNavigationBar;
@@ -33,7 +35,7 @@
 
 @synthesize workingPath = _workingPath;
 @synthesize controllerTitle = _controllerTitle;
-
+@synthesize tableView = _tableView;
 
 /*
 - (id)initWithStyle:(UITableViewStyle)style
@@ -62,6 +64,13 @@
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    
+    //9/20/2012 4inch
+    if(theToolBar!=nil)
+        theToolBar = nil;
+    
+    [self createToolBar];
+    //9/20/2012 4inch
     
     /**
      we add tool bar to view here because we want it to be on this view controller
@@ -113,7 +122,8 @@
     
     //[self customizedNavigationBar];
     
-    [self createToolBar];
+    //9/20/2012 4inch
+    //[self createToolBar];
     
 }
 
@@ -132,6 +142,23 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
+//**9/20/2012 4inch**//
+- (NSUInteger)supportedInterfaceOrientations
+{
+    return UIInterfaceOrientationMaskAllButUpsideDown;
+}
+
+//**9/20/2012 4inch**//
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
+{
+    UIInterfaceOrientation orientation = [UIDevice currentDevice].orientation;
+    
+    if(orientation == UIInterfaceOrientationPortraitUpsideDown)
+        return UIInterfaceOrientationPortrait;
+    
+    return orientation;
 }
 
 #pragma mark - Table view data source
@@ -230,6 +257,8 @@
     //set controller title
     controller.controllerTitle = selectedDirectoryName;
 
+    //**9/20/2012 4inch**//
+    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
     
     //push view controller
     [self.navigationController pushViewController:controller animated:YES];
@@ -326,8 +355,24 @@
 {
     if(theToolBar == nil)
     {
+        //**9/20/2012 4inch**//
+        CGRect viewBound = self.view.bounds;
+        
+        CGFloat toolBarHeight = 44.0f;
+        
         //436 = 480 - 44
-        theToolBar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 436, 320, 44)];
+        
+        //theToolBar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 436, 320, 44)];
+        theToolBar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, viewBound.size.height+20+self.navigationController.navigationBar.frame.size.height-toolBarHeight, viewBound.size.width, toolBarHeight)];
+        
+        theToolBar.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
+        
+        CGRect viewFrame = self.view.frame;
+        CGRect tableFrame = self.tableView.frame;
+        viewFrame.size.height -= toolBarHeight;
+        self.tableView.frame = CGRectMake(tableFrame.origin.x, tableFrame.origin.y, viewFrame.size.width, viewFrame.size.height);
+        
+        //**9/20/2012 4inch**//
         
         UIBarButtonItem *moveToButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Move here", @"Move here") style:UIBarButtonItemStyleDone target:self action:@selector(moveFiles)];
         

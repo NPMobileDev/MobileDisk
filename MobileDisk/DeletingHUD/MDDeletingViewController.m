@@ -35,7 +35,8 @@
 
 -(void)dealloc
 {
-     [gradientView removeFromSuperview];
+    [gradientView removeFromSuperview];
+
 }
 
 

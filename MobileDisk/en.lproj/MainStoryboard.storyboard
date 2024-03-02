@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="1.1" toolsVersion="2182" systemVersion="11E53" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="AcG-cU-k2O">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="3084" systemVersion="11G63" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="AcG-cU-k2O">
     <dependencies>
-        <deployment defaultVersion="1296" identifier="iOS"/>
-        <development defaultVersion="4200" identifier="xcode"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="1181"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="2083"/>
     </dependencies>
     <scenes>
         <!--Settings View Controller - Settings-->
         <scene sceneID="hpK-id-fkB">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="FKg-F5-63F" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tableViewController id="9ra-UL-nsD" customClass="MDSettingsViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="singleLineEtched" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="Uhk-jR-IAd">
                         <rect key="frame" x="0.0" y="64" width="320" height="367"/>
@@ -34,7 +31,7 @@
                                         </label>
                                         <switch opaque="NO" tag="1000" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="de6-kI-gdH">
                                             <rect key="frame" x="201" y="8" width="79" height="27"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                         </switch>
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -49,7 +46,7 @@
                                     <subviews>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Type the following address in your computer's web  browser" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="cmx-Sw-N5K">
                                             <rect key="frame" x="20" y="11" width="260" height="46"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -58,7 +55,7 @@
                                         </label>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="1001" contentMode="left" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="iEu-xL-e28">
                                             <rect key="frame" x="20" y="65" width="260" height="21"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -85,7 +82,7 @@
                                         </label>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="1002" contentMode="left" text="1.1MB" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="0E2-OF-f71">
                                             <rect key="frame" x="122" y="11" width="158" height="21"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -112,7 +109,7 @@
                                         </label>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="1003" contentMode="left" text="1.1MB" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="f0s-iB-eDX">
                                             <rect key="frame" x="124" y="11" width="156" height="21"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -139,14 +136,62 @@
                                         </label>
                                         <switch opaque="NO" tag="1004" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="1BA-Nw-INm">
                                             <rect key="frame" x="201" y="8" width="79" height="27"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                         </switch>
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="S3-R0-Passcode" id="mnA-76-Q5Y">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="S3-R0-VideoSubtitle" id="ecg-5C-GX1">
                                 <rect key="frame" x="0.0" y="322" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                    <rect key="frame" x="10" y="0.0" width="300" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Subtitle:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="Hh0-ij-ik3">
+                                            <rect key="frame" x="20" y="11" width="66" height="22"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="shadowColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <size key="shadowOffset" width="0.0" height="1"/>
+                                        </label>
+                                        <switch opaque="NO" tag="1005" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" id="HhN-Mu-jRs">
+                                            <rect key="frame" x="201" y="6" width="79" height="27"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                        </switch>
+                                    </subviews>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                </view>
+                            </tableViewCell>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="S3-R1-SubtitleColor" id="Xwi-3E-C7y">
+                                <rect key="frame" x="0.0" y="366" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                    <rect key="frame" x="10" y="0.0" width="280" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Subtitle color:" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="aOe-RT-eTB">
+                                            <rect key="frame" x="20" y="11" width="107" height="22"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="shadowColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <size key="shadowOffset" width="0.0" height="1"/>
+                                        </label>
+                                        <imageView userInteractionEnabled="NO" tag="1006" contentMode="scaleToFill" id="YLO-Xs-H2w">
+                                            <rect key="frame" x="225" y="4" width="35" height="35"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                        </imageView>
+                                    </subviews>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                </view>
+                            </tableViewCell>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="S4-R0-Passcode" id="mnA-76-Q5Y">
+                                <rect key="frame" x="0.0" y="410" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                     <rect key="frame" x="10" y="0.0" width="300" height="43"/>
@@ -161,16 +206,16 @@
                                             <color key="shadowColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <size key="shadowOffset" width="0.0" height="1"/>
                                         </label>
-                                        <switch opaque="NO" tag="1005" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="JS8-JF-4x3">
+                                        <switch opaque="NO" tag="1007" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="JS8-JF-4x3">
                                             <rect key="frame" x="201" y="8" width="79" height="27"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                         </switch>
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" indentationWidth="10" reuseIdentifier="S3-R1-ChangePasscode" id="fep-py-kXk">
-                                <rect key="frame" x="0.0" y="366" width="320" height="45"/>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" indentationWidth="10" reuseIdentifier="S4-R1-ChangePasscode" id="fep-py-kXk">
+                                <rect key="frame" x="0.0" y="454" width="320" height="45"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                     <rect key="frame" x="10" y="0.0" width="300" height="43"/>
@@ -178,7 +223,7 @@
                                     <subviews>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Change passcode" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="ZZ1-W1-8Ur">
                                             <rect key="frame" x="20" y="11" width="260" height="22"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -198,13 +243,710 @@
                     </tableView>
                     <navigationItem key="navigationItem" title="Settings" id="ym4-dW-z0x"/>
                 </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="FKg-F5-63F" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="788" y="-532"/>
+        </scene>
+        <!--Table View Controller - More-->
+        <scene sceneID="qmD-yf-6FR">
+            <objects>
+                <tableViewController id="aP3-7Z-5D2" sceneMemberID="viewController">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="sgT-Vb-lZw">
+                        <rect key="frame" x="0.0" y="64" width="320" height="367"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <sections>
+                            <tableViewSection id="SeF-Nz-HUo">
+                                <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="5x5-5R-CF2">
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="300" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="About this app" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="IvG-lz-tHJ">
+                                                    <rect key="frame" x="20" y="11" width="280" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                        <connections>
+                                            <segue destination="8WD-Ca-k2z" kind="push" id="sMf-3r-MxA"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="q4s-US-72P">
+                                        <rect key="frame" x="0.0" y="44" width="320" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="300" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Instruction" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="b7k-Zo-4UQ">
+                                                    <rect key="frame" x="20" y="11" width="280" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                        <connections>
+                                            <segue destination="o6L-qK-1Z3" kind="push" id="6Qz-lf-NiQ"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                        </sections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="More" id="9b9-Nd-Bc9"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="IB7-hg-G5f" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="788" y="-1739"/>
+        </scene>
+        <!--About View Controller - About-->
+        <scene sceneID="Uyc-Hs-ORD">
+            <objects>
+                <tableViewController id="8WD-Ca-k2z" customClass="MDAboutViewController" sceneMemberID="viewController">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="BRA-Qz-cdT">
+                        <rect key="frame" x="0.0" y="64" width="320" height="367"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <sections>
+                            <tableViewSection id="gqH-5G-NRV">
+                                <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="753" id="Kag-CF-Pu4">
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="753"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="752"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="thJ-OW-OwN">
+                                                    <rect key="frame" x="40" y="20" width="240" height="667"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <string key="text">MobileDisk was designed to let you store any kind of file. 
+
+You can either use wifi or iTunes to transfer your files between your device and computer.
+
+You are able to preview some files that are supported in MobileDisk without transfer to computer first.
+
+MobileDisk allow you to manage files.
+You can create folder.
+You can move files.
+You can delete files.
+You can rename file.
+You can search files in a directory by keyword.
+
+MobileDisk is able to unzip file, therefore, you can pack several files into zip archive.
+
+MobileDisk can generate thumbnail for file, so that you can easy to differentiate between files.
+
+MobileDisk allow you to setup passcode to protect your files from other people.
+
+If you like it please rate it.
+
+Thank you for purchasing MobileDisk.</string>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                                </textView>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="AOA-eK-8ba">
+                                                    <rect key="frame" x="118" y="695" width="84" height="37"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                                    <state key="normal" title="Rate me">
+                                                        <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <state key="highlighted">
+                                                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="rateMe:" destination="8WD-Ca-k2z" eventType="touchUpInside" id="O9L-o5-Ax7"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                        </sections>
+                        <connections>
+                            <outlet property="dataSource" destination="8WD-Ca-k2z" id="Q5A-NT-5Tl"/>
+                            <outlet property="delegate" destination="8WD-Ca-k2z" id="xma-DD-XOd"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="About" id="Pm5-hp-gad"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ByE-xm-HAi" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1290" y="-2320"/>
+        </scene>
+        <!--Table View Controller - Instruction-->
+        <scene sceneID="Grw-XD-oQJ">
+            <objects>
+                <tableViewController id="o6L-qK-1Z3" sceneMemberID="viewController">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="singleLineEtched" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="Oee-Ft-7Yg">
+                        <rect key="frame" x="0.0" y="64" width="320" height="367"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <sections>
+                            <tableViewSection headerTitle="Transfer" id="eg6-6e-3g2">
+                                <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="55X-kr-ag1">
+                                        <rect key="frame" x="0.0" y="46" width="320" height="45"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="10" y="1" width="280" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="How to transfer files to device?" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="i83-FO-qnQ">
+                                                    <rect key="frame" x="20" y="11" width="280" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                        <connections>
+                                            <segue destination="yNI-dS-gF2" kind="push" id="qfZ-6W-aS8"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="GU7-7n-zYH">
+                                        <rect key="frame" x="0.0" y="91" width="320" height="45"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="10" y="0.0" width="280" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="How to transfer files to computer?" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="ACa-bw-he0">
+                                                    <rect key="frame" x="20" y="11" width="260" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                        <connections>
+                                            <segue destination="rlp-xe-rMF" kind="push" id="9P4-hS-mio"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                            <tableViewSection headerTitle="Video player" id="LEN-fF-Cfx">
+                                <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" indentationWidth="10" id="sbO-Hs-uOe">
+                                        <rect key="frame" x="0.0" y="182" width="320" height="45"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="10" y="1" width="280" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="What is the file format for subtitle?" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="gZY-x4-PMN">
+                                                    <rect key="frame" x="20" y="11" width="261" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                        <connections>
+                                            <segue destination="cVU-Rt-sIi" kind="push" id="CTE-Vf-rZL"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="pWt-mv-z2D">
+                                        <rect key="frame" x="0.0" y="227" width="320" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="10" y="0.0" width="280" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="How to show up video subtitle?" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="nYL-sm-1Pk">
+                                                    <rect key="frame" x="20" y="11" width="280" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                        <connections>
+                                            <segue destination="l6p-Fo-cwV" kind="push" id="3Ci-7Y-7JF"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" indentationWidth="10" id="XmA-HV-ifp">
+                                        <rect key="frame" x="0.0" y="271" width="320" height="45"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="10" y="0.0" width="280" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="How to change subtitle color?" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="q5V-tH-KEC">
+                                                    <rect key="frame" x="20" y="11" width="260" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                        <connections>
+                                            <segue destination="yUI-qL-gX7" kind="push" id="lND-TB-q3o"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                            <tableViewSection headerTitle="File" id="H5b-1t-pYz">
+                                <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" indentationWidth="10" id="JXp-iM-P2e">
+                                        <rect key="frame" x="0.0" y="362" width="320" height="46"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="10" y="1" width="280" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="How to copy file or folders' name?" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="Uv0-0V-9T1">
+                                                    <rect key="frame" x="20" y="11" width="262" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                        <connections>
+                                            <segue destination="jaI-3j-IWL" kind="push" id="022-tl-K5j"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                        </sections>
+                        <connections>
+                            <outlet property="dataSource" destination="o6L-qK-1Z3" id="y7K-wf-vrd"/>
+                            <outlet property="delegate" destination="o6L-qK-1Z3" id="pdX-U8-j4J"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Instruction" id="hv4-m9-lex"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="sUJ-mS-MDO" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1294" y="-1739"/>
+        </scene>
+        <!--Table View Controller - Transfer files to device-->
+        <scene sceneID="Nm7-nL-Ufh">
+            <objects>
+                <tableViewController id="yNI-dS-gF2" customClass="MDTableViewController" sceneMemberID="viewController">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="singleLineEtched" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="LMC-42-CSr">
+                        <rect key="frame" x="0.0" y="64" width="320" height="367"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <sections>
+                            <tableViewSection headerTitle="Transfer files to device through wifi" id="Is6-fP-fXN">
+                                <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="361" id="Bf2-Fa-437">
+                                        <rect key="frame" x="0.0" y="67" width="320" height="363"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="10" y="1" width="300" height="360"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" id="G6Z-ss-v4Y">
+                                                    <rect key="frame" x="20" y="20" width="260" height="320"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                                    <string key="text">Step 1. Tap the "Settings" tab at bottom.
+﻿
+Step 2. In the settings view scroll to "Wi-Fi Transfer" section and turn on switch in "Wi-Fi Status"﻿.
+﻿
+Step 3. Open browser on your computer and type in the address that device gave (Example:http//192.168.1.35:8080 ).
+﻿
+Step 4. In web page click choose file button to pick file that you want to upload and then click upload button to upload file.</string>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                                </textView>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                            <tableViewSection headerTitle="Transfer files to device through iTunes" id="yEs-yt-d9e">
+                                <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="251" id="rHs-nt-1fx">
+                                        <rect key="frame" x="0.0" y="497" width="320" height="253"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="10" y="1" width="300" height="250"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" id="JND-nA-H2C">
+                                                    <rect key="frame" x="30" y="20" width="240" height="215"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                                    <string key="text">Step 1. Open iTunes and then connect your device to computer.
+﻿
+Step 2. Click your device in iTunes then go to application page.
+﻿
+Step 3. Locate "MobileDisk" app in "File sharing" section.
+﻿
+Step 4. Click "Add" button to add file into device.</string>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                                </textView>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                        </sections>
+                        <connections>
+                            <outlet property="dataSource" destination="yNI-dS-gF2" id="RUY-fW-N3e"/>
+                            <outlet property="delegate" destination="yNI-dS-gF2" id="LMK-L3-tbp"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Transfer files to device" id="DSc-YR-9rs"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Rv8-lt-AjY" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1988" y="-4335"/>
+        </scene>
+        <!--Table View Controller - Transfer files to computer-->
+        <scene sceneID="Vou-d6-NcB">
+            <objects>
+                <tableViewController id="rlp-xe-rMF" customClass="MDTableViewController" sceneMemberID="viewController">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="singleLineEtched" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="5js-2d-OrU">
+                        <rect key="frame" x="0.0" y="64" width="320" height="367"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <sections>
+                            <tableViewSection headerTitle="Transfer files to computer through wifi" id="abB-mV-H99">
+                                <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="336" id="tip-50-QHr">
+                                        <rect key="frame" x="0.0" y="67" width="320" height="338"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="10" y="1" width="300" height="335"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" id="TR4-i6-QXC">
+                                                    <rect key="frame" x="30" y="20" width="240" height="295"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                                    <string key="text">Step 1. Tap the "Settings" tab at bottom.
+﻿
+Step 2. In the settings view scroll to "Wi-Fi Transfer" section and turn on switch in "Wi-Fi Status"﻿.
+﻿
+Step 3. Open browser on your computer and type in the address that device gave (Example:http//192.168.1.35:8080 ).
+﻿
+Step 4. In web page click file to preview or right click on file and then choose "Save to".</string>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                                </textView>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                            <tableViewSection headerTitle="Transfer files to computer through iTunes" id="bTY-RQ-Gpe">
+                                <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="262" id="LdO-b3-mLW">
+                                        <rect key="frame" x="0.0" y="472" width="320" height="264"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="10" y="1" width="300" height="261"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" id="JN0-AV-3ed">
+                                                    <rect key="frame" x="30" y="20" width="240" height="221"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                                    <string key="text">Step 1. Open iTunes and then connect your device to computer.
+﻿
+Step 2. Click your device in iTunes then go to application page.
+﻿
+Step 3. Locate "MobileDisk" app in "File sharing" section.
+﻿
+Step 4. Choose file and then click "Save to" button.</string>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                                </textView>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                        </sections>
+                        <connections>
+                            <outlet property="dataSource" destination="rlp-xe-rMF" id="mOJ-mE-ZnA"/>
+                            <outlet property="delegate" destination="rlp-xe-rMF" id="3tW-O1-Sch"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Transfer files to computer" id="QEc-uH-kVN"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="lcH-6j-Mgy" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1988" y="-3748"/>
+        </scene>
+        <!--Table View Controller - Subtitle color-->
+        <scene sceneID="0r0-UC-VNF">
+            <objects>
+                <tableViewController id="yUI-qL-gX7" customClass="MDTableViewController" sceneMemberID="viewController">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="singleLineEtched" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="iia-Pn-FVn">
+                        <rect key="frame" x="0.0" y="64" width="320" height="367"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <sections>
+                            <tableViewSection headerTitle="How to change subtitle color" id="nD4-mb-TmO">
+                                <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="196" id="bGQ-gh-V0Q">
+                                        <rect key="frame" x="0.0" y="46" width="320" height="198"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="10" y="1" width="300" height="195"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" id="Fbx-uf-3ll">
+                                                    <rect key="frame" x="30" y="20" width="240" height="155"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                                    <string key="text">Step 1. Tap the "Settings" tab at bottom.
+
+Step 2. In the settings view scroll to "Video player" section and then tap on “Subtitle color”. Now you can pick any color for subtitle.</string>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                                </textView>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                        </sections>
+                        <connections>
+                            <outlet property="dataSource" destination="yUI-qL-gX7" id="722-lh-qg0"/>
+                            <outlet property="delegate" destination="yUI-qL-gX7" id="jmF-bv-Qz5"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Subtitle color" id="2FT-o5-QyZ"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="fE5-OF-aAl" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2000" y="-1730"/>
+        </scene>
+        <!--Table View Controller - Copy name-->
+        <scene sceneID="o1B-qq-wnD">
+            <objects>
+                <tableViewController id="jaI-3j-IWL" customClass="MDTableViewController" sceneMemberID="viewController">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="singleLineEtched" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="a3a-Ly-Ebf">
+                        <rect key="frame" x="0.0" y="64" width="320" height="367"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <sections>
+                            <tableViewSection headerTitle="How to copy file or folders' name" id="X78-FR-KbF">
+                                <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="177" id="EFt-dN-l1P">
+                                        <rect key="frame" x="0.0" y="46" width="320" height="179"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="10" y="1" width="300" height="176"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" id="yKN-kH-7GR">
+                                                    <rect key="frame" x="30" y="20" width="240" height="136"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                                    <string key="text">Step 1. Long press on file or folder in the table until a menu prompt.
+
+Step 2.  Press the item in the prompted menu, in order to copy file or folders' name.</string>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                                </textView>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                        </sections>
+                        <connections>
+                            <outlet property="dataSource" destination="jaI-3j-IWL" id="arX-uM-Zpi"/>
+                            <outlet property="delegate" destination="jaI-3j-IWL" id="zaY-ov-YS1"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Copy name" id="r4G-nM-Bqw"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="zZi-ji-suk" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2000" y="-1112"/>
+        </scene>
+        <!--Table View Controller - Subtitle file format-->
+        <scene sceneID="PQQ-VR-ACl">
+            <objects>
+                <tableViewController id="cVU-Rt-sIi" customClass="MDTableViewController" sceneMemberID="viewController">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="singleLineEtched" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="JXk-qR-9IU">
+                        <rect key="frame" x="0.0" y="64" width="320" height="367"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <sections>
+                            <tableViewSection headerTitle="What subtitle formats are supported in MobileDisk" id="ixp-lx-7Xy">
+                                <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="123" id="eMk-rV-6jt">
+                                        <rect key="frame" x="0.0" y="67" width="320" height="125"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="10" y="1" width="300" height="122"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="MobileDisk only support SRT subtitle format and SRT subtitle must save with UTF-8 encoding." id="Gki-ev-lbJ">
+                                                    <rect key="frame" x="25" y="19" width="240" height="83"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                                    <color key="textColor" red="1" green="0.0" blue="0.010851006337158076" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                                </textView>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                            <tableViewSection headerTitle="What is SRT format" id="DKD-XO-Tpx">
+                                <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="328" id="dLG-o3-kfd">
+                                        <rect key="frame" x="0.0" y="238" width="320" height="330"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="10" y="1" width="300" height="327"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" id="nFG-N2-WAz">
+                                                    <rect key="frame" x="30" y="20" width="240" height="287"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                                    <string key="text">SRT is perhaps the most basic of all subtitle formats.
+
+It consists of four parts, all in text..
+
+1. A number indicating which subtitle it is in the sequence.
+2. The time that the subtitle should appear on the screen, and then disappear.
+3. The subtitle itself.
+4. A blank line indicating the start of a new subtitle.
+
+Here is an example SRT file:
+
+1
+00:02:17,440 --> 00:02:20,375
+Senator, we're making
+our final approach into Coruscant.
+
+2
+00:02:20,476 --> 00:02:22,501
+Very good, Lieutenant.
+
+In this example, the text "Senator, we're making our final approach into Coruscant." would be converted into UTF-8 and placed in the Block. The timecode of the block would be set to "00:02:17,440". And the BlockDuration element would be set to "00:00:02,935".
+The same is repeated for the next subtitle.</string>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                                </textView>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                        </sections>
+                        <connections>
+                            <outlet property="dataSource" destination="cVU-Rt-sIi" id="rOc-tq-00T"/>
+                            <outlet property="delegate" destination="cVU-Rt-sIi" id="4ED-yv-t5E"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Subtitle file format" id="Skz-gD-cmm"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="W0F-ae-Uej" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2000" y="-2951"/>
+        </scene>
+        <!--Table View Controller - Video subtitle-->
+        <scene sceneID="8c1-q0-3cE">
+            <objects>
+                <tableViewController id="l6p-Fo-cwV" customClass="MDTableViewController" sceneMemberID="viewController">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="singleLineEtched" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="n0p-rm-hvm">
+                        <rect key="frame" x="0.0" y="64" width="320" height="367"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <sections>
+                            <tableViewSection headerTitle="How to show up video subtitle" id="ndE-0N-Y84">
+                                <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="330" id="GCX-cT-HTv">
+                                        <rect key="frame" x="0.0" y="46" width="320" height="332"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="10" y="1" width="300" height="329"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" id="hfs-8E-y45">
+                                                    <rect key="frame" x="30" y="20" width="240" height="289"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                                    <string key="text">Step 1. Tap the "Settings" tab at bottom.
+
+Step 2. In the settings view scroll to "Video player" section and turn on switch in "Subtitle", so that video player will automatically search appropriate subtitle file(.srt).
+
+Step 3. Move your video and subtitle file(.srt) to the same folder.
+
+Step 4. Make sure the name of subtitle file is same as the name of video file.</string>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                                </textView>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                        </sections>
+                        <connections>
+                            <outlet property="dataSource" destination="l6p-Fo-cwV" id="eF4-LI-Ade"/>
+                            <outlet property="delegate" destination="l6p-Fo-cwV" id="6Fu-hO-ecP"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Video subtitle" id="xZz-fd-yd0"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="VMZ-VL-d7u" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2000" y="-2360"/>
+        </scene>
+        <!--Navigation Controller - More-->
+        <scene sceneID="f2d-E0-ot3">
+            <objects>
+                <navigationController definesPresentationContext="YES" id="VAM-9x-c72" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="More" image="TabbarMore.png" id="Fvt-Tm-xV1"/>
+                    <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="U3B-lR-U1q">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="aP3-7Z-5D2" kind="relationship" relationship="rootViewController" id="zVb-q0-wsm"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="YS5-9u-yiO" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="80" y="-1739"/>
         </scene>
         <!--Passcode View Controller-->
         <scene sceneID="0sO-FL-dOE">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="sHC-fS-asj" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController storyboardIdentifier="MDPasscodeViewController" id="ixg-mM-XEZ" customClass="MDPasscodeViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Kl9-oc-zMd">
                         <rect key="frame" x="0.0" y="20" width="320" height="460"/>
@@ -236,25 +978,25 @@
                             </textField>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" textAlignment="center" minimumFontSize="17" background="DigitalBackground.png" id="WwW-HU-unH" userLabel="vP1Text Field">
                                 <rect key="frame" x="48" y="77" width="50" height="50"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" keyboardType="numberPad" secureTextEntry="YES"/>
                             </textField>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" textAlignment="center" minimumFontSize="17" background="DigitalBackground.png" id="qhQ-EL-wIX" userLabel="vp2Text Field">
                                 <rect key="frame" x="106" y="77" width="50" height="50"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" keyboardType="numberPad" secureTextEntry="YES"/>
                             </textField>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" textAlignment="center" minimumFontSize="17" background="DigitalBackground.png" id="igm-yb-MpO" userLabel="vP3Text Field">
                                 <rect key="frame" x="164" y="77" width="50" height="50"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" keyboardType="numberPad" secureTextEntry="YES"/>
                             </textField>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" textAlignment="center" minimumFontSize="17" background="DigitalBackground.png" id="gPp-gK-RH9" userLabel="vP4Text Field">
                                 <rect key="frame" x="222" y="77" width="50" height="50"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" keyboardType="numberPad" secureTextEntry="YES"/>
                             </textField>
@@ -281,26 +1023,26 @@
                         <outlet property="vP4" destination="gPp-gK-RH9" id="wIz-Ut-9nV"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="sHC-fS-asj" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="788" y="-1150"/>
         </scene>
         <!--Files Navigation Controller - Files-->
         <scene sceneID="tqE-rl-2p5">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Zfk-IP-Sy7" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <navigationController definesPresentationContext="YES" id="GoA-wp-R9K" customClass="MDFilesNavigationController" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Files" image="TabbarFile.png" id="dS7-ye-Vt4"/>
                     <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="0KB-dI-Oug">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                 </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Zfk-IP-Sy7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="280" y="107"/>
         </scene>
         <!--Foreground View Controller-->
         <scene sceneID="7hf-nD-Ywu">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="cZf-83-TV7" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController storyboardIdentifier="MDForegroundViewController" id="GwA-eo-4k8" customClass="MDForegroundViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Xuy-bj-qUX">
                         <rect key="frame" x="0.0" y="20" width="320" height="460"/>
@@ -317,13 +1059,13 @@
                         <outlet property="logoImageView" destination="ZLC-gk-Xmw" id="1TY-dE-ewY"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="cZf-83-TV7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="280" y="769"/>
         </scene>
         <!--License Agreement View Controller-->
         <scene sceneID="bHv-QC-VO2">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="IzF-r4-eua" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController storyboardIdentifier="MDLicenseAgreementViewController" id="dqC-iW-cdU" customClass="MDLicenseAgreementViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Dgc-dY-Uqa">
                         <rect key="frame" x="0.0" y="20" width="320" height="460"/>
@@ -331,7 +1073,7 @@
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="RzP-rH-ku1">
                                 <rect key="frame" x="122" y="403" width="76" height="37"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" title="I Agree">
                                     <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
@@ -346,9 +1088,9 @@
                             </button>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" id="78h-mi-wqp">
                                 <rect key="frame" x="0.0" y="54" width="320" height="341"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                <mutableString key="text">The Products transacted through the Service are licensed, not sold, to You for use only under the terms of this license, unless a Product is accompanied by a separate license agreement, in which case the terms of that separate license agreement will govern, subject to Your prior acceptance of that separate license agreement. The licensor (“Application Provider”) reserves all rights not expressly granted to You. The Product that is subject to this license is referred to in this license as the “Licensed Application.”
+                                <string key="text">The Products transacted through the Service are licensed, not sold, to You for use only under the terms of this license, unless a Product is accompanied by a separate license agreement, in which case the terms of that separate license agreement will govern, subject to Your prior acceptance of that separate license agreement. The licensor (“Application Provider”) reserves all rights not expressly granted to You. The Product that is subject to this license is referred to in this license as the “Licensed Application.”
 
 a. Scope of License: This license granted to You for the Licensed Application by Application Provider is limited to a non-transferable license to use the Licensed Application on any iPhone or iPod touch that You own or control and as permitted by the Usage Rules set forth in Section 9.b. of the App Store Terms and Conditions (the “Usage Rules”). This license does not allow You to use the Licensed Application on any iPod touch or iPhone that You do not own or control, and You may not distribute or make the Licensed Application available over a network where it could be used by multiple devices at the same time. You may not rent, lease, lend, sell, redistribute or sublicense the Licensed Application. You may not copy (except as expressly permitted by this license and the Usage Rules), decompile, reverse engineer, disassemble, attempt to derive the source code of, modify, or create derivative works of the Licensed Application, any updates, or any part thereof (except as and only to the extent any foregoing restriction is prohibited by applicable law or to the extent as may be permitted by the licensing terms governing use of any open sourced components included with the Licensed Application). Any attempt to do so is a violation of the rights of the Application Provider and its licensors. If You breach this restriction, You may be subject to prosecution and damages. The terms of the license will govern any upgrades provided by Application Provider that replace and/or supplement the original Product, unless such upgrade is accompanied by a separate license in which case the terms of that license will govern.
 
@@ -374,13 +1116,13 @@ g. You may not use or otherwise export or re-export the Licensed Application exc
 
 h. The Licensed Application and related documentation are "Commercial Items", as that term is defined at 48 C.F.R. §2.101, consisting of "Commercial Computer Software" and "Commercial Computer Software Documentation", as such terms are used in 48 C.F.R. §12.212 or 48 C.F.R. §227.7202, as applicable. Consistent with 48 C.F.R. §12.212 or 48 C.F.R. §227.7202-1 through 227.7202-4, as applicable, the Commercial Computer Software and Commercial Computer Software Documentation are being licensed to U.S. Government end users (a) only as Commercial Items and (b) with only those rights as are granted to all other end users pursuant to the terms and conditions herein. Unpublished-rights reserved under the copyright laws of the United States.
 
-i. The laws of the State of California, excluding its conflicts of law rules, govern this license and your use of the Licensed Application. Your use of the Licensed Application may also be subject to other local, state, national, or international laws.</mutableString>
+i. The laws of the State of California, excluding its conflicts of law rules, govern this license and your use of the Licensed Application. Your use of the Licensed Application may also be subject to other local, state, national, or international laws.</string>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="END USER LICENSE AGREEMENT" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="0qL-u5-ZT6">
                                 <rect key="frame" x="20" y="25" width="278" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
@@ -389,13 +1131,13 @@ i. The laws of the State of California, excluding its conflicts of law rules, go
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="IzF-r4-eua" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="280" y="1431"/>
         </scene>
         <!--Files View Controller-->
         <scene sceneID="MR8-91-85Q">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="9y9-2M-jcZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tableViewController storyboardIdentifier="MDFilesViewController" id="5w8-22-CJ8" customClass="MDFilesViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="o1y-Yg-vNZ">
                         <rect key="frame" x="0.0" y="64" width="320" height="367"/>
@@ -409,30 +1151,29 @@ i. The laws of the State of California, excluding its conflicts of law rules, go
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                 </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="9y9-2M-jcZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="788" y="107"/>
         </scene>
         <!--Move Files Navigation Controller-->
         <scene sceneID="faE-ny-swa">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="wMI-0e-leU" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <navigationController storyboardIdentifier="MDMoveFilesNavigationController" definesPresentationContext="YES" toolbarHidden="NO" id="glT-vz-2b9" customClass="MDMoveFilesNavigationController" sceneMemberID="viewController">
-                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
+                <navigationController storyboardIdentifier="MDMoveFilesNavigationController" definesPresentationContext="YES" id="glT-vz-2b9" customClass="MDMoveFilesNavigationController" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="GdD-uN-U1I">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
-                    <toolbar key="toolbar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="cNg-NV-90X">
+                    <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="NKg-4x-kmi">
                         <rect key="frame" x="0.0" y="436" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </toolbar>
                 </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="wMI-0e-leU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1218" y="107"/>
         </scene>
         <!--Document View Controller-->
         <scene sceneID="rjD-2Z-1mU">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="mw0-ZK-GlK" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController storyboardIdentifier="" id="YTN-b1-pDy" customClass="MDDocumentViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="xVJ-Ew-jqB">
                         <rect key="frame" x="0.0" y="64" width="320" height="416"/>
@@ -440,7 +1181,7 @@ i. The laws of the State of California, excluding its conflicts of law rules, go
                         <subviews>
                             <webView contentMode="scaleToFill" scalesPageToFit="YES" id="4t4-IF-jTA">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="416"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <connections>
                                     <outlet property="delegate" destination="YTN-b1-pDy" id="EHp-s4-qFX"/>
@@ -455,60 +1196,80 @@ i. The laws of the State of California, excluding its conflicts of law rules, go
                         <outlet property="webView" destination="4t4-IF-jTA" id="Ot6-Ti-fdX"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="mw0-ZK-GlK" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1744" y="713"/>
         </scene>
         <!--Image Viewer Controller-->
         <scene sceneID="dxb-Yg-26S">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="WCT-eT-JJJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <viewController id="Lef-Xy-TAU" customClass="MDImageViewerController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="MDImageViewerController" id="Lef-Xy-TAU" customClass="MDImageViewerController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="TCQ-yl-XZl">
-                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                        <rect key="frame" x="0.0" y="20" width="320" height="460"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="4ZF-i3-Ehx" customClass="MDScrollView">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="416"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <connections>
-                                    <outlet property="delegate" destination="Lef-Xy-TAU" id="Pk4-zc-QO7"/>
-                                </connections>
-                            </scrollView>
+                            <navigationBar contentMode="scaleToFill" barStyle="blackTranslucent" id="oxA-XD-T1e">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <items>
+                                    <navigationItem title="Title" id="9Tb-vr-khz">
+                                        <barButtonItem key="leftBarButtonItem" systemItem="action" id="4et-f2-e0n">
+                                            <connections>
+                                                <action selector="action:" destination="Lef-Xy-TAU" id="QL8-N2-h7Y"/>
+                                            </connections>
+                                        </barButtonItem>
+                                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="hV7-dn-x0O">
+                                            <connections>
+                                                <action selector="doneImageWatching:" destination="Lef-Xy-TAU" id="3YX-3R-dAB"/>
+                                            </connections>
+                                        </barButtonItem>
+                                    </navigationItem>
+                                </items>
+                            </navigationBar>
                         </subviews>
-                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" id="Nq9-jP-Fnm"/>
                     <connections>
-                        <outlet property="imageScrolleView" destination="4ZF-i3-Ehx" id="kVc-3W-KNn"/>
+                        <outlet property="navBar" destination="oxA-XD-T1e" id="A3k-DR-6jV"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="WCT-eT-JJJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1744" y="1356"/>
         </scene>
         <!--Move Files View Controller-->
-        <scene sceneID="SZ4-uh-VZM">
+        <scene sceneID="gQd-Fq-3Xs">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Dms-xd-Uoq" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <tableViewController storyboardIdentifier="MDMoveFilesViewController" id="zAd-jv-VcU" customClass="MDMoveFilesViewController" sceneMemberID="viewController">
-                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="ZyF-u6-Hxc">
-                        <rect key="frame" x="0.0" y="64" width="320" height="372"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <connections>
-                            <outlet property="dataSource" destination="zAd-jv-VcU" id="oO9-k4-KMN"/>
-                            <outlet property="delegate" destination="zAd-jv-VcU" id="QYX-44-be8"/>
-                        </connections>
-                    </tableView>
+                <viewController storyboardIdentifier="MDMoveFilesViewController" id="Sd8-eJ-37f" customClass="MDMoveFilesViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="ha3-5b-Z9d">
+                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="EjG-fO-p9y">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="416"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="Sd8-eJ-37f" id="8uq-Bb-gtd"/>
+                                    <outlet property="delegate" destination="Sd8-eJ-37f" id="PnN-Yu-XfL"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
-                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
-                </tableViewController>
+                    <connections>
+                        <outlet property="tableView" destination="EjG-fO-p9y" id="vhs-BY-byw"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="wlx-QT-cHy" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1638" y="105"/>
+            <point key="canvasLocation" x="1745" y="102"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="XDm-Y4-DAX">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="vZq-s1-0vj" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tabBarController definesPresentationContext="YES" id="AcG-cU-k2O" sceneMemberID="viewController">
                     <nil key="simulatedBottomBarMetrics"/>
                     <tabBar key="tabBar" contentMode="scaleToFill" id="8hB-oq-HGG">
@@ -519,15 +1280,16 @@ i. The laws of the State of California, excluding its conflicts of law rules, go
                     <connections>
                         <segue destination="GoA-wp-R9K" kind="relationship" relationship="viewControllers" id="YTO-HT-e9t"/>
                         <segue destination="mDB-KO-CNZ" kind="relationship" relationship="viewControllers" id="Jt6-qx-Yyp"/>
+                        <segue destination="VAM-9x-c72" kind="relationship" relationship="viewControllers" id="koT-Rx-ace"/>
                     </connections>
                 </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="vZq-s1-0vj" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-254" y="-224"/>
         </scene>
         <!--Navigation Controller - Settings-->
         <scene sceneID="uPY-TS-6zH">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="wTP-oZ-K6S" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <navigationController id="mDB-KO-CNZ" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Settings" image="TabbarSettings.png" id="WEZ-81-Fca"/>
                     <toolbarItems/>
@@ -540,13 +1302,13 @@ i. The laws of the State of California, excluding its conflicts of law rules, go
                         <segue destination="9ra-UL-nsD" kind="relationship" relationship="rootViewController" id="1uK-Fi-AsN"/>
                     </connections>
                 </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="wTP-oZ-K6S" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="280" y="-532"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="IwW-pV-QjP">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="EcJ-yb-sr7" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <navigationController storyboardIdentifier="MDDocumentViewController" id="v5a-oK-tF0" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="G8Y-UY-hdG">
@@ -558,35 +1320,17 @@ i. The laws of the State of California, excluding its conflicts of law rules, go
                         <segue destination="YTN-b1-pDy" kind="relationship" relationship="rootViewController" id="7sv-3K-bvt"/>
                     </connections>
                 </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="EcJ-yb-sr7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1218" y="713"/>
-        </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="zDT-fP-fhs">
-            <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="dO6-dc-AHe" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <navigationController storyboardIdentifier="MDImageViewerController" id="fqG-GL-aEU" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="IRw-e8-26U">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="Lef-Xy-TAU" kind="relationship" relationship="rootViewController" id="Kpg-aT-nbK"/>
-                    </connections>
-                </navigationController>
-            </objects>
-            <point key="canvasLocation" x="1218" y="1356"/>
         </scene>
         <!--Player Controller-->
         <scene sceneID="5ST-dm-GoM">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="65r-OA-PqI" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController storyboardIdentifier="MDAVPlayerController" id="hHu-Hu-HBp" customClass="MDAVPlayerController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="9lU-yf-yh4">
                         <rect key="frame" x="0.0" y="20" width="320" height="460"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" id="8Yk-1W-nOH">
                                 <rect key="frame" x="0.0" y="0.0" width="321" height="460"/>
@@ -602,8 +1346,17 @@ i. The laws of the State of California, excluding its conflicts of law rules, go
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                     </activityIndicatorView>
                                 </subviews>
-                                <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Subtitle" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="10" id="BzS-KM-JGT" customClass="MDLabel">
+                                <rect key="frame" x="20" y="335" width="280" height="78"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
+                                <color key="textColor" red="0.56899713010204089" green="0.54446816069859871" blue="0.030928971275641676" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                                <color key="shadowColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <size key="shadowOffset" width="0.0" height="0.0"/>
+                            </label>
                             <navigationBar contentMode="scaleToFill" id="e2m-yC-6Nt">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
@@ -633,7 +1386,7 @@ i. The laws of the State of California, excluding its conflicts of law rules, go
                                 <rect key="frame" x="0.0" y="44" width="320" height="67"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <subviews>
-                                    <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" id="qXm-dY-Jdw">
+                                    <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" id="qXm-dY-Jdw" customClass="OBSlider">
                                         <rect key="frame" x="48" y="23" width="224" height="23"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
                                         <connections>
@@ -663,11 +1416,13 @@ i. The laws of the State of California, excluding its conflicts of law rules, go
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <connections>
                         <outlet property="currentTimeLabel" destination="Pf7-Xo-n1x" id="zYp-FU-FUZ"/>
                         <outlet property="gestureReceiverView" destination="8Yk-1W-nOH" id="rCB-r7-Qph"/>
                         <outlet property="loadingIndicator" destination="KPn-Vm-FBk" id="Nmo-uV-SUt"/>
                         <outlet property="navBar" destination="e2m-yC-6Nt" id="ZdN-me-kFf"/>
+                        <outlet property="subtitleLabel" destination="BzS-KM-JGT" id="oJp-Gs-t5m"/>
                         <outlet property="timeLeftLabel" destination="F1E-Qc-5Ef" id="Hdf-iy-6sq"/>
                         <outlet property="timeLineSlider" destination="qXm-dY-Jdw" id="grG-vv-w1C"/>
                         <outlet property="timelineBackgroundView" destination="MrQ-Q3-gFT" id="Uaz-b2-1zv"/>
@@ -675,13 +1430,13 @@ i. The laws of the State of California, excluding its conflicts of law rules, go
                         <outlet property="videoLayerView" destination="deh-sv-Bao" id="A4w-4o-XSx"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="65r-OA-PqI" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1218" y="1995"/>
         </scene>
         <!--Music Player Controller-->
         <scene sceneID="lkq-si-uOk">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="LE3-Ab-y29" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController storyboardIdentifier="MDMusicPlayerController" id="Ea1-l6-d3H" customClass="MDMusicPlayerController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="cFx-SI-90d">
                         <rect key="frame" x="0.0" y="20" width="320" height="460"/>
@@ -709,7 +1464,7 @@ i. The laws of the State of California, excluding its conflicts of law rules, go
                                 <rect key="frame" x="0.0" y="44" width="320" height="108"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
-                                    <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" id="XXM-dJ-NVi">
+                                    <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" id="XXM-dJ-NVi" customClass="OBSlider">
                                         <rect key="frame" x="56" y="73" width="208" height="23"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <connections>
@@ -772,7 +1527,7 @@ i. The laws of the State of California, excluding its conflicts of law rules, go
                             </view>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="center" id="wEB-Qx-Fvw">
                                 <rect key="frame" x="0.0" y="153" width="320" height="263"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="calibratedRGB"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -824,15 +1579,14 @@ i. The laws of the State of California, excluding its conflicts of law rules, go
                         <outlet property="toolbar" destination="n9r-qT-atU" id="veD-XF-BLI"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="LE3-Ab-y29" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1218" y="2593"/>
         </scene>
         <!--Unarchive Navigation Controller-->
         <scene sceneID="sGe-g1-BCr">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="ac9-LQ-N7h" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <navigationController storyboardIdentifier="MDUnarchiveNavigationController" definesPresentationContext="YES" toolbarHidden="NO" id="6lN-zY-iKn" customClass="MDUnarchiveNavigationController" sceneMemberID="viewController">
-                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
+                <navigationController storyboardIdentifier="MDUnarchiveNavigationController" definesPresentationContext="YES" id="6lN-zY-iKn" customClass="MDUnarchiveNavigationController" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="tRU-EK-7Q8">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -841,45 +1595,54 @@ i. The laws of the State of California, excluding its conflicts of law rules, go
                         <autoresizingMask key="autoresizingMask"/>
                     </toolbar>
                 </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ac9-LQ-N7h" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1234" y="3277"/>
         </scene>
         <!--Unarchive View Controller-->
-        <scene sceneID="ieb-C3-cgC">
+        <scene sceneID="lQC-dK-3oK">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="JB9-eP-tv1" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <tableViewController storyboardIdentifier="MDUnarchiveViewController" id="g75-VH-FcA" customClass="MDUnarchiveViewController" sceneMemberID="viewController">
-                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="s8h-1t-Qj8">
-                        <rect key="frame" x="0.0" y="64" width="320" height="372"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <connections>
-                            <outlet property="dataSource" destination="g75-VH-FcA" id="p0s-nt-uBL"/>
-                            <outlet property="delegate" destination="g75-VH-FcA" id="SCn-I7-2YK"/>
-                        </connections>
-                    </tableView>
+                <viewController storyboardIdentifier="MDUnarchiveViewController" id="7g5-oF-0cx" customClass="MDUnarchiveViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="OOM-3P-bXu">
+                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="1VX-6T-pMr">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="416"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="7g5-oF-0cx" id="V1U-2L-dal"/>
+                                    <outlet property="delegate" destination="7g5-oF-0cx" id="L4R-LZ-2i7"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
-                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
-                </tableViewController>
+                    <connections>
+                        <outlet property="tableView" destination="1VX-6T-pMr" id="CJz-Qd-HqV"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="VTw-5n-CS3" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1651" y="3277"/>
+            <point key="canvasLocation" x="1641" y="3277"/>
         </scene>
         <!--Progress View Controller-->
         <scene sceneID="tFQ-3b-ELs">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="vd0-38-6AL" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController storyboardIdentifier="MDProgressViewController" id="B9J-t1-uRo" customClass="MDProgressViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8gT-5u-CBs">
                         <rect key="frame" x="0.0" y="20" width="320" height="460"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" heightSizable="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <progressView opaque="NO" contentMode="scaleToFill" progress="0.5" id="0x1-Ry-8jk">
                                 <rect key="frame" x="20" y="225" width="280" height="9"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                             </progressView>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="0%" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="WLZ-ov-Ut5">
                                 <rect key="frame" x="20" y="196" width="280" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -888,7 +1651,7 @@ i. The laws of the State of California, excluding its conflicts of law rules, go
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Prepare to unarchive" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="008-nM-sU9">
                                 <rect key="frame" x="20" y="167" width="280" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -897,43 +1660,46 @@ i. The laws of the State of California, excluding its conflicts of law rules, go
                             </label>
                         </subviews>
                     </view>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <connections>
                         <outlet property="percentLabel" destination="WLZ-ov-Ut5" id="FSZ-5G-9Av"/>
                         <outlet property="progressView" destination="0x1-Ry-8jk" id="eqT-th-61d"/>
                         <outlet property="statusLabel" destination="008-nM-sU9" id="5A8-5d-mp2"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="vd0-38-6AL" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2051" y="3277"/>
         </scene>
         <!--Deleting View Controller-->
         <scene sceneID="b3r-Yf-fFq">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="xF8-wD-WhC" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController storyboardIdentifier="MDDeletingViewController" id="jeV-Ot-fBF" customClass="MDDeletingViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="znO-ak-clq">
                         <rect key="frame" x="0.0" y="20" width="320" height="460"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" heightSizable="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Deleting..." lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="ruJ-hc-Fvm">
                                 <rect key="frame" x="122" y="192" width="77" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" style="whiteLarge" id="Aa2-Dc-Fht">
                                 <rect key="frame" x="142" y="221" width="37" height="37"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                             </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" red="0.8292410714285714" green="0.8292410714285714" blue="0.8292410714285714" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <connections>
                         <outlet property="activityView" destination="Aa2-Dc-Fht" id="0FT-0O-XXb"/>
                         <outlet property="messageLabel" destination="ruJ-hc-Fvm" id="sG2-a7-eQb"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="xF8-wD-WhC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2397" y="3277"/>
         </scene>
@@ -941,126 +1707,9 @@ i. The laws of the State of California, excluding its conflicts of law rules, go
     <resources>
         <image name="DigitalBackground.png" width="100" height="100"/>
         <image name="TabbarFile.png" width="32" height="32"/>
+        <image name="TabbarMore.png" width="32" height="32"/>
         <image name="TabbarSettings.png" width="32" height="32"/>
     </resources>
-    <classes>
-        <class className="MDAVPlayerController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MDAVPlayerController.h"/>
-            <relationships>
-                <relationship kind="action" name="beginChangeSlider:"/>
-                <relationship kind="action" name="endChangeSlider:"/>
-                <relationship kind="action" name="fastForward:"/>
-                <relationship kind="action" name="rewind:"/>
-                <relationship kind="action" name="sliderValueChange:"/>
-                <relationship kind="outlet" name="currentTimeLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="gestureReceiverView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="loadingIndicator" candidateClass="UIActivityIndicatorView"/>
-                <relationship kind="outlet" name="navBar" candidateClass="UINavigationBar"/>
-                <relationship kind="outlet" name="timeLeftLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="timeLineSlider" candidateClass="UISlider"/>
-                <relationship kind="outlet" name="timelineBackgroundView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="toolbar" candidateClass="UIToolbar"/>
-                <relationship kind="outlet" name="videoLayerView" candidateClass="UIView"/>
-            </relationships>
-        </class>
-        <class className="MDDeletingViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MDDeletingViewController.h"/>
-            <relationships>
-                <relationship kind="outlet" name="activityView" candidateClass="UIActivityIndicatorView"/>
-                <relationship kind="outlet" name="messageLabel" candidateClass="UILabel"/>
-            </relationships>
-        </class>
-        <class className="MDDocumentViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MDDocumentViewController.h"/>
-            <relationships>
-                <relationship kind="outlet" name="webView" candidateClass="UIWebView"/>
-            </relationships>
-        </class>
-        <class className="MDFilesNavigationController" superclassName="UINavigationController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MDFilesNavigationController.h"/>
-        </class>
-        <class className="MDFilesViewController" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MDFilesViewController.h"/>
-        </class>
-        <class className="MDForegroundViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MDForegroundViewController.h"/>
-            <relationships>
-                <relationship kind="outlet" name="logoImageView" candidateClass="UIImageView"/>
-            </relationships>
-        </class>
-        <class className="MDImageViewerController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MDImageViewerController.h"/>
-            <relationships>
-                <relationship kind="outlet" name="imageScrolleView" candidateClass="UIScrollView"/>
-            </relationships>
-        </class>
-        <class className="MDLicenseAgreementViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MDLicenseAgreementViewController.h"/>
-        </class>
-        <class className="MDMoveFilesNavigationController" superclassName="UINavigationController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MDMoveFilesNavigationController.h"/>
-        </class>
-        <class className="MDMoveFilesViewController" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MDMoveFilesViewController.h"/>
-        </class>
-        <class className="MDMusicPlayerController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MDMusicPlayerController.h"/>
-            <relationships>
-                <relationship kind="action" name="doneListening:"/>
-                <relationship kind="action" name="fastForward:"/>
-                <relationship kind="action" name="rewind:"/>
-                <relationship kind="outlet" name="albumNameLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="artistLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="currentTimeLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="gestureView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="lyricsBackgroundView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="lyricsTextView" candidateClass="UITextView"/>
-                <relationship kind="outlet" name="musicImageView" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="musicReflectionImageView" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="navBar" candidateClass="UINavigationBar"/>
-                <relationship kind="outlet" name="timeLeftLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="timeLineSlider" candidateClass="UISlider"/>
-                <relationship kind="outlet" name="timelineBackgroundView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="timelineView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="titleLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="toolbar" candidateClass="UIToolbar"/>
-            </relationships>
-        </class>
-        <class className="MDPasscodeViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MDPasscodeViewController.h"/>
-            <relationships>
-                <relationship kind="outlet" name="navBar" candidateClass="UINavigationBar"/>
-                <relationship kind="outlet" name="p1" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="p2" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="p3" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="p4" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="vP1" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="vP2" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="vP3" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="vP4" candidateClass="UITextField"/>
-            </relationships>
-        </class>
-        <class className="MDProgressViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MDProgressViewController.h"/>
-            <relationships>
-                <relationship kind="outlet" name="percentLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="progressView" candidateClass="UIProgressView"/>
-                <relationship kind="outlet" name="statusLabel" candidateClass="UILabel"/>
-            </relationships>
-        </class>
-        <class className="MDScrollView" superclassName="UIScrollView">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MDScrollView.h"/>
-        </class>
-        <class className="MDSettingsViewController" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MDSettingsViewController.h"/>
-        </class>
-        <class className="MDUnarchiveNavigationController" superclassName="UINavigationController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MDUnarchiveNavigationController.h"/>
-        </class>
-        <class className="MDUnarchiveViewController" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MDUnarchiveViewController.h"/>
-        </class>
-    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

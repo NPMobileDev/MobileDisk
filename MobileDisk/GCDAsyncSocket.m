@@ -8,18 +8,11 @@
 //  https://github.com/robbiehanson/CocoaAsyncSocket
 //
 
-#if ! __has_feature(objc_arc)
-#warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
-// For more information see: https://github.com/robbiehanson/CocoaAsyncSocket/wiki/ARC
-#endif
-
 #import "GCDAsyncSocket.h"
 
 #if TARGET_OS_IPHONE
-  #import <CFNetwork/CFNetwork.h>
+#import <CFNetwork/CFNetwork.h>
 #endif
-
-#import <mach/mach.h>
 
 #import <arpa/inet.h>
 #import <fcntl.h>
@@ -34,13 +27,44 @@
 #import <sys/uio.h>
 #import <unistd.h>
 
+#if ! __has_feature(objc_arc)
+#warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
+// For more information see: https://github.com/robbiehanson/CocoaAsyncSocket/wiki/ARC
+#endif
+
+/**
+ * Does ARC support support GCD objects?
+ * It does if the minimum deployment target is iOS 6+ or Mac OS X 10.8+
+**/
+#if TARGET_OS_IPHONE
+
+  // Compiling for iOS
+
+  #if __IPHONE_OS_VERSION_MIN_REQUIRED >= 60000 // iOS 6.0 or later
+    #define NEEDS_DISPATCH_RETAIN_RELEASE 0
+  #else                                         // iOS 5.X or earlier
+    #define NEEDS_DISPATCH_RETAIN_RELEASE 1
+  #endif
+
+#else
+
+  // Compiling for Mac OS X
+
+  #if MAC_OS_X_VERSION_MIN_REQUIRED >= 1080     // Mac OS X 10.8 or later
+    #define NEEDS_DISPATCH_RETAIN_RELEASE 0
+  #else
+    #define NEEDS_DISPATCH_RETAIN_RELEASE 1     // Mac OS X 10.7 or earlier
+  #endif
+
+#endif
+
 
 #if 0
 
 // Logging Enabled - See log level below
 
 // Logging uses the CocoaLumberjack framework (which is also GCD based).
-// http://code.google.com/p/cocoalumberjack/
+// https://github.com/robbiehanson/CocoaLumberjack
 // 
 // It allows us to do a lot of logging without significantly slowing down the code.
 #import "DDLog.h"
@@ -154,8 +178,60 @@ enum GCDAsyncSocketConfig
   static NSThread *cfstreamThread;  // Used for CFStreams
 #endif
 
-@interface GCDAsyncSocket (Private)
-
+@interface GCDAsyncSocket ()
+{
+	uint32_t flags;
+	uint16_t config;
+	
+#if __has_feature(objc_arc_weak)
+	__weak id delegate;
+#else
+	__unsafe_unretained id delegate;
+#endif
+	dispatch_queue_t delegateQueue;
+	
+	int socket4FD;
+	int socket6FD;
+	int connectIndex;
+	NSData * connectInterface4;
+	NSData * connectInterface6;
+	
+	dispatch_queue_t socketQueue;
+	
+	dispatch_source_t accept4Source;
+	dispatch_source_t accept6Source;
+	dispatch_source_t connectTimer;
+	dispatch_source_t readSource;
+	dispatch_source_t writeSource;
+	dispatch_source_t readTimer;
+	dispatch_source_t writeTimer;
+	
+	NSMutableArray *readQueue;
+	NSMutableArray *writeQueue;
+	
+	GCDAsyncReadPacket *currentRead;
+	GCDAsyncWritePacket *currentWrite;
+	
+	unsigned long socketFDBytesAvailable;
+	
+	GCDAsyncSocketPreBuffer *preBuffer;
+		
+#if TARGET_OS_IPHONE
+	CFStreamClientContext streamContext;
+	CFReadStreamRef readStream;
+	CFWriteStreamRef writeStream;
+#endif
+#if SECURE_TRANSPORT_MAYBE_AVAILABLE
+	SSLContextRef sslContext;
+	GCDAsyncSocketPreBuffer *sslPreBuffer;
+	size_t sslWriteCachedLength;
+	OSStatus sslErrCode;
+#endif
+	
+	void *IsOnSocketQueueOrTargetQueueKey;
+	
+	id userData;
+}
 // Accepting
 - (BOOL)doAccept:(int)socketFD;
 
@@ -172,7 +248,6 @@ enum GCDAsyncSocketConfig
 
 // Disconnect
 - (void)closeWithError:(NSError *)error;
-- (void)close;
 - (void)maybeClose;
 
 // Errors
@@ -265,10 +340,28 @@ enum GCDAsyncSocketConfig
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-@interface GCDAsyncSocketRingBuffer : NSObject
+/**
+ * A PreBuffer is used when there is more data available on the socket
+ * than is being requested by current read request.
+ * In this case we slurp up all data from the socket (to minimize sys calls),
+ * and store additional yet unread data in a "prebuffer".
+ * 
+ * The prebuffer is entirely drained before we read from the socket again.
+ * In other words, a large chunk of data is written is written to the prebuffer.
+ * The prebuffer is then drained via a series of one or more reads (for subsequent read request(s)).
+ * 
+ * A ring buffer was once used for this purpose.
+ * But a ring buffer takes up twice as much memory as needed (double the size for mirroring).
+ * In fact, it generally takes up more than twice the needed size as everything has to be rounded up to vm_page_size.
+ * And since the prebuffer is always completely drained after being written to, a full ring buffer isn't needed.
+ * 
+ * The current design is very simple and straight-forward, while also keeping memory requirements lower.
+**/
+
+@interface GCDAsyncSocketPreBuffer : NSObject
 {
-	uint8_t *ringBuffer;
-	size_t ringBufferSize;
+	uint8_t *preBuffer;
+	size_t preBufferSize;
 	
 	uint8_t *readPointer;
 	uint8_t *writePointer;
@@ -295,127 +388,46 @@ enum GCDAsyncSocketConfig
 
 @end
 
-@implementation GCDAsyncSocketRingBuffer
-
-static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
-{
-	uint8_t *ringBuffer = NULL;
-	
-	do
-	{
-		kern_return_t result;
-		
-		vm_address_t buffer;
-		vm_size_t bufferSize = ringBufferSize;
-		
-		result = vm_allocate(mach_task_self(), &buffer, (bufferSize*2), VM_FLAGS_ANYWHERE);
-		if (result != ERR_SUCCESS)
-		{
-			LogCError(@"vm_allocate error: %d", result);
-			
-			continue;
-		}
-		
-		result = vm_deallocate(mach_task_self(), (buffer+bufferSize), bufferSize);
-		if (result != ERR_SUCCESS)
-		{
-			LogCError(@"vm_deallocate error: %d", result);
-			
-			vm_deallocate(mach_task_self(), buffer, (bufferSize*2));
-			continue;
-		}
-		
-		vm_address_t bufferMirror = buffer + bufferSize;
-		vm_prot_t cur_protection;
-		vm_prot_t max_protection;
-		
-		result = vm_remap(mach_task_self(),
-		                  &bufferMirror,       // target address
-		                  bufferSize,          // target address size
-		                  0,                   // target address alignment mask
-		                  FALSE,               // target address placement indicator
-		                  mach_task_self(),  
-		                  buffer,              // source address
-		                  0,                   // copy
-		                  &cur_protection,     // unused
-		                  &max_protection,     // unused
-		                  VM_INHERIT_DEFAULT);
-		
-		if (result != ERR_SUCCESS)
-		{
-			// Race condition we're prepared for.
-			// This may occasionally happen, which is why we do this in a loop.
-			LogCInfo(@"vm_remap error: %d", result);
-			
-			vm_deallocate(mach_task_self(), buffer, bufferSize);
-		}
-		else
-		{
-			ringBuffer = (uint8_t *)buffer;
-		}
-		
-		
-	} while (ringBuffer == NULL);
-	
-	*ringBufferPtr = ringBuffer;
-}
+@implementation GCDAsyncSocketPreBuffer
 
 - (id)initWithCapacity:(size_t)numBytes
 {
 	if ((self = [super init]))
 	{
-		// Round up to nearest vm_page_size
-		ringBufferSize = round_page(numBytes);
+		preBufferSize = numBytes;
+		preBuffer = malloc(preBufferSize);
 		
-		allocate_ring_buffer(&ringBuffer, ringBufferSize);
-		
-		readPointer = ringBuffer;
-		writePointer = ringBuffer;
+		readPointer = preBuffer;
+		writePointer = preBuffer;
 	}
 	return self;
 }
 
 - (void)dealloc
 {
-	kern_return_t result =
-	    vm_deallocate(mach_task_self(), (vm_address_t)ringBuffer, (vm_size_t)(ringBufferSize*2));
-	
-	if (result != ERR_SUCCESS)
-	{
-		LogError(@"vm_deallocate error: %d", result);
-	}
+	if (preBuffer)
+		free(preBuffer);
 }
 
 - (void)ensureCapacityForWrite:(size_t)numBytes
 {
-	size_t availableSpace = ringBufferSize - (writePointer - readPointer);
+	size_t availableSpace = preBufferSize - (writePointer - readPointer);
 	
 	if (numBytes > availableSpace)
 	{
 		size_t additionalBytes = numBytes - availableSpace;
 		
-		uint8_t *newRingBuffer = NULL;
-		size_t newRingBufferSize = round_page(ringBufferSize + additionalBytes);
+		size_t newPreBufferSize = preBufferSize + additionalBytes;
+		uint8_t *newPreBuffer = realloc(preBuffer, newPreBufferSize);
 		
-		allocate_ring_buffer(&newRingBuffer, newRingBufferSize);
+		size_t readPointerOffset = readPointer - preBuffer;
+		size_t writePointerOffset = writePointer - preBuffer;
 		
-		size_t availableBytes = writePointer - readPointer;
+		preBuffer = newPreBuffer;
+		preBufferSize = newPreBufferSize;
 		
-		memcpy((void *)newRingBuffer, (const void *)readPointer, (unsigned long)(availableBytes));
-		
-		kern_return_t result =
-		    vm_deallocate(mach_task_self(), (vm_address_t)ringBuffer, (vm_size_t)(ringBufferSize*2));
-		
-		if (result != ERR_SUCCESS)
-		{
-			LogError(@"vm_deallocate error: %d", result);
-		}
-		
-		ringBuffer = newRingBuffer;
-		ringBufferSize = newRingBufferSize;
-		
-		readPointer = ringBuffer;
-		writePointer = ringBuffer + availableBytes;
+		readPointer = preBuffer + readPointerOffset;
+		writePointer = preBuffer + writePointerOffset;
 	}
 }
 
@@ -435,9 +447,21 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 	if (availableBytesPtr) *availableBytesPtr = writePointer - readPointer;
 }
 
+- (void)didRead:(size_t)bytesRead
+{
+	readPointer += bytesRead;
+	
+	if (readPointer == writePointer)
+	{
+		// The prebuffer has been drained. Reset pointers.
+		readPointer  = preBuffer;
+		writePointer = preBuffer;
+	}
+}
+
 - (size_t)availableSpace
 {
-	return ringBufferSize - (writePointer - readPointer);
+	return preBufferSize - (writePointer - readPointer);
 }
 
 - (uint8_t *)writeBuffer
@@ -448,18 +472,7 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 - (void)getWriteBuffer:(uint8_t **)bufferPtr availableSpace:(size_t *)availableSpacePtr
 {
 	if (bufferPtr) *bufferPtr = writePointer;
-	if (availableSpacePtr) *availableSpacePtr = ringBufferSize - (writePointer - readPointer);
-}
-
-- (void)didRead:(size_t)bytesRead
-{
-	readPointer += bytesRead;
-	
-	if (readPointer >= (ringBuffer + ringBufferSize))
-	{
-		readPointer  -= ringBufferSize;
-		writePointer -= ringBufferSize;
-	}
+	if (availableSpacePtr) *availableSpacePtr = preBufferSize - (writePointer - readPointer);
 }
 
 - (void)didWrite:(size_t)bytesWritten
@@ -469,8 +482,8 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 
 - (void)reset
 {
-	readPointer = ringBuffer;
-	writePointer = ringBuffer;
+	readPointer  = preBuffer;
+	writePointer = preBuffer;
 }
 
 @end
@@ -514,7 +527,7 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 
 - (NSUInteger)readLengthForNonTermWithHint:(NSUInteger)bytesAvailable;
 - (NSUInteger)readLengthForTermWithHint:(NSUInteger)bytesAvailable shouldPreBuffer:(BOOL *)shouldPreBufferPtr;
-- (NSUInteger)readLengthForTermWithPreBuffer:(GCDAsyncSocketRingBuffer *)preBuffer found:(BOOL *)foundPtr;
+- (NSUInteger)readLengthForTermWithPreBuffer:(GCDAsyncSocketPreBuffer *)preBuffer found:(BOOL *)foundPtr;
 
 - (NSInteger)searchForTermAfterPreBuffering:(ssize_t)numBytes;
 
@@ -778,7 +791,7 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
  * 
  * It is assumed the terminator has not already been read.
 **/
-- (NSUInteger)readLengthForTermWithPreBuffer:(GCDAsyncSocketRingBuffer *)preBuffer found:(BOOL *)foundPtr
+- (NSUInteger)readLengthForTermWithPreBuffer:(GCDAsyncSocketPreBuffer *)preBuffer found:(BOOL *)foundPtr
 {
 	NSAssert(term != nil, @"This method does not apply to non-term reads");
 	NSAssert([preBuffer availableBytes] > 0, @"Invoked with empty pre buffer!");
@@ -1036,12 +1049,11 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 	if((self = [super init]))
 	{
 		delegate = aDelegate;
+		delegateQueue = dq;
 		
-		if (dq)
-		{
-			dispatch_retain(dq);
-			delegateQueue = dq;
-		}
+		#if NEEDS_DISPATCH_RETAIN_RELEASE
+		if (dq) dispatch_retain(dq);
+		#endif
 		
 		socket4FD = SOCKET_NULL;
 		socket6FD = SOCKET_NULL;
@@ -1056,13 +1068,37 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 			NSAssert(sq != dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
 			         @"The given socketQueue parameter must not be a concurrent queue.");
 			
-			dispatch_retain(sq);
 			socketQueue = sq;
+			#if NEEDS_DISPATCH_RETAIN_RELEASE
+			dispatch_retain(sq);
+			#endif
 		}
 		else
 		{
 			socketQueue = dispatch_queue_create([GCDAsyncSocketQueueName UTF8String], NULL);
 		}
+		
+		// The dispatch_queue_set_specific() and dispatch_get_specific() functions take a "void *key" parameter.
+		// From the documentation:
+		//
+		// > Keys are only compared as pointers and are never dereferenced.
+		// > Thus, you can use a pointer to a static variable for a specific subsystem or
+		// > any other value that allows you to identify the value uniquely.
+		//
+		// We're just going to use the memory address of an ivar.
+		// Specifically an ivar that is explicitly named for our purpose to make the code more readable.
+		//
+		// However, it feels tedious (and less readable) to include the "&" all the time:
+		// dispatch_get_specific(&IsOnSocketQueueOrTargetQueueKey)
+		//
+		// So we're going to make it so it doesn't matter if we use the '&' or not,
+		// by assigning the value of the ivar to the address of the ivar.
+		// Thus: IsOnSocketQueueOrTargetQueueKey == &IsOnSocketQueueOrTargetQueueKey;
+		
+		IsOnSocketQueueOrTargetQueueKey = &IsOnSocketQueueOrTargetQueueKey;
+		
+		void *nonNullUnusedPointer = (__bridge void *)self;
+		dispatch_queue_set_specific(socketQueue, IsOnSocketQueueOrTargetQueueKey, nonNullUnusedPointer, NULL);
 		
 		readQueue = [[NSMutableArray alloc] initWithCapacity:5];
 		currentRead = nil;
@@ -1070,7 +1106,7 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 		writeQueue = [[NSMutableArray alloc] initWithCapacity:5];
 		currentWrite = nil;
 		
-		preBuffer = [[GCDAsyncSocketRingBuffer alloc] initWithCapacity:vm_page_size];
+		preBuffer = [[GCDAsyncSocketPreBuffer alloc] initWithCapacity:(1024 * 4)];
 	}
 	return self;
 }
@@ -1079,7 +1115,7 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 {
 	LogInfo(@"%@ - %@ (start)", THIS_METHOD, self);
 	
-	if (dispatch_get_current_queue() == socketQueue)
+	if (dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey))
 	{
 		[self closeWithError:nil];
 	}
@@ -1091,12 +1127,15 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 	}
 	
 	delegate = nil;
-	if (delegateQueue)
-		dispatch_release(delegateQueue);
+	
+	#if NEEDS_DISPATCH_RETAIN_RELEASE
+	if (delegateQueue) dispatch_release(delegateQueue);
+	#endif
 	delegateQueue = NULL;
 	
-	if (socketQueue)
-		dispatch_release(socketQueue);
+	#if NEEDS_DISPATCH_RETAIN_RELEASE
+	if (socketQueue) dispatch_release(socketQueue);
+	#endif
 	socketQueue = NULL;
 	
 	LogInfo(@"%@ - %@ (finish)", THIS_METHOD, self);
@@ -1108,7 +1147,7 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 
 - (id)delegate
 {
-	if (dispatch_get_current_queue() == socketQueue)
+	if (dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey))
 	{
 		return delegate;
 	}
@@ -1130,7 +1169,7 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 		delegate = newDelegate;
 	};
 	
-	if (dispatch_get_current_queue() == socketQueue) {
+	if (dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey)) {
 		block();
 	}
 	else {
@@ -1153,7 +1192,7 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 
 - (dispatch_queue_t)delegateQueue
 {
-	if (dispatch_get_current_queue() == socketQueue)
+	if (dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey))
 	{
 		return delegateQueue;
 	}
@@ -1173,16 +1212,15 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 {
 	dispatch_block_t block = ^{
 		
-		if (delegateQueue)
-			dispatch_release(delegateQueue);
-		
-		if (newDelegateQueue)
-			dispatch_retain(newDelegateQueue);
+		#if NEEDS_DISPATCH_RETAIN_RELEASE
+		if (delegateQueue) dispatch_release(delegateQueue);
+		if (newDelegateQueue) dispatch_retain(newDelegateQueue);
+		#endif
 		
 		delegateQueue = newDelegateQueue;
 	};
 	
-	if (dispatch_get_current_queue() == socketQueue) {
+	if (dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey)) {
 		block();
 	}
 	else {
@@ -1205,7 +1243,7 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 
 - (void)getDelegate:(id *)delegatePtr delegateQueue:(dispatch_queue_t *)delegateQueuePtr
 {
-	if (dispatch_get_current_queue() == socketQueue)
+	if (dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey))
 	{
 		if (delegatePtr) *delegatePtr = delegate;
 		if (delegateQueuePtr) *delegateQueuePtr = delegateQueue;
@@ -1231,16 +1269,15 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 		
 		delegate = newDelegate;
 		
-		if (delegateQueue)
-			dispatch_release(delegateQueue);
-		
-		if (newDelegateQueue)
-			dispatch_retain(newDelegateQueue);
+		#if NEEDS_DISPATCH_RETAIN_RELEASE
+		if (delegateQueue) dispatch_release(delegateQueue);
+		if (newDelegateQueue) dispatch_retain(newDelegateQueue);
+		#endif
 		
 		delegateQueue = newDelegateQueue;
 	};
 	
-	if (dispatch_get_current_queue() == socketQueue) {
+	if (dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey)) {
 		block();
 	}
 	else {
@@ -1261,49 +1298,11 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 	[self setDelegate:newDelegate delegateQueue:newDelegateQueue synchronously:YES];
 }
 
-- (BOOL)autoDisconnectOnClosedReadStream
-{
-	// Note: YES means kAllowHalfDuplexConnection is OFF
-	
-	if (dispatch_get_current_queue() == socketQueue)
-	{
-		return ((config & kAllowHalfDuplexConnection) == 0);
-	}
-	else
-	{
-		__block BOOL result;
-		
-		dispatch_sync(socketQueue, ^{
-			result = ((config & kAllowHalfDuplexConnection) == 0);
-		});
-		
-		return result;
-	}
-}
-
-- (void)setAutoDisconnectOnClosedReadStream:(BOOL)flag
-{
-	// Note: YES means kAllowHalfDuplexConnection is OFF
-	
-	dispatch_block_t block = ^{
-		
-		if (flag)
-			config &= ~kAllowHalfDuplexConnection;
-		else
-			config |= kAllowHalfDuplexConnection;
-	};
-	
-	if (dispatch_get_current_queue() == socketQueue)
-		block();
-	else
-		dispatch_async(socketQueue, block);
-}
-
 - (BOOL)isIPv4Enabled
 {
 	// Note: YES means kIPv4Disabled is OFF
 	
-	if (dispatch_get_current_queue() == socketQueue)
+	if (dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey))
 	{
 		return ((config & kIPv4Disabled) == 0);
 	}
@@ -1331,7 +1330,7 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 			config |= kIPv4Disabled;
 	};
 	
-	if (dispatch_get_current_queue() == socketQueue)
+	if (dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey))
 		block();
 	else
 		dispatch_async(socketQueue, block);
@@ -1341,7 +1340,7 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 {
 	// Note: YES means kIPv6Disabled is OFF
 	
-	if (dispatch_get_current_queue() == socketQueue)
+	if (dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey))
 	{
 		return ((config & kIPv6Disabled) == 0);
 	}
@@ -1369,7 +1368,7 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 			config |= kIPv6Disabled;
 	};
 	
-	if (dispatch_get_current_queue() == socketQueue)
+	if (dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey))
 		block();
 	else
 		dispatch_async(socketQueue, block);
@@ -1379,7 +1378,7 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 {
 	// Note: YES means kPreferIPv6 is OFF
 	
-	if (dispatch_get_current_queue() == socketQueue)
+	if (dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey))
 	{
 		return ((config & kPreferIPv6) == 0);
 	}
@@ -1407,7 +1406,7 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 			config |= kPreferIPv6;
 	};
 	
-	if (dispatch_get_current_queue() == socketQueue)
+	if (dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey))
 		block();
 	else
 		dispatch_async(socketQueue, block);
@@ -1422,7 +1421,7 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 		result = userData;
 	};
 	
-	if (dispatch_get_current_queue() == socketQueue)
+	if (dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey))
 		block();
 	else
 		dispatch_sync(socketQueue, block);
@@ -1440,7 +1439,7 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 		}
 	};
 	
-	if (dispatch_get_current_queue() == socketQueue)
+	if (dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey))
 		block();
 	else
 		dispatch_async(socketQueue, block);
@@ -1676,8 +1675,10 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 			
 			dispatch_source_set_cancel_handler(accept4Source, ^{
 				
+				#if NEEDS_DISPATCH_RETAIN_RELEASE
 				LogVerbose(@"dispatch_release(accept4Source)");
 				dispatch_release(acceptSource);
+				#endif
 				
 				LogVerbose(@"close(socket4FD)");
 				close(socketFD);
@@ -1708,8 +1709,10 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 			
 			dispatch_source_set_cancel_handler(accept6Source, ^{
 				
+				#if NEEDS_DISPATCH_RETAIN_RELEASE
 				LogVerbose(@"dispatch_release(accept6Source)");
 				dispatch_release(acceptSource);
+				#endif
 				
 				LogVerbose(@"close(socket6FD)");
 				close(socketFD);
@@ -1724,7 +1727,7 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 		result = YES;
 	}};
 	
-	if (dispatch_get_current_queue() == socketQueue)
+	if (dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey))
 		block();
 	else
 		dispatch_sync(socketQueue, block);
@@ -1843,8 +1846,9 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 			}
 			
 			// Release the socket queue returned from the delegate (it was retained by acceptedSocket)
-			if (childSocketQueue)
-				dispatch_release(childSocketQueue);
+			#if NEEDS_DISPATCH_RETAIN_RELEASE
+			if (childSocketQueue) dispatch_release(childSocketQueue);
+			#endif
 			
 			// The accepted socket should have been retained by the delegate.
 			// Otherwise it gets properly released when exiting the block.
@@ -1865,7 +1869,7 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 **/
 - (BOOL)preConnectWithInterface:(NSString *)interface error:(NSError **)errPtr
 {
-	NSAssert(dispatch_get_current_queue() == socketQueue, @"Must be dispatched on socketQueue");
+	NSAssert(dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey), @"Must be dispatched on socketQueue");
 	
 	if (delegate == nil) // Must have delegate set
 	{
@@ -2030,7 +2034,7 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 		result = YES;
 	}};
 	
-	if (dispatch_get_current_queue() == socketQueue)
+	if (dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey))
 		block();
 	else
 		dispatch_sync(socketQueue, block);
@@ -2144,7 +2148,7 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 		result = YES;
 	}};
 	
-	if (dispatch_get_current_queue() == socketQueue)
+	if (dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey))
 		block();
 	else
 		dispatch_sync(socketQueue, block);
@@ -2257,7 +2261,7 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 {
 	LogTrace();
 	
-	NSAssert(dispatch_get_current_queue() == socketQueue, @"Must be dispatched on socketQueue");
+	NSAssert(dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey), @"Must be dispatched on socketQueue");
 	NSAssert(address4 || address6, @"Expected at least one valid address");
 	
 	if (aConnectIndex != connectIndex)
@@ -2311,7 +2315,7 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 {
 	LogTrace();
 	
-	NSAssert(dispatch_get_current_queue() == socketQueue, @"Must be dispatched on socketQueue");
+	NSAssert(dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey), @"Must be dispatched on socketQueue");
 	
 	
 	if (aConnectIndex != connectIndex)
@@ -2331,7 +2335,7 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 {
 	LogTrace();
 	
-	NSAssert(dispatch_get_current_queue() == socketQueue, @"Must be dispatched on socketQueue");
+	NSAssert(dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey), @"Must be dispatched on socketQueue");
 	
 	LogVerbose(@"IPv4: %@:%hu", [[self class] hostFromAddress:address4], [[self class] portFromAddress:address4]);
 	LogVerbose(@"IPv6: %@:%hu", [[self class] hostFromAddress:address6], [[self class] portFromAddress:address6]);
@@ -2404,6 +2408,11 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 		}
 	}
 	
+	// Prevent SIGPIPE signals
+	
+	int nosigpipe = 1;
+	setsockopt(socketFD, SOL_SOCKET, SO_NOSIGPIPE, &nosigpipe, sizeof(nosigpipe));
+	
 	// Start the connection process in a background queue
 	
 	int aConnectIndex = connectIndex;
@@ -2439,7 +2448,7 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 {
 	LogTrace();
 	
-	NSAssert(dispatch_get_current_queue() == socketQueue, @"Must be dispatched on socketQueue");
+	NSAssert(dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey), @"Must be dispatched on socketQueue");
 	
 	
 	if (aConnectIndex != connectIndex)
@@ -2552,11 +2561,6 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 		return;
 	}
 	
-	// Prevent SIGPIPE signals
-	
-	int nosigpipe = 1;
-	setsockopt(socketFD, SOL_SOCKET, SO_NOSIGPIPE, &nosigpipe, sizeof(nosigpipe));
-	
 	// Setup our read/write sources
 	
 	[self setupReadAndWriteSourcesForNewlyConnectedSocket:socketFD];
@@ -2571,7 +2575,7 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 {
 	LogTrace();
 	
-	NSAssert(dispatch_get_current_queue() == socketQueue, @"Must be dispatched on socketQueue");
+	NSAssert(dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey), @"Must be dispatched on socketQueue");
 	
 	
 	if (aConnectIndex != connectIndex)
@@ -2597,11 +2601,13 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 			[self doConnectTimeout];
 		}});
 		
+		#if NEEDS_DISPATCH_RETAIN_RELEASE
 		dispatch_source_t theConnectTimer = connectTimer;
 		dispatch_source_set_cancel_handler(connectTimer, ^{
 			LogVerbose(@"dispatch_release(connectTimer)");
 			dispatch_release(theConnectTimer);
 		});
+		#endif
 		
 		dispatch_time_t tt = dispatch_time(DISPATCH_TIME_NOW, (timeout * NSEC_PER_SEC));
 		dispatch_source_set_timer(connectTimer, tt, DISPATCH_TIME_FOREVER, 0);
@@ -2654,7 +2660,7 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 {
 	LogTrace();
 	
-	NSAssert(dispatch_get_current_queue() == socketQueue, @"Must be dispatched on socketQueue");
+	NSAssert(dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey), @"Must be dispatched on socketQueue");
 	
 	
 	[self endConnectTimeout];
@@ -2692,7 +2698,9 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 	#endif
 	#if SECURE_TRANSPORT_MAYBE_AVAILABLE
 	{
-		[sslReadBuffer setLength:0];
+		[sslPreBuffer reset];
+		sslErrCode = noErr;
+		
 		if (sslContext)
 		{
 			// Getting a linker error here about the SSLx() functions?
@@ -2700,8 +2708,9 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 			
 			SSLClose(sslContext);
 			
-			#if !TARGET_OS_IPHONE
-			// SSLDisposeContext doesn't exist in iOS for some odd reason.
+			#if TARGET_OS_IPHONE
+			CFRelease(sslContext);
+			#else
 			SSLDisposeContext(sslContext);
 			#endif
 			
@@ -2815,7 +2824,7 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 	
 	// Synchronous disconnection, as documented in the header file
 	
-	if (dispatch_get_current_queue() == socketQueue)
+	if (dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey))
 		block();
 	else
 		dispatch_sync(socketQueue, block);
@@ -2864,7 +2873,7 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 **/
 - (void)maybeClose
 {
-	NSAssert(dispatch_get_current_queue() == socketQueue, @"Must be dispatched on socketQueue");
+	NSAssert(dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey), @"Must be dispatched on socketQueue");
 	
 	BOOL shouldClose = NO;
 	
@@ -3033,7 +3042,7 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 		result = (flags & kSocketStarted) ? NO : YES;
 	};
 	
-	if (dispatch_get_current_queue() == socketQueue)
+	if (dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey))
 		block();
 	else
 		dispatch_sync(socketQueue, block);
@@ -3049,7 +3058,7 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 		result = (flags & kConnected) ? YES : NO;
 	};
 	
-	if (dispatch_get_current_queue() == socketQueue)
+	if (dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey))
 		block();
 	else
 		dispatch_sync(socketQueue, block);
@@ -3059,7 +3068,7 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 
 - (NSString *)connectedHost
 {
-	if (dispatch_get_current_queue() == socketQueue)
+	if (dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey))
 	{
 		if (socket4FD != SOCKET_NULL)
 			return [self connectedHostFromSocket4:socket4FD];
@@ -3086,7 +3095,7 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 
 - (uint16_t)connectedPort
 {
-	if (dispatch_get_current_queue() == socketQueue)
+	if (dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey))
 	{
 		if (socket4FD != SOCKET_NULL)
 			return [self connectedPortFromSocket4:socket4FD];
@@ -3114,7 +3123,7 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 
 - (NSString *)localHost
 {
-	if (dispatch_get_current_queue() == socketQueue)
+	if (dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey))
 	{
 		if (socket4FD != SOCKET_NULL)
 			return [self localHostFromSocket4:socket4FD];
@@ -3141,7 +3150,7 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 
 - (uint16_t)localPort
 {
-	if (dispatch_get_current_queue() == socketQueue)
+	if (dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey))
 	{
 		if (socket4FD != SOCKET_NULL)
 			return [self localPortFromSocket4:socket4FD];
@@ -3355,7 +3364,7 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 		}
 	};
 	
-	if (dispatch_get_current_queue() == socketQueue)
+	if (dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey))
 		block();
 	else
 		dispatch_sync(socketQueue, block);
@@ -3391,7 +3400,7 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 		}
 	};
 	
-	if (dispatch_get_current_queue() == socketQueue)
+	if (dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey))
 		block();
 	else
 		dispatch_sync(socketQueue, block);
@@ -3401,7 +3410,7 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 
 - (BOOL)isIPv4
 {
-	if (dispatch_get_current_queue() == socketQueue)
+	if (dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey))
 	{
 		return (socket4FD != SOCKET_NULL);
 	}
@@ -3419,7 +3428,7 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 
 - (BOOL)isIPv6
 {
-	if (dispatch_get_current_queue() == socketQueue)
+	if (dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey))
 	{
 		return (socket6FD != SOCKET_NULL);
 	}
@@ -3437,7 +3446,7 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 
 - (BOOL)isSecure
 {
-	if (dispatch_get_current_queue() == socketQueue)
+	if (dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey))
 	{
 		return (flags & kSocketSecure) ? YES : NO;
 	}
@@ -3659,15 +3668,19 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 	
 	__block int socketFDRefCount = 2;
 	
+	#if NEEDS_DISPATCH_RETAIN_RELEASE
 	dispatch_source_t theReadSource = readSource;
 	dispatch_source_t theWriteSource = writeSource;
+	#endif
 	
 	dispatch_source_set_cancel_handler(readSource, ^{
 		
 		LogVerbose(@"readCancelBlock");
 		
+		#if NEEDS_DISPATCH_RETAIN_RELEASE
 		LogVerbose(@"dispatch_release(readSource)");
 		dispatch_release(theReadSource);
+		#endif
 		
 		if (--socketFDRefCount == 0)
 		{
@@ -3680,8 +3693,10 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 		
 		LogVerbose(@"writeCancelBlock");
 		
+		#if NEEDS_DISPATCH_RETAIN_RELEASE
 		LogVerbose(@"dispatch_release(writeSource)");
 		dispatch_release(theWriteSource);
+		#endif
 		
 		if (--socketFDRefCount == 0)
 		{
@@ -3969,7 +3984,7 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 		}
 	};
 	
-	if (dispatch_get_current_queue() == socketQueue)
+	if (dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey))
 		block();
 	else
 		dispatch_sync(socketQueue, block);
@@ -3990,7 +4005,7 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 - (void)maybeDequeueRead
 {
 	LogTrace();
-	NSAssert(dispatch_get_current_queue() == socketQueue, @"Must be dispatched on socketQueue");
+	NSAssert(dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey), @"Must be dispatched on socketQueue");
 	
 	// If we're not currently processing a read AND we have an available read stream
 	if ((currentRead == nil) && (flags & kConnected))
@@ -4115,15 +4130,15 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 		
 		// Figure out if there is any data available to be read
 		// 
-		// socketFDBytesAvailable <- Number of encrypted bytes we haven't read from the bsd socket
-		// [sslReadBuffer length] <- Number of encrypted bytes we've buffered from bsd socket
-		// sslInternalBufSize     <- Number of decrypted bytes SecureTransport has buffered
+		// socketFDBytesAvailable        <- Number of encrypted bytes we haven't read from the bsd socket
+		// [sslPreBuffer availableBytes] <- Number of encrypted bytes we've buffered from bsd socket
+		// sslInternalBufSize            <- Number of decrypted bytes SecureTransport has buffered
 		// 
 		// We call the variable "estimated" because we don't know how many decrypted bytes we'll get
-		// from the encrypted bytes in the sslReadBuffer.
+		// from the encrypted bytes in the sslPreBuffer.
 		// However, we do know this is an upper bound on the estimation.
 		
-		estimatedBytesAvailable = socketFDBytesAvailable + [sslReadBuffer length];
+		estimatedBytesAvailable = socketFDBytesAvailable + [sslPreBuffer availableBytes];
 		
 		size_t sslInternalBufSize = 0;
 		SSLGetBufferedReadSize(sslContext, &sslInternalBufSize);
@@ -4159,7 +4174,7 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 				[preBuffer didWrite:bytesRead];
 			}
 			
-			LogVerbose(@"%@ - prebuffer.length = %lu", THIS_METHOD, (unsigned long)[ringBuffer availableBytes]);
+			LogVerbose(@"%@ - prebuffer.length = %zu", THIS_METHOD, [preBuffer availableBytes]);
 			
 			if (result != noErr)
 			{
@@ -4266,9 +4281,9 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 			// This has to do with the encypted packets that are coming across the TCP stream.
 			// But it's non-optimal to do a bunch of small reads from the BSD socket.
 			// So our SSLReadFunction reads all available data from the socket (optimizing the sys call)
-			// and may store excess in the sslReadBuffer.
+			// and may store excess in the sslPreBuffer.
 			
-			estimatedBytesAvailable += [sslReadBuffer length];
+			estimatedBytesAvailable += [sslPreBuffer availableBytes];
 			
 			// The second buffer is within SecureTransport.
 			// As mentioned earlier, there are encrypted packets coming across the TCP stream.
@@ -4391,7 +4406,7 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 		// Remove the copied bytes from the preBuffer
 		[preBuffer didRead:bytesToCopy];
 		
-		LogVerbose(@"copied(%lu) preBufferLength(%lu)", bytesToCopy, [preBuffer availableBytes]);
+		LogVerbose(@"copied(%lu) preBufferLength(%zu)", (unsigned long)bytesToCopy, [preBuffer availableBytes]);
 		
 		// Update totals
 		
@@ -4580,8 +4595,19 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 					if (result == errSSLWouldBlock)
 						waiting = YES;
 					else
-						error = [self sslError:result];
-					
+					{
+						if (result == errSSLClosedGraceful || result == errSSLClosedAbort)
+						{
+							// We've reached the end of the stream.
+							// Handle this the same way we would an EOF from the socket.
+							socketEOF = YES;
+							sslErrCode = result;
+						}
+						else
+						{
+							error = [self sslError:result];
+						}
+					}
 					// It's possible that bytesRead > 0, even if the result was errSSLWouldBlock.
 					// This happens when the SSLRead function is able to read some data,
 					// but not the entire amount we requested.
@@ -4671,10 +4697,12 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 					// We just read a big chunk of data into the preBuffer
 					
 					[preBuffer didWrite:bytesRead];
+					LogVerbose(@"read data into preBuffer - preBuffer.length = %zu", [preBuffer availableBytes]);
 					
 					// Search for the terminating sequence
 					
 					bytesToRead = [currentRead readLengthForTermWithPreBuffer:preBuffer found:&done];
+					LogVerbose(@"copying %lu bytes from preBuffer", (unsigned long)bytesToRead);
 					
 					// Ensure there's room on the read packet's buffer
 					
@@ -4689,6 +4717,7 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 					
 					// Remove the copied bytes from the prebuffer
 					[preBuffer didRead:bytesToRead];
+					LogVerbose(@"preBuffer.length = %zu", [preBuffer availableBytes]);
 					
 					// Update totals
 					currentRead->bytesDone += bytesToRead;
@@ -4723,12 +4752,14 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 						
 						// Copy excess data into preBuffer
 						
+						LogVerbose(@"copying %ld overflow bytes into preBuffer", (long)overflow);
 						[preBuffer ensureCapacityForWrite:overflow];
 						
 						uint8_t *overflowBuffer = buffer + underflow;
 						memcpy([preBuffer writeBuffer], overflowBuffer, overflow);
 						
 						[preBuffer didWrite:overflow];
+						LogVerbose(@"preBuffer.length = %zu", [preBuffer availableBytes]);
 						
 						// Note: The completeCurrentRead method will trim the buffer for us.
 						
@@ -4968,7 +4999,23 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 	{
 		if (error == nil)
 		{
-			error = [self connectionClosedError];
+			if ([self usingSecureTransportForTLS])
+			{
+				#if SECURE_TRANSPORT_MAYBE_AVAILABLE
+				if (sslErrCode != noErr && sslErrCode != errSSLClosedGraceful)
+				{
+					error = [self sslError:sslErrCode];
+				}
+				else
+				{
+					error = [self connectionClosedError];
+				}
+				#endif
+			}
+			else
+			{
+				error = [self connectionClosedError];
+			}
 		}
 		[self closeWithError:error];
 	}
@@ -5057,11 +5104,13 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 			[self doReadTimeout];
 		}});
 		
+		#if NEEDS_DISPATCH_RETAIN_RELEASE
 		dispatch_source_t theReadTimer = readTimer;
 		dispatch_source_set_cancel_handler(readTimer, ^{
 			LogVerbose(@"dispatch_release(readTimer)");
 			dispatch_release(theReadTimer);
 		});
+		#endif
 		
 		dispatch_time_t tt = dispatch_time(DISPATCH_TIME_NOW, (timeout * NSEC_PER_SEC));
 		
@@ -5183,7 +5232,7 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 		}
 	};
 	
-	if (dispatch_get_current_queue() == socketQueue)
+	if (dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey))
 		block();
 	else
 		dispatch_sync(socketQueue, block);
@@ -5204,7 +5253,7 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 - (void)maybeDequeueWrite
 {
 	LogTrace();
-	NSAssert(dispatch_get_current_queue() == socketQueue, @"Must be dispatched on socketQueue");
+	NSAssert(dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey), @"Must be dispatched on socketQueue");
 	
 	
 	// If we're not currently processing a write AND we have an available write stream
@@ -5363,7 +5412,7 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 			}
 		
 			CFIndex result = CFWriteStreamWrite(writeStream, buffer, (CFIndex)bytesToWrite);
-			LogVerbose(@"CFWriteStreamWrite(%lu) = %li", bytesToWrite, result);
+			LogVerbose(@"CFWriteStreamWrite(%lu) = %li", (unsigned long)bytesToWrite, result);
 		
 			if (result < 0)
 			{
@@ -5583,7 +5632,7 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 	{
 		// Update total amount read for the current write
 		currentWrite->bytesDone += bytesWritten;
-		LogVerbose(@"currentWrite->bytesDone = %lu", currentWrite->bytesDone);
+		LogVerbose(@"currentWrite->bytesDone = %lu", (unsigned long)currentWrite->bytesDone);
 		
 		// Is packet done?
 		done = (currentWrite->bytesDone == [currentWrite->buffer length]);
@@ -5685,11 +5734,13 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 			[self doWriteTimeout];
 		}});
 		
+		#if NEEDS_DISPATCH_RETAIN_RELEASE
 		dispatch_source_t theWriteTimer = writeTimer;
 		dispatch_source_set_cancel_handler(writeTimer, ^{
 			LogVerbose(@"dispatch_release(writeTimer)");
 			dispatch_release(theWriteTimer);
 		});
+		#endif
 		
 		dispatch_time_t tt = dispatch_time(DISPATCH_TIME_NOW, (timeout * NSEC_PER_SEC));
 		
@@ -5858,7 +5909,7 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 {
 	LogVerbose(@"sslReadWithBuffer:%p length:%lu", buffer, (unsigned long)*bufferLength);
 	
-	if ((socketFDBytesAvailable == 0) && ([sslReadBuffer length] == 0))
+	if ((socketFDBytesAvailable == 0) && ([sslPreBuffer availableBytes] == 0))
 	{
 		LogVerbose(@"%@ - No data available to read...", THIS_METHOD);
 		
@@ -5883,25 +5934,24 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 	// STEP 1 : READ FROM SSL PRE BUFFER
 	// 
 	
-	NSUInteger sslReadBufferLength = [sslReadBuffer length];
+	size_t sslPreBufferLength = [sslPreBuffer availableBytes];
 	
-	if (sslReadBufferLength > 0)
+	if (sslPreBufferLength > 0)
 	{
 		LogVerbose(@"%@: Reading from SSL pre buffer...", THIS_METHOD);
 		
 		size_t bytesToCopy;
-		if (sslReadBufferLength > totalBytesLeftToBeRead)
+		if (sslPreBufferLength > totalBytesLeftToBeRead)
 			bytesToCopy = totalBytesLeftToBeRead;
 		else
-			bytesToCopy = (size_t)sslReadBufferLength;
+			bytesToCopy = sslPreBufferLength;
 		
-		LogVerbose(@"%@: Copying %zu bytes from sslReadBuffer", THIS_METHOD, bytesToCopy);
+		LogVerbose(@"%@: Copying %zu bytes from sslPreBuffer", THIS_METHOD, bytesToCopy);
 		
-		memcpy(buffer, [sslReadBuffer mutableBytes], bytesToCopy);
+		memcpy(buffer, [sslPreBuffer readBuffer], bytesToCopy);
+		[sslPreBuffer didRead:bytesToCopy];
 		
-		[sslReadBuffer replaceBytesInRange:NSMakeRange(0, bytesToCopy) withBytes:NULL length:0];
-		
-		LogVerbose(@"%@: sslReadBuffer.length = %lu", THIS_METHOD, (unsigned long)[sslReadBuffer length]);
+		LogVerbose(@"%@: sslPreBuffer.length = %zu", THIS_METHOD, [sslPreBuffer availableBytes]);
 		
 		totalBytesRead += bytesToCopy;
 		totalBytesLeftToBeRead -= bytesToCopy;
@@ -5927,19 +5977,16 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 		
 		if (socketFDBytesAvailable > totalBytesLeftToBeRead)
 		{
-			// Read all available data from socket into sslReadBuffer.
+			// Read all available data from socket into sslPreBuffer.
 			// Then copy requested amount into dataBuffer.
 			
-			LogVerbose(@"%@: Reading into sslReadBuffer...", THIS_METHOD);
+			LogVerbose(@"%@: Reading into sslPreBuffer...", THIS_METHOD);
 			
-			if ([sslReadBuffer length] < socketFDBytesAvailable)
-			{
-				[sslReadBuffer setLength:socketFDBytesAvailable];
-			}
+			[sslPreBuffer ensureCapacityForWrite:socketFDBytesAvailable];
 			
 			readIntoPreBuffer = YES;
 			bytesToRead = (size_t)socketFDBytesAvailable;
-			buf = [sslReadBuffer mutableBytes];
+			buf = [sslPreBuffer writeBuffer];
 		}
 		else
 		{
@@ -5965,11 +6012,6 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 			}
 			
 			socketFDBytesAvailable = 0;
-			
-			if (readIntoPreBuffer)
-			{
-				[sslReadBuffer setLength:0];
-			}
 		}
 		else if (result == 0)
 		{
@@ -5977,11 +6019,6 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 			
 			socketError = YES;
 			socketFDBytesAvailable = 0;
-			
-			if (readIntoPreBuffer)
-			{
-				[sslReadBuffer setLength:0];
-			}
 		}
 		else
 		{
@@ -5994,19 +6031,19 @@ static void allocate_ring_buffer(uint8_t **ringBufferPtr, size_t ringBufferSize)
 			
 			if (readIntoPreBuffer)
 			{
+				[sslPreBuffer didWrite:bytesReadFromSocket];
+				
 				size_t bytesToCopy = MIN(totalBytesLeftToBeRead, bytesReadFromSocket);
 				
-				LogVerbose(@"%@: Copying %zu bytes out of sslReadBuffer", THIS_METHOD, bytesToCopy);
+				LogVerbose(@"%@: Copying %zu bytes out of sslPreBuffer", THIS_METHOD, bytesToCopy);
 				
-				memcpy((uint8_t *)buffer + totalBytesRead, [sslReadBuffer bytes], bytesToCopy);
-				
-				[sslReadBuffer setLength:bytesReadFromSocket];
-				[sslReadBuffer replaceBytesInRange:NSMakeRange(0, bytesToCopy) withBytes:NULL length:0];
+				memcpy((uint8_t *)buffer + totalBytesRead, [sslPreBuffer readBuffer], bytesToCopy);
+				[sslPreBuffer didRead:bytesToCopy];
 				
 				totalBytesRead += bytesToCopy;
 				totalBytesLeftToBeRead -= bytesToCopy;
 				
-				LogVerbose(@"%@: sslReadBuffer.length = %lu", THIS_METHOD, (unsigned long)[sslReadBuffer length]);
+				LogVerbose(@"%@: sslPreBuffer.length = %zu", THIS_METHOD, [sslPreBuffer availableBytes]);
 			}
 			else
 			{
@@ -6091,7 +6128,7 @@ static OSStatus SSLReadFunction(SSLConnectionRef connection, void *data, size_t 
 {
 	GCDAsyncSocket *asyncSocket = (__bridge GCDAsyncSocket *)connection;
 	
-	NSCAssert(dispatch_get_current_queue() == asyncSocket->socketQueue, @"What the deuce?");
+	NSCAssert(dispatch_get_specific(asyncSocket->IsOnSocketQueueOrTargetQueueKey), @"What the deuce?");
 	
 	return [asyncSocket sslReadWithBuffer:data length:dataLength];
 }
@@ -6100,7 +6137,7 @@ static OSStatus SSLWriteFunction(SSLConnectionRef connection, const void *data, 
 {
 	GCDAsyncSocket *asyncSocket = (__bridge GCDAsyncSocket *)connection;
 	
-	NSCAssert(dispatch_get_current_queue() == asyncSocket->socketQueue, @"What the deuce?");
+	NSCAssert(dispatch_get_specific(asyncSocket->IsOnSocketQueueOrTargetQueueKey), @"What the deuce?");
 	
 	return [asyncSocket sslWriteWithBuffer:data length:dataLength];
 }
@@ -6456,23 +6493,25 @@ static OSStatus SSLWriteFunction(SSLConnectionRef connection, const void *data, 
 	}
 	#endif
 	
-	// Setup the sslReadBuffer
+	// Setup the sslPreBuffer
 	// 
-	// Any data in the preBuffer needs to be moved into the sslReadBuffer,
+	// Any data in the preBuffer needs to be moved into the sslPreBuffer,
 	// as this data is now part of the secure read stream.
 	
-	sslReadBuffer = [[NSMutableData alloc] init];
+	sslPreBuffer = [[GCDAsyncSocketPreBuffer alloc] initWithCapacity:(1024 * 4)];
 	
-	uint8_t *preBuf;
-	size_t preBufLen;
+	size_t preBufferLength  = [preBuffer availableBytes];
 	
-	[preBuffer getReadBuffer:&preBuf availableBytes:&preBufLen];
-	
-	if (preBufLen > 0)
+	if (preBufferLength > 0)
 	{
-		[sslReadBuffer appendBytes:preBuf length:preBufLen];
-		[preBuffer didRead:preBufLen];
+		[sslPreBuffer ensureCapacityForWrite:preBufferLength];
+		
+		memcpy([sslPreBuffer writeBuffer], [preBuffer readBuffer], preBufferLength);
+		[preBuffer didRead:preBufferLength];
+		[sslPreBuffer didWrite:preBufferLength];
 	}
+	
+	sslErrCode = noErr;
 	
 	// Start the SSL Handshake process
 	
@@ -6870,7 +6909,7 @@ static void CFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType ty
 {
 	LogTrace();
 	
-	NSAssert(dispatch_get_current_queue() == socketQueue, @"Must be dispatched on socketQueue");
+	NSAssert(dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey), @"Must be dispatched on socketQueue");
 	
 	
 	if (readStream || writeStream)
@@ -6887,14 +6926,12 @@ static void CFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType ty
 		return NO;
 	}
 	
-    
 	if (![self isConnected])
 	{
 		// Cannot create streams until file descriptor is connected
 		return NO;
 	}
 	
-    
 	LogVerbose(@"Creating read and write stream...");
 	
 	CFStreamCreatePairWithSocket(NULL, (CFSocketNativeHandle)socketFD, &readStream, &writeStream);
@@ -6934,7 +6971,7 @@ static void CFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType ty
 {
 	LogVerbose(@"%@ %@", THIS_METHOD, (includeReadWrite ? @"YES" : @"NO"));
 	
-	NSAssert(dispatch_get_current_queue() == socketQueue, @"Must be dispatched on socketQueue");
+	NSAssert(dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey), @"Must be dispatched on socketQueue");
 	NSAssert((readStream != NULL && writeStream != NULL), @"Read/Write stream is null");
 	
 	streamContext.version = 0;
@@ -6968,7 +7005,7 @@ static void CFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType ty
 {
 	LogTrace();
 	
-	NSAssert(dispatch_get_current_queue() == socketQueue, @"Must be dispatched on socketQueue");
+	NSAssert(dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey), @"Must be dispatched on socketQueue");
 	NSAssert((readStream != NULL && writeStream != NULL), @"Read/Write stream is null");
 	
 	if (!(flags & kAddedStreamsToRunLoop))
@@ -6991,7 +7028,7 @@ static void CFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType ty
 {
 	LogTrace();
 	
-	NSAssert(dispatch_get_current_queue() == socketQueue, @"Must be dispatched on socketQueue");
+	NSAssert(dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey), @"Must be dispatched on socketQueue");
 	NSAssert((readStream != NULL && writeStream != NULL), @"Read/Write stream is null");
 	
 	if (flags & kAddedStreamsToRunLoop)
@@ -7011,7 +7048,7 @@ static void CFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType ty
 {
 	LogTrace();
 	
-	NSAssert(dispatch_get_current_queue() == socketQueue, @"Must be dispatched on socketQueue");
+	NSAssert(dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey), @"Must be dispatched on socketQueue");
 	NSAssert((readStream != NULL && writeStream != NULL), @"Read/Write stream is null");
 	
 	CFStreamStatus readStatus = CFReadStreamGetStatus(readStream);
@@ -7040,14 +7077,85 @@ static void CFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType ty
 #pragma mark Advanced
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (void)performBlock:(dispatch_block_t)block
+/**
+ * See header file for big discussion of this method.
+**/
+- (BOOL)autoDisconnectOnClosedReadStream
 {
-	dispatch_sync(socketQueue, block);
+	// Note: YES means kAllowHalfDuplexConnection is OFF
+	
+	if (dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey))
+	{
+		return ((config & kAllowHalfDuplexConnection) == 0);
+	}
+	else
+	{
+		__block BOOL result;
+		
+		dispatch_sync(socketQueue, ^{
+			result = ((config & kAllowHalfDuplexConnection) == 0);
+		});
+		
+		return result;
+	}
 }
 
+/**
+ * See header file for big discussion of this method.
+**/
+- (void)setAutoDisconnectOnClosedReadStream:(BOOL)flag
+{
+	// Note: YES means kAllowHalfDuplexConnection is OFF
+	
+	dispatch_block_t block = ^{
+		
+		if (flag)
+			config &= ~kAllowHalfDuplexConnection;
+		else
+			config |= kAllowHalfDuplexConnection;
+	};
+	
+	if (dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey))
+		block();
+	else
+		dispatch_async(socketQueue, block);
+}
+
+
+/**
+ * See header file for big discussion of this method.
+**/
+- (void)markSocketQueueTargetQueue:(dispatch_queue_t)socketNewTargetQueue
+{
+	void *nonNullUnusedPointer = (__bridge void *)self;
+	dispatch_queue_set_specific(socketNewTargetQueue, IsOnSocketQueueOrTargetQueueKey, nonNullUnusedPointer, NULL);
+}
+
+/**
+ * See header file for big discussion of this method.
+**/
+- (void)unmarkSocketQueueTargetQueue:(dispatch_queue_t)socketOldTargetQueue
+{
+	dispatch_queue_set_specific(socketOldTargetQueue, IsOnSocketQueueOrTargetQueueKey, NULL, NULL);
+}
+
+/**
+ * See header file for big discussion of this method.
+**/
+- (void)performBlock:(dispatch_block_t)block
+{
+	if (dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey))
+		block();
+	else
+		dispatch_sync(socketQueue, block);
+}
+
+/**
+ * Questions? Have you read the header file?
+**/
 - (int)socketFD
 {
-	if (dispatch_get_current_queue() != socketQueue)
+	if (!dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey))
 	{
 		LogWarn(@"%@ - Method only available from within the context of a performBlock: invocation", THIS_METHOD);
 		return SOCKET_NULL;
@@ -7059,9 +7167,12 @@ static void CFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType ty
 		return socket6FD;
 }
 
+/**
+ * Questions? Have you read the header file?
+**/
 - (int)socket4FD
 {
-	if (dispatch_get_current_queue() != socketQueue)
+	if (!dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey))
 	{
 		LogWarn(@"%@ - Method only available from within the context of a performBlock: invocation", THIS_METHOD);
 		return SOCKET_NULL;
@@ -7070,9 +7181,12 @@ static void CFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType ty
 	return socket4FD;
 }
 
+/**
+ * Questions? Have you read the header file?
+**/
 - (int)socket6FD
 {
-	if (dispatch_get_current_queue() != socketQueue)
+	if (!dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey))
 	{
 		LogWarn(@"%@ - Method only available from within the context of a performBlock: invocation", THIS_METHOD);
 		return SOCKET_NULL;
@@ -7083,9 +7197,12 @@ static void CFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType ty
 
 #if TARGET_OS_IPHONE
 
+/**
+ * Questions? Have you read the header file?
+**/
 - (CFReadStreamRef)readStream
 {
-	if (dispatch_get_current_queue() != socketQueue)
+	if (!dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey))
 	{
 		LogWarn(@"%@ - Method only available from within the context of a performBlock: invocation", THIS_METHOD);
 		return NULL;
@@ -7097,9 +7214,12 @@ static void CFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType ty
 	return readStream;
 }
 
+/**
+ * Questions? Have you read the header file?
+**/
 - (CFWriteStreamRef)writeStream
 {
-	if (dispatch_get_current_queue() != socketQueue)
+	if (!dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey))
 	{
 		LogWarn(@"%@ - Method only available from within the context of a performBlock: invocation", THIS_METHOD);
 		return NULL;
@@ -7142,11 +7262,14 @@ static void CFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType ty
 	return YES;
 }
 
+/**
+ * Questions? Have you read the header file?
+**/
 - (BOOL)enableBackgroundingOnSocket
 {
 	LogTrace();
 	
-	if (dispatch_get_current_queue() != socketQueue)
+	if (!dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey))
 	{
 		LogWarn(@"%@ - Method only available from within the context of a performBlock: invocation", THIS_METHOD);
 		return NO;
@@ -7163,7 +7286,7 @@ static void CFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType ty
 	
 	LogTrace();
 	
-	if (dispatch_get_current_queue() != socketQueue)
+	if (!dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey))
 	{
 		LogWarn(@"%@ - Method only available from within the context of a performBlock: invocation", THIS_METHOD);
 		return NO;
@@ -7172,11 +7295,13 @@ static void CFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType ty
 	return [self enableBackgroundingOnSocketWithCaveat:YES];
 }
 
-#else
+#endif
+
+#if SECURE_TRANSPORT_MAYBE_AVAILABLE
 
 - (SSLContextRef)sslContext
 {
-	if (dispatch_get_current_queue() != socketQueue)
+	if (!dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey))
 	{
 		LogWarn(@"%@ - Method only available from within the context of a performBlock: invocation", THIS_METHOD);
 		return NULL;

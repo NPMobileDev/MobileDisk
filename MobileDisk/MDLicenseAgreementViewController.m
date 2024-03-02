@@ -41,6 +41,17 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
+//9/20/2012
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
+{
+    return UIInterfaceOrientationPortrait;
+}
+//9/20/2012
+- (NSUInteger)supportedInterfaceOrientations
+{
+    return UIInterfaceOrientationMaskPortrait;
+}
+
 -(IBAction)agreeLicense:(id)sender
 {
     NSString *msg = NSLocalizedString(@"You agree and understand these terms and conditions", @"License Agreement");

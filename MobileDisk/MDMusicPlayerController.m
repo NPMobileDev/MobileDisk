@@ -238,6 +238,17 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
+//**9/20/2012 4inch**//
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
+{
+    return UIInterfaceOrientationPortrait;
+}
+//**9/20/2012 4inch**//
+- (NSUInteger)supportedInterfaceOrientations
+{
+    return UIInterfaceOrientationMaskPortrait;
+}
+
 #pragma mark - music player enter background/foreground notification
 -(void)musicPlayerEnterBackground:(NSNotification*)notification
 {

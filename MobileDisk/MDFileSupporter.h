@@ -28,4 +28,5 @@
 -(id)findControllerToOpenFile:(NSString *)filePath WithStoryboard:(UIStoryboard *)storyboard;
 -(BOOL)canShowFileName:(NSString *)fileName;
 -(void)findThumbnailImageForFileAtPath:(NSString *)filePath thumbnailSize:(CGSize)imageSize WithObject:(id)object;
+-(void)clearThumbnailCache;//add 9/12/2012
 @end

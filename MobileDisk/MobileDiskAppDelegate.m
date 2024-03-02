@@ -101,9 +101,19 @@ static int idleTimeCount = 0;
     [player prepareToPlay];
 }
 
+//**modify 9/4/2012**//
 -(void)registerUserDefaults
 {
-    NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], sysGenerateThumbnail, [NSNumber numberWithBool:NO], sysPasscodeStatus, @"-1", sysPasscodeNumber, [NSNumber numberWithBool:NO], sysLicenseAgree, nil];
+    NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:
+                         [NSNumber numberWithBool:YES], sysGenerateThumbnail, 
+                         [NSNumber numberWithBool:NO], sysPasscodeStatus, 
+                         @"-1", sysPasscodeNumber, 
+                         [NSNumber numberWithBool:NO], sysLicenseAgree, 
+                         [NSNumber numberWithBool:YES], sysVideoPlayerSubtitle,
+                         [NSNumber numberWithFloat:0.8f], sysSubtitleRedColor,
+                         [NSNumber numberWithFloat:0.78f], sysSubtitleGreenColor,
+                         [NSNumber numberWithFloat:0.1f], sysSubtitleBlueColor,
+                         nil];
     
     [[NSUserDefaults standardUserDefaults] registerDefaults:dic];
 }

@@ -7,6 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MDSrtSubtitle.h" /**add 9/4/2012**/
+#import "MDSrtSubtitleInfo.h"/**add 9/4/2012**/
 
 #define kRewindAmount 10.0f
 #define kFastForwardAmount 10.0f
@@ -14,7 +16,7 @@
 #define kFadeInUIDuration 0.2f
 #define kVideoScale 1.5f;
 
-@interface MDAVPlayerController : UIViewController
+@interface MDAVPlayerController : UIViewController<MDSrtSubtitleDelegate>
 
 @property (nonatomic, copy) NSURL *avFileURL;
 

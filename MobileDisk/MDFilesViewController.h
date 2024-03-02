@@ -21,6 +21,8 @@
 #import "MDSelectedActionSheet.h"
 #import "MDFileSupporter.h"
 #import "MDConfirmDeleteAlertView.h"
+#import "MDImageViewerController.h"
+#import "MDOpenFileActionSheet.h"
 
 
 @interface MDFilesViewController : UITableViewController <UIAlertViewDelegate,  UIActionSheetDelegate, 
@@ -30,7 +32,11 @@
     MDNonSelectedActionSheetDelegate,
     MDSelectedActionSheetDelegate,
     MDConfirmDeleteAlertViewDelegate,
-    UIGestureRecognizerDelegate>
+    UIGestureRecognizerDelegate,
+    UISearchBarDelegate,
+    MDImageViewerControllerDelegate,
+    UIDocumentInteractionControllerDelegate,
+    MDOpenFileActionSheetDelegate>
 
 //current path
 @property (nonatomic, copy) NSString *workingPath;

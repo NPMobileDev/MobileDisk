@@ -133,6 +133,13 @@ static NSArray *hiddenFileName;
 
 }
 
+//add 9/12/2012
+-(void)clearThumbnailCache
+{
+    if(thumbnailImageCache != nil)
+        [thumbnailImageCache removeAllObjects];
+}
+
 -(void)loadHiddenFileName
 {
 
@@ -388,6 +395,7 @@ static NSArray *hiddenFileName;
         pdfController.theDocumentURL = pdfURL;
         
         controller = navController;
+        
     }
     else if(UTTypeConformsTo(compareUTI, kUTTypeExcel))
     {
@@ -437,14 +445,17 @@ static NSArray *hiddenFileName;
 
 -(id)findImageViewerController
 {
+    //modify 9/12/2012
     //find image viewer controller
-    NSURL *imageURL = [NSURL fileURLWithPath:operateFilePath];
+    //NSURL *imageURL = [NSURL fileURLWithPath:operateFilePath];
     
     UINavigationController *navController = [operateStoryboard instantiateViewControllerWithIdentifier:@"MDImageViewerController"];
     
-    MDImageViewerController * imageController = [navController.viewControllers objectAtIndex:0];
+    //modfiy 9/12/2012
+    //MDImageViewerController * imageController = [navController.viewControllers objectAtIndex:0];
     
-    imageController.imageURL = imageURL;
+    //modify 9/12/2012
+    //imageController.imageURL = imageURL;
     
     return navController;
 }

@@ -12,6 +12,7 @@
 #import "MobileDiskAppDelegate.h"
 
 
+
 @interface MDAVPlayerController ()
 
 @property (nonatomic, weak) IBOutlet UINavigationBar *navBar;
@@ -25,7 +26,10 @@
 //this is only used to contain video view
 @property (nonatomic, weak) IBOutlet UIView *videoLayerView;
 @property (nonatomic, weak) IBOutlet UIActivityIndicatorView *loadingIndicator;
+@property (nonatomic, weak) IBOutlet UILabel *subtitleLabel;//add 9/4/2012
 
+-(void)beginPlayVideo;//add 9/4/2012
+-(void)updateSubtitle;//add 9/4/2012
 -(void)play;
 -(void)pause;
 -(IBAction)rewind:(id)sender;
@@ -51,7 +55,7 @@
 
 @implementation MDAVPlayerController{
     
-    MPMoviePlayerController *avPlayer;
+    __block MPMoviePlayerController *avPlayer;
     
     //timer for update timeline slider and labels
     NSTimer *updateTimer;
@@ -65,9 +69,21 @@
     
     BOOL isScaled;
     
+    //used to remember video layer rect in Portrait
     CGRect videoLayerRect;
     
     UIDeviceOrientation lastDeviceOrientation;
+    
+    __block MDSrtSubtitle *srtSubtitle;//add 9/4/2012
+    
+    MDSrtSubtitleInfo *currentSubtitle;//add 9/4/2012
+    
+    //only true if subtitle finish processing
+    BOOL subtitleReady;//add 9/4/2012
+    //only true if video finish processing
+    BOOL videoReady;//add 9/4/2012
+    
+    UIColor *subtitleColor;//add 9/4/2012
     
 }
 
@@ -81,6 +97,7 @@
 @synthesize gestureReceiverView = _gestureReceiverView;
 @synthesize videoLayerView = _videoLayerView;
 @synthesize loadingIndicator = _loadingIndicator;
+@synthesize subtitleLabel = _subtitleLabel;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -108,7 +125,7 @@
     
     [avPlayer.view removeFromSuperview];
     
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:NO];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:NO];
 }
 
 -(void)dealloc
@@ -123,6 +140,102 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     
+    self.subtitleLabel.text = nil;//add 9/4/2012
+    subtitleReady = NO;//add 9/24/2012
+    videoReady = NO;//add 9/24/2012
+    
+    //*********************************init srt subtitle*****************************//
+    //add 9/4/2012
+    CGFloat red = [[NSUserDefaults standardUserDefaults] floatForKey:sysSubtitleRedColor];
+    CGFloat green = [[NSUserDefaults standardUserDefaults] floatForKey:sysSubtitleGreenColor];
+    CGFloat blue = [[NSUserDefaults standardUserDefaults] floatForKey:sysSubtitleBlueColor];
+    
+    subtitleColor = [UIColor colorWithRed:red green:green blue:blue alpha:1.0f];
+    
+    self.subtitleLabel.textColor = subtitleColor;
+    
+    BOOL subtitleEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:sysVideoPlayerSubtitle];
+    
+    if(subtitleEnabled)
+    {
+        NSString *subtitleFilePath = [[self.avFileURL path] stringByDeletingPathExtension];
+        subtitleFilePath = [subtitleFilePath stringByAppendingString:@".srt"];
+        
+        //if srt subtitle file exist at path
+        if([[NSFileManager defaultManager] fileExistsAtPath:subtitleFilePath])
+        {
+            srtSubtitle = [[MDSrtSubtitle alloc] initWithSrtSubtitleFile:subtitleFilePath withDelegate:self];
+            
+            if(srtSubtitle != nil)
+            {
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
+                    
+                    [srtSubtitle paserSrtSubtitle];
+                });
+            }
+
+        }
+        else
+        {
+            NSLog(@"srt sub title file dose not exist");
+            srtSubtitle = nil;
+        }
+    }
+    else
+    {
+        srtSubtitle = nil;
+    }
+    //*********************************init srt subtitle*****************************//
+    
+    //run in another thread so controller will present early 9/4/2012
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
+    
+        //create player
+        avPlayer = [[MPMoviePlayerController alloc] initWithContentURL:self.avFileURL];
+        
+        //set style and scaling mode
+        avPlayer.controlStyle = MPMovieControlStyleNone;
+        avPlayer.scalingMode = MPMovieScalingModeAspectFit;
+        avPlayer.movieSourceType = MPMovieSourceTypeFile;
+        
+        [avPlayer prepareToPlay];
+        
+        dispatch_async(dispatch_get_main_queue(), ^(void){
+            
+            //remember video layer rect in Portrait
+            videoLayerRect = self.videoLayerView.frame;
+            
+            //set video view's width and height equal to videoLayerView
+            avPlayer.view.frame = CGRectMake(0, 0, self.videoLayerView.bounds.size.width, self.videoLayerView.bounds.size.height);
+            
+            //add video view to controller's view
+            [self.videoLayerView addSubview:avPlayer.view];
+            
+            
+            //**9/20/2012 4inch**//
+            //if present video controller in landscape, reposition
+            if(UIInterfaceOrientationIsLandscape([UIDevice currentDevice].orientation))
+            {
+                CGRect newRect;
+                CGRect screenBounds = [UIScreen mainScreen].bounds;
+                
+                newRect.origin.x = 0;
+                newRect.origin.y = 0;
+
+                newRect.size.width = screenBounds.size.height;
+                newRect.size.height = screenBounds.size.width-20;
+                
+                
+                self.videoLayerView.frame = newRect;
+                avPlayer.view.frame = CGRectMake(0, 0, newRect.size.width, newRect.size.height);
+            }
+
+            
+        });
+        
+        NSLog(@"avplayer ready");
+    });
+    /*
     //create player
     avPlayer = [[MPMoviePlayerController alloc] initWithContentURL:self.avFileURL];
     
@@ -140,6 +253,7 @@
     
     //add video view to controller's view
     [self.videoLayerView addSubview:avPlayer.view];
+     */
     
     //create gesture
     [self createGestureForView:self.gestureReceiverView];
@@ -198,6 +312,7 @@
     [self.videoLayerView bringSubviewToFront:self.loadingIndicator];
     [self.loadingIndicator startAnimating];
     
+    
     //dont sleep
     [MobileDiskAppDelegate disableIdleTime];
 }
@@ -214,8 +329,15 @@
     return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 }
 
+//**9/20/2012 4inch**//
+- (NSUInteger)supportedInterfaceOrientations
+{
+    return UIInterfaceOrientationMaskAllButUpsideDown;
+}
+
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
 {
+    //**9/20/2012 4inch**//
     
     lastDeviceOrientation = toInterfaceOrientation;
     
@@ -224,28 +346,38 @@
         if(toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation == UIInterfaceOrientationLandscapeRight)
         {
             CGRect newRect;
+            CGRect screenBounds = [UIScreen mainScreen].bounds;
                 
             //newRect.origin.x = 480/2 - self.videoLayerView.frame.size.width/2;
             newRect.origin.x = 0;
             newRect.origin.y = 0;
             //newRect.size.width = self.videoLayerView.frame.size.width;
-            newRect.size.width = 480;
+            //newRect.size.height = self.videoLayerView.frame.size.height;
+            //newRect.size.width = 480;
             //newRect.size.height = 300;
-            newRect.size.height = 300;
+            //newRect.size.height = 300;
+            newRect.size.width = screenBounds.size.height;
+            newRect.size.height = screenBounds.size.width-20;
 
             
             //if video is been scaled
             if(isScaled)
             {
                 //newRect.origin.x = 480/2 - self.videoLayerView.frame.size.width/2;
-                float scaledHeight = 480 * kVideoScale;
-                newRect.origin.x = -((scaledHeight - 480) / 2);
+                //float scaledHeight = 480 * kVideoScale;
+                float scaledHeight = screenBounds.size.height * kVideoScale;
+                newRect.origin.x = -((scaledHeight - screenBounds.size.height) / 2);
+                //newRect.origin.x = -((scaledHeight - 480) / 2);
                 //newRect.origin.y = 300/2 - self.videoLayerView.frame.size.height/2;
-                float scaledWidth = 320 * kVideoScale;
-                newRect.origin.y = -((scaledWidth - 320) / 2);
+                //float scaledWidth = 320 * kVideoScale;
+                float scaledWidth = screenBounds.size.width * kVideoScale;
+                newRect.origin.y = -((scaledWidth - screenBounds.size.width) / 2);
+                //newRect.origin.y = -((scaledWidth - 320) / 2);
                 //newRect.size = self.videoLayerView.frame.size;
-                float sizeWidth = 480 * kVideoScale;
-                float sizeHeight = 320 * kVideoScale;
+                //float sizeWidth = 480 * kVideoScale;
+                //float sizeHeight = 320 * kVideoScale;
+                float sizeWidth = screenBounds.size.height * kVideoScale;
+                float sizeHeight = screenBounds.size.width * kVideoScale;
                 newRect.size = CGSizeMake(sizeWidth, sizeHeight);
                 
             }
@@ -259,19 +391,26 @@
         if(toInterfaceOrientation == UIInterfaceOrientationPortrait)
         {
             CGRect newRect = videoLayerRect;
+            CGRect screenBounds = [UIScreen mainScreen].bounds;
             
             //if video is been scaled
             if(isScaled)
             {
                 //newRect.origin.x = 320/2 - self.videoLayerView.frame.size.width/2;
-                float scaledWidth = 320 * kVideoScale;
-                newRect.origin.x = -((scaledWidth - 320) / 2);
+                //float scaledWidth = 320 * kVideoScale;
+                float scaledWidth = screenBounds.size.width * kVideoScale;
+                newRect.origin.x = -((scaledWidth - screenBounds.size.width) / 2);
+                //newRect.origin.x = -((scaledWidth - 320) / 2);
                 //newRect.origin.y = 460/2 - self.videoLayerView.frame.size.height/2;
-                float scaledHeight = 480 * kVideoScale;
-                newRect.origin.y = -((scaledHeight - 480) / 2);
+                //float scaledHeight = 480 * kVideoScale;
+                float scaledHeight = screenBounds.size.height * kVideoScale;
+                newRect.origin.y = -((scaledHeight - screenBounds.size.height) / 2);
+                //newRect.origin.y = -((scaledHeight - 480) / 2);
                 //newRect.size = self.videoLayerView.frame.size;
-                float sizeWidth = 320 * kVideoScale;
-                float sizeHeight = 480 * kVideoScale;
+                //float sizeWidth = 320 * kVideoScale;
+                //float sizeHeight = 480 * kVideoScale;
+                float sizeWidth = screenBounds.size.width * kVideoScale;
+                float sizeHeight = screenBounds.size.height * kVideoScale;
                 newRect.size = CGSizeMake(sizeWidth, sizeHeight);
             }
             
@@ -281,6 +420,38 @@
         
     }
 }
+
+#pragma mark - begin play check 9/4/2012
+-(void)beginPlayVideo
+{
+    //if user disable subtitle
+    if(srtSubtitle == nil)
+    {
+        if(videoReady)
+        {
+
+            [self play];
+            [self performUIAction];
+            
+            return;
+        }
+    }
+    
+    if(subtitleReady && videoReady)
+    {
+        
+        [self play];
+        [self performUIAction];
+    }
+}
+
+#pragma mark - MDSrtSubtitle delegate 9/4/2012
+-(void)MDSrtSubtitlePaserSubtitleFinished
+{
+    subtitleReady = YES;
+    [self beginPlayVideo];
+}
+
 
 #pragma mark - video player enter background/foreground notification
 -(void)videoPlayerEnterBackground:(NSNotification*)notification
@@ -317,6 +488,7 @@
 }
 
 #pragma mark - notification video load content
+/**modify 9/4/2012**/
 -(void)videoPlayerDidLoadContent:(NSNotification*)notification
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerLoadStateDidChangeNotification object:nil];
@@ -328,21 +500,22 @@
     self.timeLeftLabel.text = [@"-" stringByAppendingString:[self secondsToString:self.timeLineSlider.maximumValue]];
     self.currentTimeLabel.text = [self secondsToString:0.0f];
     
-    [self.loadingIndicator stopAnimating];
-    self.loadingIndicator.hidden = YES;
-    
     //play video when content loaded
-    [self play];
+    //[self play];
+    videoReady = YES;
+    [self beginPlayVideo];
+     
 }
 
 #pragma mark - video control
 -(void)play
 {
+    NSLog(@"avplayer play video");
+    
     [self changePlayButtonToPause];
-    
-    [avPlayer prepareToPlay];
+
+    //[avPlayer prepareToPlay];
     [avPlayer play];
-    
     
     //create a update timer if needed
     if(updateTimer == nil)
@@ -355,6 +528,10 @@
     
     //start timer
     [updateTimer fire];
+    
+    //add 9/4/2012
+    [self.loadingIndicator stopAnimating];
+    self.loadingIndicator.hidden = YES;
      
 }
 
@@ -390,7 +567,7 @@
             [self updateTimeLabels];
         }
 
-        
+        [self updateSubtitle];//add 9/4/2012
     }
     
     //NSLog(@"total %f", self.timeLineSlider.maximumValue);
@@ -405,6 +582,116 @@
     //time left
     float timeleft = self.timeLineSlider.maximumValue - self.timeLineSlider.value;
     self.timeLeftLabel.text = [@"-" stringByAppendingString:[self secondsToString:timeleft]];
+}
+
+#pragma mark - Subtitle update 9/4/2012
+-(void)updateSubtitle
+{
+    
+    if(srtSubtitle ==nil)
+        return;
+    
+    NSUInteger playbackTime = round(avPlayer.currentPlaybackTime);
+    BOOL shouldUpdateUI = NO;
+
+    
+    if(currentSubtitle != nil)
+    {
+        if(playbackTime > currentSubtitle.subtitleEndTime || playbackTime < currentSubtitle.subtitleStartTime)
+        {
+            self.subtitleLabel.text = nil;
+            
+            //have to update subtitle
+            currentSubtitle = [srtSubtitle querySubtitleByTime:playbackTime];
+            
+            //update subtitle ui
+            shouldUpdateUI = YES;
+        }
+    }
+    else
+    {
+        currentSubtitle = [srtSubtitle querySubtitleByTime:playbackTime];
+        
+        if(currentSubtitle != nil)
+        {
+            self.subtitleLabel.text = nil;
+            
+            //update subtitle ui
+            shouldUpdateUI = YES;
+        }
+
+    }
+    
+    if(shouldUpdateUI && currentSubtitle != nil)
+    {
+        NSLog(@"subtitle index:%i", currentSubtitle.subtitleIndex);
+        NSLog(@"subtitle content:%@", currentSubtitle.subtitleContent);
+        NSLog(@"subtitle characters:%i",[currentSubtitle.subtitleContent length]);
+        NSLog(@"subtitle sentence:%i", currentSubtitle.subtitleSentences);
+        NSLog(@"\n\n");
+        
+        /**adjust subtitle label frame 9/4/2012**/
+        NSUInteger characters = [currentSubtitle.subtitleContent length];
+        CGFloat characterSize = self.subtitleLabel.font.pointSize;
+        
+        float stringlong = characters *characterSize;
+        int height = stringlong/self.subtitleLabel.frame.size.width;
+        
+        if(height == 0)
+        {
+            CGRect frame = self.subtitleLabel.frame;
+            frame.size.height = self.subtitleLabel.font.pointSize;
+            if(!isScaled)
+            {
+                frame.origin.y = (self.videoLayerView.frame.origin.y+self.videoLayerView.frame.size.height-self.toolbar.frame.size.height)-frame.size.height;
+            }
+
+            
+            self.subtitleLabel.frame = frame;
+        }
+        else
+        {
+            CGRect frame = self.subtitleLabel.frame;
+            
+            if(((int)stringlong % (int)self.subtitleLabel.frame.size.width)!=0)
+            {
+                height++;
+                
+                frame.size.height = height*self.subtitleLabel.font.pointSize;
+                if(!isScaled)
+                {
+                    frame.origin.y = (self.videoLayerView.frame.origin.y+self.videoLayerView.frame.size.height-self.toolbar.frame.size.height)-frame.size.height;
+                }
+            }
+            else
+            {
+
+                frame.size.height = height*self.subtitleLabel.font.pointSize;
+                if(!isScaled)
+                {
+                    frame.origin.y = (self.videoLayerView.frame.origin.y+self.videoLayerView.frame.size.height-self.toolbar.frame.size.height)-frame.size.height;
+                }
+            }
+
+            self.subtitleLabel.frame = frame;
+        }
+        /**adjust subtitle label frame 9/4/2012**/ 
+        
+        /*
+        //update subtitle ui
+        if(currentSubtitle.subtitleSentences > 1)
+        {
+            self.subtitleLabel.textAlignment = UITextAlignmentLeft;
+        }
+        else
+        {
+            self.subtitleLabel.textAlignment = UITextAlignmentCenter;
+        }
+         */
+        self.subtitleLabel.textAlignment = UITextAlignmentCenter;
+        
+        self.subtitleLabel.text = currentSubtitle.subtitleContent;
+    }
 }
 
 #pragma mark - Timeline slider event
@@ -437,6 +724,9 @@
     
     //update labels
     [self updateTimeLabels];
+    
+    //update subtitle 9/4/2012
+    [self updateSubtitle];
     
     //resume update
     canUpdateTimeline = YES;
@@ -716,13 +1006,22 @@
         //if device in landscape
         if([UIDevice currentDevice].orientation == UIDeviceOrientationLandscapeLeft || [UIDevice currentDevice].orientation == UIDeviceOrientationLandscapeRight || lastDeviceOrientation == UIDeviceOrientationLandscapeLeft || lastDeviceOrientation == UIDeviceOrientationLandscapeRight)
         {
+            //**9/20/2012 4inch**//
             //center = CGPointMake(480/2, 320/2);
+            CGRect screenBounds = [UIScreen mainScreen].bounds;
             
+            /*
             newWidth = 480 * kVideoScale;
             newHeight = 320 * kVideoScale;
             
             newX = -((newWidth - 480) / 2);
             newY = -((newHeight - 320) / 2);
+             */
+            newWidth = screenBounds.size.height * kVideoScale;
+            newHeight = screenBounds.size.width * kVideoScale;
+            
+            newX = -((newWidth - screenBounds.size.height) / 2);
+            newY = -((newHeight - screenBounds.size.width) / 2);
         }
         
 

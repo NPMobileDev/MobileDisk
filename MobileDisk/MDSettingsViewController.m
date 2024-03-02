@@ -26,6 +26,8 @@
 -(void)passcodeStatusChange:(id)sender;
 -(void)changePasscode;
 -(void)generateThumbnail:(id)sender;
+- (UIImage *)imageWithColor:(UIColor *)color; //add 9/4/2012
+-(void)changeSubtitleColor; //add 9/4/2012
 
 @end
 
@@ -136,6 +138,12 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
+//**9/20/2012 4inch**//
+- (NSUInteger)supportedInterfaceOrientations
+{
+    return UIInterfaceOrientationMaskAllButUpsideDown;
+}
+
 -(void)enterForeground:(NSNotification*)notification
 {
     [self resolveIPAddress];
@@ -180,7 +188,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
     }
     
-    if(section == 3)
+    if(section == 4)
     {
         NSString *passcodeNumber = [[NSUserDefaults standardUserDefaults] stringForKey:sysPasscodeNumber];
         
@@ -274,8 +282,16 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
      [self.navigationController pushViewController:detailViewController animated:YES];
      */
     
-    
-    if(indexPath.section == 3)
+    if(indexPath.section == 3)//add 9/4/2012
+    {
+        //did select video player subtitle color row
+        if(indexPath.row == 1)
+        {
+            [self changeSubtitleColor];
+            [tableView deselectRowAtIndexPath:indexPath animated:YES];
+        }
+    }
+    else if(indexPath.section == 4)
     {
         //did select change passcode row
         if(indexPath.row == 1)
@@ -296,8 +312,15 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
         return nil;
     }
      */
-    
-    if(indexPath.section == 3)
+    if(indexPath.section == 3)//add 9/4/2012
+    {
+        //change video subtitle color row can be selected
+        if(indexPath.row == 1)
+        {
+            return indexPath;
+        }
+    }
+    else if(indexPath.section == 4)
     {
         //change passcode row can be selected
         if(indexPath.row == 1)
@@ -426,8 +449,13 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     //add prototype cell identifier for section 2, one row
     [cellModels addObject:[NSArray arrayWithObjects:@"S2-R0-GenerateThumbnail", nil]];
     
-     //add prototype cell identifier for section 3, two row
-    [cellModels addObject:[NSArray arrayWithObjects:@"S3-R0-Passcode", @"S3-R1-ChangePasscode", nil]];
+    //add prototype cell identifier for section 3, two row //add 9/4/2012
+    [cellModels addObject:[NSArray arrayWithObjects:@"S3-R0-VideoSubtitle", @"S3-R1-SubtitleColor", nil]]; 
+    
+     //add prototype cell identifier for section 4, two row
+    [cellModels addObject:[NSArray arrayWithObjects:@"S4-R0-Passcode", @"S4-R1-ChangePasscode", nil]];
+    
+   
 
     
     //add header for section 0
@@ -439,8 +467,13 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     //add header for section 2
     [sectionHeaders addObject:NSLocalizedString(@"File", @"File")];
     
-    //add header for section 3
+    //add header for section 3 //add 9/4/2012
+    [sectionHeaders addObject:NSLocalizedString(@"Video player", @"Video player")];
+    
+    //add header for section 4
     [sectionHeaders addObject:NSLocalizedString(@"Passcode Protection", @"Passcode Protection")];
+    
+
     
 }
 
@@ -527,19 +560,46 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
             /**
              configure cells at section 3
              **/
-        case 3:
+        case 3://add 9/4/2012
+            if(indexPath.row == 0)
+            {
+                //get value for video player subtitle status
+                BOOL videoPlayerSubtitleStatus = [[NSUserDefaults standardUserDefaults] boolForKey:sysVideoPlayerSubtitle];
+                
+                UISwitch *theSwitch = (UISwitch*)[cell viewWithTag:1005];
+                theSwitch.on = videoPlayerSubtitleStatus;
+                
+                [theSwitch addTarget:self action:@selector(videoPlayerSubtitleChange:) forControlEvents:UIControlEventValueChanged];
+            }
+            else if(indexPath.row == 1)
+            {
+                CGFloat red = [[NSUserDefaults standardUserDefaults] floatForKey:sysSubtitleRedColor];
+                CGFloat green = [[NSUserDefaults standardUserDefaults] floatForKey:sysSubtitleGreenColor];
+                CGFloat blue = [[NSUserDefaults standardUserDefaults] floatForKey:sysSubtitleBlueColor];
+                
+                UIColor *theColor = [UIColor colorWithRed:red green:green blue:blue alpha:1.0f];
+                
+                UIImage *colorImage = [self imageWithColor:theColor];
+                
+                UIImageView *colorImageView = (UIImageView*)[cell viewWithTag:1006];
+                colorImageView.image = colorImage;
+            }
+
+            break;
+            /**
+             configure cells at section 4
+             **/
+        case 4: 
             if(indexPath.row == 0)
             {
                 //get value for passcode status
                 BOOL passcodeStatus = [[NSUserDefaults standardUserDefaults] boolForKey:sysPasscodeStatus];
                 
-                UISwitch *theSwitch = (UISwitch*)[cell viewWithTag:1005];
+                UISwitch *theSwitch = (UISwitch*)[cell viewWithTag:1007];
                 theSwitch.on = passcodeStatus;
                 
                 [theSwitch addTarget:self action:@selector(passcodeStatusChange:) forControlEvents:UIControlEventValueChanged];
             }
-            
-            break;
             
         default:
             break;
@@ -718,6 +778,23 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     }
 }
 
+#pragma mark - create image with color 9/4/2012
+//this is for subtitle color indicator
+- (UIImage *)imageWithColor:(UIColor *)color 
+{
+    CGRect rect = CGRectMake(0.0f, 0.0f, 40.0f, 40.0f);
+    UIGraphicsBeginImageContext(rect.size);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    
+    CGContextSetFillColorWithColor(context, [color CGColor]);
+    CGContextFillRect(context, rect);
+    
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return image;
+}
+
 #pragma mark - Generate thumbnail switcher
 -(void)generateThumbnail:(id)sender
 {
@@ -771,11 +848,66 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     [changePasscodeController presentInViewController:self.navigationController];
 }
 
+#pragma mark - Video player subtitle switch enable/disable 9/4/2012
+-(void)videoPlayerSubtitleChange:(id)sender
+{
+    UISwitch *theSwitch = sender;
+    BOOL subtitleStatus = theSwitch.on;
+    
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setObject:[NSNumber numberWithBool:subtitleStatus] forKey:sysVideoPlayerSubtitle];
+    
+    [userDefaults synchronize];
+    
+}
+
+#pragma mark - change subtitle color 9/4/2012
+-(void)changeSubtitleColor
+{
+    CGFloat red = [[NSUserDefaults standardUserDefaults] floatForKey:sysSubtitleRedColor];
+    CGFloat green = [[NSUserDefaults standardUserDefaults] floatForKey:sysSubtitleGreenColor];
+    CGFloat blue = [[NSUserDefaults standardUserDefaults] floatForKey:sysSubtitleBlueColor];
+    
+    UIColor *theColor = [UIColor colorWithRed:red green:green blue:blue alpha:1.0f];
+    
+    ColorPickerController *colorPicker = [[ColorPickerController alloc] initWithColor:theColor andTitle:NSLocalizedString(@"Subtitle color", @"Subtitle color")];
+    
+    colorPicker.delegate = self;
+    
+    [self.navigationController pushViewController:colorPicker animated:YES];
+}
+
+#pragma mark - ColorPicker delegate 9/4/2012
+- (void)colorPickerSaved:(ColorPickerController *)controller
+{
+    RgbColor theColor = [ColorPickerController rgbColorFromColor:controller.selectedColor];
+    
+     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    
+    [userDefaults setObject:[NSNumber numberWithFloat:theColor.red] forKey:sysSubtitleRedColor];
+    
+    [userDefaults setObject:[NSNumber numberWithFloat:theColor.green] forKey:sysSubtitleGreenColor];
+    
+    [userDefaults setObject:[NSNumber numberWithFloat:theColor.blue] forKey:sysSubtitleBlueColor];
+    
+    [userDefaults synchronize];
+    
+    [self reloadTableViewSection:3 WithAnimation:YES];
+    
+    [self.navigationController popViewControllerAnimated:YES];
+    
+}
+
+- (void)colorPickerCancelled:(ColorPickerController *)controller
+{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
 #pragma mark - MDPasscodeViewController delegate
 -(void)MDPasscodeViewControllerDidCancel:(MDPasscodeViewController *)controller
 {
     //[self.tableView reloadData];
-    [self reloadTableViewSection:3 WithAnimation:YES];
+    [self reloadTableViewSection:4 WithAnimation:YES];
     
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
@@ -791,7 +923,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     [userDefaults synchronize];
     
     //[self.tableView reloadData];
-    [self reloadTableViewSection:3 WithAnimation:YES];
+    [self reloadTableViewSection:4 WithAnimation:YES];
     
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
@@ -822,7 +954,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     [userDefaults synchronize];
     
     //[self.tableView reloadData];
-    [self reloadTableViewSection:3 WithAnimation:YES];
+    [self reloadTableViewSection:4 WithAnimation:YES];
     
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }

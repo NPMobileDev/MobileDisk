@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MDMoveFilesViewController : UITableViewController
+@interface MDMoveFilesViewController : UIViewController<UITableViewDataSource, UITableViewDelegate>
 
 @property (nonatomic, copy) NSString *workingPath;
 @property (nonatomic, copy) NSString *controllerTitle;

@@ -142,7 +142,10 @@
 		NSString *strPath = [NSString stringWithCString:filename encoding:NSUTF8StringEncoding];
         if(strPath == nil)
         {
-            strPath = [NSString stringWithCString:filename encoding:NSASCIIStringEncoding];
+            
+            unsigned long encoding = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingBig5);
+            
+            strPath = [[NSString alloc] initWithCString:filename encoding:encoding];
         }
         
 		BOOL isDirectory = NO;

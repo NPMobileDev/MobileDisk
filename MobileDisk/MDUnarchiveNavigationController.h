@@ -8,8 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import "SSZipArchive.h"
+#import "SSZipArchive+SSZipArchiveExtension.h"
+#import "MDUnarchivePasswordAlertView.h"
 
-@interface MDUnarchiveNavigationController : UINavigationController <SSZipArchiveDelegate>
+
+@interface MDUnarchiveNavigationController : UINavigationController <SSZipArchiveDelegate, MDUnarchivePasswordAlertViewDelegate>
 
 @property (nonatomic, copy) NSURL *archiveFilePath;
 

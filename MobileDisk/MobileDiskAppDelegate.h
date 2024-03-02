@@ -14,6 +14,11 @@
 #define sysPasscodeNumber @"PasscodeNumber"
 #define sysApplicationEnterForeground @"ApplicationEnterForeground"
 #define sysLicenseAgree @"AppLicenseAgreement"
+//add 9/4/2012
+#define sysVideoPlayerSubtitle @"VideoPlayerSubtitle"
+#define sysSubtitleRedColor @"SubtitleRedColor"
+#define sysSubtitleGreenColor @"SubtitleGreenColor"
+#define sysSubtitleBlueColor @"SubtitleBlueColor"
 
 @interface MobileDiskAppDelegate : UIResponder <UIApplicationDelegate, MDPasscodeViewControllerDelegate>
 
